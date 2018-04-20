@@ -19,6 +19,7 @@ class Main {
         game.load.image('loading', './assets/images/progress-bar.png');
         game.load.image('brand', './assets/images/logo.png');
         game.load.script('Splash', './states/Splash.js');
+        game.load.script('utils', './lib/utils.js');
     }
 
     create(){
