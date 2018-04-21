@@ -1,13 +1,13 @@
 {
   "name": "conquer_them_all",
   "productName": "conquer_them_all",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
     "electron": "electron .",
-    "start": "yarn bundle && electron-forge start",
-    "package": "yarn bundle && electron-forge package",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
   },
