@@ -28,9 +28,6 @@ class Main {
     }
 }
 
-// instantiate main setup
-//const main = new Main(game);
-
 // Adds the main configuration to the application and starts it
 game.state.add('Main', new Main());
 game.state.start('Main');

@@ -1,3 +1,11 @@
 class GameMenu {
     
+    preload(){
+
+    }
+
+    create(){
+        
+    }
+
 }
