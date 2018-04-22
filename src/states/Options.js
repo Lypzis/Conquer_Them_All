@@ -15,7 +15,7 @@ class Options{
         this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
         utils.centerGameObjects([this.titleText]);
 
-        utils.navItemOrganizer('<- Back', this.optionCount, (target) => game.state.start('GameMenu') );
+        utils.navItemOrganizer('<- Back', this.optionCount, (target) => game.state.start('GameMenu'), true );
 
     }
 

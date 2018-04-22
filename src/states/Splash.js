@@ -106,7 +106,7 @@ class Splash {
 
         setTimeout(() => {
             game.state.start('GameMenu');
-        }, 5000); //5000ms = 5s before loading next screen
+        }, 1000); //1000ms = 1s before loading next screen
 
 
     }
