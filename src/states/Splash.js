@@ -1,10 +1,12 @@
 //////////////////////////////////////////////////////////////////////////////
 /*
  * @by: Lypzis Team
- * @autor: Victor V. Piccoli
+ * @author: Victor V. Piccoli
  * @doc: Splash/temporary screen to preload scripts, images, sounds and fonts
 */
 //////////////////////////////////////////////////////////////////////////////
+
+import WebFont from 'webfontloader';
 
 const playSound = true,
     playMusic = true;
@@ -24,41 +26,44 @@ class Splash {
     }
 
     loadScripts() {
-        //load text font manager
-        game.load.script('WebFont', './vendor/webfontloader.js')
-
-        utils.loadScripts([
+        const states = [
             'GameMenu',
             'TheGame',
             'GameOver',
             'Credits',
             'Options'
-        ]);
+        ];
+
+        states.forEach( (state) => game.load.script(`${state}`, `./states/${state}.js`) );
     }
 
     loadBgm() {
-        utils.loadAudio([
+        const audios = [
             'dangerous',
             'fear_and_wonder'
-        ]);
+        ];
 
+        audios.forEach( (audio) => game.load.audio(`${audio}`, `./assets/bgm/${audio}.mp3`) );
     }
 
     loadImages() {
-        utils.loadImages([
+        const images = [
             'menu-bg',
             'options-bg',
             'quit-bg'
-        ]);
+        ];
+
+        images.forEach( (image) => game.load.image(`${image}`, `./assets/images/${image}.png`) );
     }
 
+    // loads a custom font
     loadFonts() {
-        this.WebFontConfig = {
+        WebFont.load({
             custom: {
                 families: ['SkydomeGlory'],
                 urls: ['./assets/style/skydome-glory.css']
             }
-        }
+        })
     }
 
     preload() {
@@ -89,7 +94,7 @@ class Splash {
         // add background music and make it play in loop
         music = game.add.audio('fear_and_wonder');
         music.loop = true;
-        music.play();
+        //music.play();
     }
 
     create() {
@@ -100,7 +105,7 @@ class Splash {
         this.addGameMusic();
 
         setTimeout(() => {
-            // will load the main menu
+            game.state.start("GameMenu");
         }, 5000); //5000ms = 5s before loading next screen
 
 

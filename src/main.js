@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////
 /*
  * @by: Lypzis Team
- * @autor: Victor V. Piccoli
+ * @author: Victor V. Piccoli
  * @doc: Load assets, scripts and then starts Phaser application
 */
 ////////////////////////////////////////////////////////////////////////
+
+import { ipcRenderer } from 'electron'; // later use (!!!)
 
 ///////////////////////////////////////////////////////////////////////
 // Initialize Phaser application
@@ -19,7 +21,11 @@ class Main {
         game.load.image('loading', './assets/images/progress-bar.png');
         game.load.image('brand', './assets/images/logo.png');
         game.load.script('Splash', './states/Splash.js');
+
         game.load.script('utils', './lib/utils.js');
+
+        // text font manager
+        game.load.script('WebFont', './vendor/webfontloader.js');
     }
 
     create(){
