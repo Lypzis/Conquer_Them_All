@@ -6,8 +6,6 @@
 */
 ////////////////////////////////////////////////////////////////////////
 
-import { ipcRenderer } from 'electron'; // later use (!!!)
-
 ///////////////////////////////////////////////////////////////////////
 // Initialize Phaser application
 const game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
@@ -23,13 +21,14 @@ class Main {
         game.load.script('Splash', './states/Splash.js');
 
         game.load.script('utils', './lib/utils.js');
+        game.load.script('styles', './lib/styles.js');
 
         // text font manager
         game.load.script('WebFont', './vendor/webfontloader.js');
     }
 
     create(){
-        game.state.add('Splash', Splash);
+        game.state.add('Splash', new Splash());
         game.state.start('Splash');
     }
 }
