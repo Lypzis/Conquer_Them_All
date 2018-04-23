@@ -2,7 +2,7 @@
 /*
  * @by: Lypzis Team
  * @author: Victor V. Piccoli
- * @doc: Load assets, scripts and then starts Phaser application
+ * @doc: Bootstraper of the Phaser application
 */
 ////////////////////////////////////////////////////////////////////////
 
@@ -22,16 +22,16 @@ let musicPlayer;
 class Main {
 
     preload() {
+        game.load.script('styles', './lib/styles.js');
+        game.load.script('utils', './lib/utils.js');
+
+        // text font manager
+        game.load.script('WebFont', './vendor/webfontloader.js');
+
         game.load.image('background', './assets/images/background.png');
         game.load.image('loading', './assets/images/progress-bar.png');
         game.load.image('brand', './assets/images/logo.png');
         game.load.script('Splash', './states/Splash.js');
-
-        game.load.script('utils', './lib/utils.js');
-        game.load.script('styles', './lib/styles.js');
-
-        // text font manager
-        game.load.script('WebFont', './vendor/webfontloader.js');
     }
 
     create() {
@@ -41,5 +41,6 @@ class Main {
 }
 
 // Adds the main configuration to the application and starts it
-game.state.add('Main', new Main());
+game.state.add('Main', Main);
 game.state.start('Main');
+

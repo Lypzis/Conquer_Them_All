@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -34,7 +34,14 @@ const createWindow = () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
 };
+
+// quit the application
+ipcMain.on('quit', () => {
+  console.log('closing application!');
+  app.quit();
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

@@ -9,25 +9,22 @@
 class Options{
 
     init(){
-        this.playSound = gameOptions.playSound,
-        this.playMusic = gameOptions.playMusic;
-
-        this.titleText = game.add.text(game.world.centerX, 100, "Options", style.darkHeader());
+        this.titleText = game.add.text(game.world.centerX, 100, "Options", styles.darkHeader());
         this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
         utils.centerGameObjects([this.titleText]);
 
-        utils.navItemSetter(this.playMusic ? 'Mute Music':'Play Music', 1, (target) => {
-            this.playMusic = !this.playMusic;
-            target.text = this.playMusic ? 'Mute Music':'Play Music';
-            musicPlayer.volume = this.playMusic ? 1 : 0;
-        }, true);
+        utils.navItemSetter(gameOptions.playMusic ? 'Mute Music':'Play Music', 1, 80, (target) => {
+            gameOptions.playMusic = !gameOptions.playMusic;
+            target.text = gameOptions.playMusic ? 'Mute Music':'Play Music';
+            musicPlayer.volume = gameOptions.playMusic ? 1 : 0;
+        }, true, true);
 
-        utils.navItemSetter(this.playSound ? 'Mute Sound':'Play Sound', 2, (target) => {
-            this.playSound = !this.playSound;
-            target.text = this.playSound ? 'Mute Sound':'Play Sound';
-        }, true);
+        utils.navItemSetter(gameOptions.playSound ? 'Mute Sound':'Play Sound', 2, 80, (target) => {
+            gameOptions.playSound = !gameOptions.playSound;
+            target.text = gameOptions.playSound ? 'Mute Sound':'Play Sound';
+        }, true, true);
 
-        utils.navItemSetter('<- Back', 3, (target) => game.state.start('GameMenu'), true, true );
+        utils.navItemSetter('<- Back', 3, 90, (target) => game.state.start('GameMenu'), true, true );
 
     }
 

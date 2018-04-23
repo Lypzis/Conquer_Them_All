@@ -2,11 +2,11 @@
 /*
  * @by: Lypzis Team
  * @autor: Victor V. Piccoli
- * @doc: Global styles class, each function expression returns an style object
+ * @doc: Global styles object, each expression returns an style object
 */
 //////////////////////////////////////////////////////////////////////////////
 
-class styles {
+const styles = {
 
     /////////////////////////////////////////////////////////////////////////
     // For lighter backgrounds
@@ -16,7 +16,7 @@ class styles {
             fill: 'black',
             align: 'center'
         }
-    }
+    },
 
     navDarkItem() {
         return {
@@ -37,7 +37,7 @@ class styles {
             },
 
         }
-    }
+    },
 
     //////////////////////////////////////////////////////////////////////
     // For darker backgrounds
@@ -47,7 +47,7 @@ class styles {
             fill: '#fdfdfd',
             align: 'center'
         }
-    }
+    },
 
     navLightItem() {
         return {
@@ -67,7 +67,7 @@ class styles {
                 stroke: "rgba(200,200,200,0.5)"
             },
         }
-    }
+    },
 
     ///////////////////////////////////////////////////////////////////////
     // Item position
@@ -76,14 +76,14 @@ class styles {
             startY: 165,
             startX: game.world.centerX
         }
-    }
+    },
 
     leftItem() {
         return {
             startY: 165,
             startX: 30
         }
-    }
+    },
 
     // merges a modifier style object to the base style object then return it
     assignModifier(modifier, base) {
