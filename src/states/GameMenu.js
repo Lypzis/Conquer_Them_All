@@ -11,19 +11,18 @@ const style = new styles();
 class GameMenu {
 
     init(){
-        this.optionCount = 1;
 
-        this.titleText = game.add.text(game.world.centerX, 100, "Conquer Them All", style.header());
+        this.titleText = game.add.text(game.world.centerX, 100, "Conquer Them All", style.lightHeader());
 
-        // can be improved 
-        utils.navItemOrganizer('Start', this.optionCount, (target) => console.log(this.optionCount) );
-        this.optionCount++
-        utils.navItemOrganizer('Options', this.optionCount++, (target) => game.state.start('Options') );
-        utils.navItemOrganizer('Instructions', this.optionCount++, (target) => console.log('You clicked instructions!') );
-        utils.navItemOrganizer('Credits', this.optionCount++, (target) => console.log(this.optionCount) );
+        utils.navItemSetter('Start', 1, (target) => console.log('Start') );
+        utils.navItemSetter('Options', 2, (target) => game.state.start('Options') );
+        utils.navItemSetter('Instructions', 3, (target) => console.log('You clicked instructions!') );
+        utils.navItemSetter('Credits', 4, (target) => console.log('Credits') );
+        utils.navItemSetter('Quit', 5, (target) => console.log('Quit') );
 
         this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
         utils.centerGameObjects([this.titleText]);
+        
     }
 
     create() {

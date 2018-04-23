@@ -16,20 +16,42 @@ const utils = {
     },
 
     // Menu buttons/options factory
-    navItemOrganizer(text,  count, callback, revert){
-        const navItem = style.navItem();
+    navItemSetter(text,  order, callback, revert, center){
+        let navMenuStyle;
+        let navMenuPosition;
+        let anchor;
 
-        let defaultStyle;
+        if (order <= 0){
+            order = 1;
+        }
 
-        revert ? defaultStyle = navItem.inverse : defaultStyle = navItem.default;
-            
+        // set to dark ? Default is light
+        revert ? navMenuStyle = style.navDarkItem() : navMenuStyle = style.navLightItem();
+
+        // centralize ? Default is left
+        if (center) {
+            navMenuPosition = style.centerItem();
+            anchor = 0.5;
+        } else{ 
+            navMenuPosition = style.leftItem();
+            anchor = 0.0;
+        }
+
+        let y = navMenuPosition.startY;
+        let x = navMenuPosition.startX;
+
+        let defaultStyle = navMenuStyle.default;
+        let onHoverStyle = navMenuStyle.onHover;
+        let baseStyle = navMenuStyle.base;
+        
         // automatically set the y position of the option items, so it appends them vertically after each other 
-        const txt = game.add.text(30, (count * 80) + 175, text, style.assignModifier( defaultStyle, navItem.base ));
+        const txt = game.add.text(x, (order * 65) + y, text, style.assignModifier( defaultStyle, baseStyle ));
 
         txt.inputEnabled = true; // makes the item clickable
         txt.events.onInputUp.add(callback); // on click, execute the received function
-        txt.events.onInputOver.add( (target) => target.setStyle( style.assignModifier( navItem.onHover, navItem.base )));
-        txt.events.onInputOut.add( (target) => target.setStyle( style.assignModifier( defaultStyle, navItem.base )));
+        txt.events.onInputOver.add( (target) => target.setStyle( style.assignModifier( onHoverStyle, baseStyle )));
+        txt.events.onInputOut.add( (target) => target.setStyle( style.assignModifier( defaultStyle, baseStyle )));
+        txt.anchor.setTo(anchor);
         
     }
     

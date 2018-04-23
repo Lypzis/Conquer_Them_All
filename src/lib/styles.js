@@ -8,7 +8,40 @@
 
 class styles {
 
-    header() {
+    /////////////////////////////////////////////////////////////////////////
+    // For lighter backgrounds
+    darkHeader() {
+        return {
+            font: 'bold 65pt SkydomeGlory',
+            fill: 'black',
+            align: 'center'
+        }
+    }
+
+    navDarkItem() {
+        return {
+            base: {
+                font: '30pt SkydomeGlory',
+                align: 'left',
+                strokeThickness: 4,
+            },
+
+            default: {
+                fill: 'black',
+                stroke: 'black'
+            },
+
+            onHover: {
+                fill: "#2d2d2d",
+                stroke: "rgba(84,84,84,0.5)"
+            },
+
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    // For darker backgrounds
+    lightHeader() {
         return {
             font: 'bold 65pt SkydomeGlory',
             fill: '#fdfdfd',
@@ -16,8 +49,7 @@ class styles {
         }
     }
 
-    // obs: create a nav item for dark backgrounds and another for lighter
-    navItem() {
+    navLightItem() {
         return {
             base: {
                 font: '30pt SkydomeGlory',
@@ -30,23 +62,31 @@ class styles {
                 stroke: 'rgba(0,0,0,0)'
             },
 
-            inverse: {
-                fill: 'black',
-                stroke: 'black'
-            },
-
-    
-
             onHover: {
                 fill: "#FEFFD5",
                 stroke: "rgba(200,200,200,0.5)"
             },
-
         }
     }
 
-    // merges an modifier style object to a base style object then return it
-    assignModifier(modifier, base){
+    ///////////////////////////////////////////////////////////////////////
+    // Item position
+    centerItem() {
+        return {
+            startY: 165,
+            startX: game.world.centerX
+        }
+    }
+
+    leftItem() {
+        return {
+            startY: 165,
+            startX: 30
+        }
+    }
+
+    // merges a modifier style object to the base style object then return it
+    assignModifier(modifier, base) {
         return Object.assign(modifier, base);
     }
 

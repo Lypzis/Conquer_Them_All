@@ -10,11 +10,18 @@
 // Initialize Phaser application
 const game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
 
+const gameOptions = {
+    playSound: true,
+    playMusic: true
+}
+
+let musicPlayer;
+
 ///////////////////////////////////////////////////////////////////////
 // Main State Configuration
 class Main {
 
-    preload(){
+    preload() {
         game.load.image('background', './assets/images/background.png');
         game.load.image('loading', './assets/images/progress-bar.png');
         game.load.image('brand', './assets/images/logo.png');
@@ -27,7 +34,7 @@ class Main {
         game.load.script('WebFont', './vendor/webfontloader.js');
     }
 
-    create(){
+    create() {
         game.state.add('Splash', new Splash());
         game.state.start('Splash');
     }

@@ -8,11 +8,6 @@
 
 import WebFont from 'webfontloader';
 
-const playSound = true,
-    playMusic = true;
-
-let music;
-
 class Splash {
 
     constructor() {
@@ -92,9 +87,9 @@ class Splash {
 
     addGameMusic() {
         // add background music and make it play in loop
-        music = game.add.audio('fear_and_wonder');
-        music.loop = true;
-        //music.play();
+        musicPlayer = game.add.audio('fear_and_wonder');
+        musicPlayer.loop = true;
+        musicPlayer.play();
     }
 
     create() {
