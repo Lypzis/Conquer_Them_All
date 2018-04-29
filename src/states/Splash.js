@@ -45,7 +45,8 @@ class Splash {
         const images = [
             'menu-bg',
             'options-bg',
-            'quit-bg'
+            'quit-bg',
+            'tableGround-tile'
         ];
 
         images.forEach( (image) => game.load.image(`${image}`, `./assets/images/${image}.png`) );
@@ -61,6 +62,10 @@ class Splash {
         })
     }
 
+    loadMaps(){
+        game.load.tilemap('tilemap', './assets/maps/tableGround-map.json', null, Phaser.Tilemap.TILED_JSON);
+    }
+
     preload() {
         // load sprites to the stage
         game.add.sprite(0, 0, 'background');
@@ -74,6 +79,7 @@ class Splash {
         this.loadImages();
         this.loadFonts();
         this.loadBgm();
+        this.loadMaps();
     }
 
     // enqueue states to the game

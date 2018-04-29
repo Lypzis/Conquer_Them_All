@@ -25,9 +25,6 @@ class Main {
         game.load.script('styles', './lib/styles.js');
         game.load.script('utils', './lib/utils.js');
 
-        // text font manager
-        game.load.script('WebFont', './vendor/webfontloader.js');
-
         game.load.image('background', './assets/images/background.png');
         game.load.image('loading', './assets/images/progress-bar.png');
         game.load.image('brand', './assets/images/logo.png');

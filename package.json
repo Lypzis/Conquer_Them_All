@@ -52,6 +52,7 @@
     "electron-compile": "^6.4.2",
     "electron-squirrel-startup": "^1.0.0",
     "phaser-ce": "^2.10.2",
+    "phaser-navmesh": "^1.1.1",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {

@@ -85,21 +85,4 @@ const styles = {
         }
     },
 
-    // merges a modifier style object to the base style object then return it
-    assignModifier(modifier, base) {
-        return Object.assign(modifier, base);
-    }
-
 }
-
-/////////////////////////////////////
-// Debbug tests
-/*
-const test = new styles();
-
-let styled = test.navItem();
-
-console.log(styled.another);
-console.log(styled.transform[2]);
-console.log(styled.transform[0]);
-*/
