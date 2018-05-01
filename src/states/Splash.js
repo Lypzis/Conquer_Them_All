@@ -95,7 +95,7 @@ class Splash {
         // add background music and make it play in loop
         musicPlayer = game.add.audio('fear_and_wonder');
         musicPlayer.loop = true;
-        musicPlayer.play();
+        //musicPlayer.play();
     }
 
     create() {
