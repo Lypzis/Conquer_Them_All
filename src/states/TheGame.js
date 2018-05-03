@@ -34,7 +34,7 @@ class TheGame {
 
         ///////////////////////////////////////////////////////////////////////////////
         // NavMesh debug test
-        this.navigation = navMeshPlugin.buildMeshFromTiled(this.map, 'navMesh', 5);
+        this.navigation = navMeshPlugin.buildMeshFromTiled(this.map, 'navmesh', 5);
         console.log(this.navigation);
 
 
