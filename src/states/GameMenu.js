@@ -1,12 +1,12 @@
+import { ipcRenderer } from "electron";
+
 //////////////////////////////////////////////////////////////////////////////
-/*
- * @by: Lypzis Team
+/** 
+ * @by: Lypzis Entertainment
  * @author: Victor V. Piccoli
  * @doc: Main Menu Screen of the Game
 */
 //////////////////////////////////////////////////////////////////////////////
-
-import { ipcRenderer } from "electron";
 
 class GameMenu {
 

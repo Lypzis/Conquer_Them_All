@@ -1,15 +1,15 @@
 //////////////////////////////////////////////////////////////////////////////
-/*
- * @by: Lypzis Team
- * @autor: Victor V. Piccoli
- * @doc: Global styles object, each expression returns an style object
+/** 
+ * @by: Lypzis Entertainment
+ * @author: Victor V. Piccoli
+ * @doc: Global styles object, each method returns an style object
 */
 //////////////////////////////////////////////////////////////////////////////
-
 const styles = {
 
     /////////////////////////////////////////////////////////////////////////
-    // For lighter backgrounds
+    // Lighter backgrounds font style
+    /** - Turn the header text to a dark color. */
     darkHeader() {
         return {
             font: 'bold 65pt SkydomeGlory',
@@ -18,6 +18,10 @@ const styles = {
         }
     },
 
+    /**
+     * - Turn the navItems text to a dark color.
+     * - Give color change effect of hover over an item.
+     */
     navDarkItem() {
         return {
             base: {
@@ -40,7 +44,8 @@ const styles = {
     },
 
     //////////////////////////////////////////////////////////////////////
-    // For darker backgrounds
+    // Darker backgrounds font style
+    /** - Turn the header text to a light color. */
     lightHeader() {
         return {
             font: 'bold 65pt SkydomeGlory',
@@ -49,6 +54,10 @@ const styles = {
         }
     },
 
+    /**
+     * - Turn the navItems text to a light color.
+     * - Give color change effect of hover over an item.
+     */
     navLightItem() {
         return {
             base: {
@@ -70,7 +79,8 @@ const styles = {
     },
 
     ///////////////////////////////////////////////////////////////////////
-    // Item position
+    // Items alignment
+    /** - Place item to the center X position.*/
     centerItem() {
         return {
             startY: 165,
@@ -78,6 +88,7 @@ const styles = {
         }
     },
 
+    /** - Place item to the left. */
     leftItem() {
         return {
             startY: 165,
