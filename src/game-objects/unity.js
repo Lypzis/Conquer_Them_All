@@ -7,52 +7,45 @@ class Unity extends Phaser.Sprite {
         this.currentTarget = null;
 
         // Enable arcade physics for moving with velocity
-        this.game.physics.arcade.enable(this);
+        game.physics.arcade.enable(this);
     }
 
-   /* goTo(targetPoint) {
+    /* goTo(targetPoint) {
+         // Find a path to the target
+         this.path = this.navMesh.findPath(this.position, targetPoint);
+ 
+ 
+ 
+         console.log(this.position);
+         console.log(targetPoint);
+         console.log(this.path);
+         console.log(this.navMesh)
+ 
+         
+ 
+         // If there is a valid path, grab the first point from the path and set it as the target
+         if (this.path && this.path.length > 0){ 
+             this.currentTarget = this.path.shift();
+             console.log(this.currentTarget);
+         }
+         else{ 
+             this.currentTarget = null;
+         }
+ 
+     } */
+    goTo() {
         // Find a path to the target
-        this.path = this.navMesh.findPath(this.position, targetPoint);
 
-
-
-        console.log(this.position);
-        console.log(targetPoint);
-        console.log(this.path);
-        console.log(this.navMesh)
 
         
+            this.body.velocity.x += 32;
+            //this.x += 32;
+            //this.body.velocity.x = 0 
 
-        // If there is a valid path, grab the first point from the path and set it as the target
-        if (this.path && this.path.length > 0){ 
-            this.currentTarget = this.path.shift();
-            console.log(this.currentTarget);
-        }
-        else{ 
-            this.currentTarget = null;
-        }
-
-    } */
-    goTo(path) {
-        // Find a path to the target
-
-        this.path = path;
-
-        console.log(path);
-        console.log(this.path);
-
-        
-
-        // If there is a valid path, grab the first point from the path and set it as the target
-        if (this.path && this.path.length > 0){ 
-            this.currentTarget = this.path.shift();
-            console.log(this.currentTarget);
-        }
-        else{ 
-            this.currentTarget = null;
-        }
 
     }
+}
+    /*
 
     update() {
         // Stop any previous movement
@@ -60,7 +53,6 @@ class Unity extends Phaser.Sprite {
 
         // If we currently have a valid target location
         if (this.currentTarget) {
-            console.log(this.currentTarget);
             // Move towards the target
             this._moveTowards(this.currentTarget);
 
@@ -89,4 +81,6 @@ class Unity extends Phaser.Sprite {
     }
 }
 
+
   //export default FollowerSprite;
+*/
