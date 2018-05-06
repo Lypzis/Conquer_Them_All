@@ -8,8 +8,6 @@ import PhaserNavMesh from 'phaser-navmesh';
 */
 //////////////////////////////////////////////////////////////////////////////
 
-import PhaserNavMesh from 'phaser-navmesh';
-
 const navMeshPlugin = game.plugins.add(PhaserNavMesh);
 const p1 = new Phaser.Point(30, 30);
 const p2 = new Phaser.Point(60, 60);
@@ -27,21 +25,26 @@ class TheGame {
         this.map = game.add.tilemap('tilemap');
         this.map.addTilesetImage('tableGround-tile');
 
-        this.layer = this.map.createLayer(0);
-        this.layer.fixedToCamera = false;
+        this.layer = this.map.createLayer(0); //.resizeWorld();
 
-        this.layer.x = this.world.centerX - 357; // needs position improvement;
-        this.layer.y = this.world.centerY + 16;
+        this.map.setCollision([2, 3], true, this.layer);
 
-        this.map.setCollisionBetween(1,3);
+        this.start = this.map.objects['StartingPointPlayer'][0];
+
+        //this.layer.x = this.world.centerX - 357; // needs position improvement;
+        //this.layer.y = this.world.centerY + 16;
+
+        //this.map.setCollisionBetween(1,3);
         ///////////////////////////////////////////////////////////////////////////////////
 
-        console.log(this.layer.x);
-        console.log(this.layer.y);
+        //console.log(this.layer.x);
+        //console.log(this.layer.y);
         ///////////////////////////////////////////////////////////////////////////////
 
-        this.unity = new Unity(game, this.layer.x + 32, this.layer.y + 32, 'warrior-icon');
-        this.unity2 = new Unity(game, this.layer.x + 32, this.layer.y + 96, 'warrior-icon');
+        this.unity = new Unity(game, this.start.x , this.start.y , 'warrior-icon');
+        this.unity2 = new Unity(game, this.start.x , this.start.y+32 , 'warrior-icon');
+
+
     }
 
     onClick(){
@@ -54,7 +57,8 @@ class TheGame {
             
             // Tell the follower sprite to find its path to the target
             this.unity.goTo();
-        
+            this.unity2.goTo();
+
         });
     }
 
@@ -63,6 +67,11 @@ class TheGame {
         this.init();
         this.onClick();
 
+    }
+
+    update(){
+        this.physics.arcade.collide(this.unity, this.layer);
+        this.physics.arcade.collide(this.unity2, this.layer);
     }
 
 }
