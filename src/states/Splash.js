@@ -1,12 +1,12 @@
-//////////////////////////////////////////////////////////////////////////////
-/*
- * @by: Lypzis Team
- * @author: Victor V. Piccoli
- * @doc: Splash/temporary screen to preload scripts, images, sounds and fonts
-*/
-//////////////////////////////////////////////////////////////////////////////
-
 import WebFont from 'webfontloader';
+
+////////////////////////////////////////////////////////////////////////////////////////////
+/** 
+ * @by: Lypzis Entertainment
+ * @author: Victor V. Piccoli
+ * @doc: Splash/temporary screen to preload state scripts, images, objects, sounds and fonts
+*/
+////////////////////////////////////////////////////////////////////////////////////////////
 
 class Splash {
 
@@ -29,7 +29,7 @@ class Splash {
             'Options'
         ];
 
-        states.forEach( (state) => game.load.script(`${state}`, `./states/${state}.js`) );
+        states.forEach( state => game.load.script(`${state}`, `./states/${state}.js`) );
     }
 
     loadBgm() {
@@ -38,7 +38,7 @@ class Splash {
             'fear_and_wonder'
         ];
 
-        audios.forEach( (audio) => game.load.audio(`${audio}`, `./assets/bgm/${audio}.mp3`) );
+        audios.forEach( audio => game.load.audio(`${audio}`, `./assets/bgm/${audio}.mp3`) );
     }
 
     loadImages() {
@@ -46,10 +46,11 @@ class Splash {
             'menu-bg',
             'options-bg',
             'quit-bg',
-            'tableGround-tile'
+            'tableGround-tile',
+            'warrior-icon'
         ];
 
-        images.forEach( (image) => game.load.image(`${image}`, `./assets/images/${image}.png`) );
+        images.forEach( image => game.load.image(`${image}`, `./assets/images/${image}.png`) );
     }
 
     // loads a custom font
@@ -66,6 +67,14 @@ class Splash {
         game.load.tilemap('tilemap', './assets/maps/tableGround-map.json', null, Phaser.Tilemap.TILED_JSON);
     }
 
+    loadGameObjects(){
+        const objects = [
+            'unity'
+        ];
+
+        objects.forEach( object => game.load.script(`${object}`, `./game-objects/${object}.js`) );
+    }
+
     preload() {
         // load sprites to the stage
         game.add.sprite(0, 0, 'background');
@@ -80,6 +89,7 @@ class Splash {
         this.loadFonts();
         this.loadBgm();
         this.loadMaps();
+        this.loadGameObjects();
     }
 
     // enqueue states to the game

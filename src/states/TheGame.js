@@ -1,6 +1,8 @@
+import PhaserNavMesh from 'phaser-navmesh';
+
 //////////////////////////////////////////////////////////////////////////////
-/*
- * @by: Lypzis Team
+/** 
+ * @by: Lypzis Entertainment
  * @author: Victor V. Piccoli
  * @doc: Load a level into the game Window ( No levels yet )
 */
@@ -28,58 +30,42 @@ class TheGame {
         this.layer = this.map.createLayer(0);
         this.layer.fixedToCamera = false;
 
-        this.layer.x = this.world.centerX - 325; // needs position improvement;
-        this.layer.y = this.world.centerY + 80;
+        this.layer.x = this.world.centerX - 357; // needs position improvement;
+        this.layer.y = this.world.centerY + 16;
+
+        this.map.setCollisionBetween(1,3);
+        ///////////////////////////////////////////////////////////////////////////////////
+
+        console.log(this.layer.x);
+        console.log(this.layer.y);
         ///////////////////////////////////////////////////////////////////////////////
 
-        ///////////////////////////////////////////////////////////////////////////////
-        // NavMesh debug test
-        this.navigation = navMeshPlugin.buildMeshFromTiled(this.map, 'navmesh', 5);
-        console.log(this.navigation);
+        this.unity = new Unity(game, this.layer.x + 32, this.layer.y + 32, 'warrior-icon');
+        this.unity2 = new Unity(game, this.layer.x + 32, this.layer.y + 96, 'warrior-icon');
+    }
 
+    onClick(){
+        // On click
+        game.input.onDown.add(() => {
+            // Get the location of the mouse
+            //const target = game.input.activePointer.position.clone();
 
-        this.path = this.navigation.findPath(p1, p2);
-        console.log(p1 + ' e ' + p2);
-        console.log(this.path);
-
-
-        this.navigation.enableDebug(true); // Creates a Phaser.Graphics overlay on top of the screen
-        this.navigation.debugClear(); // Clears the overlay
-        // Visualize the underlying navmesh
-        this.navigation.debugDrawMesh({
-            drawCentroid: true, drawBounds: false, drawNeighbors: true, drawPortals: true
+            
+            
+            // Tell the follower sprite to find its path to the target
+            this.unity.goTo();
+        
         });
-        /*
-        this.navigation.enableDebug();
-        this.navigation.debugClear();
-
-        this.navigation.debugDrawMesh({
-            drawCentroid: true,
-            drawBounds: false,
-            drawNeighbors: true,
-            drawPortals: true
-        });
-
-        this.path = this.navigation.findPath(p1, p2, {
-            drawPolyPath: true,
-            drawFinalPath: true
-        }); 
-
-        console.log(this.path); */
-        /////////////////////////////////////////////////////////////////////////////
-
     }
 
     create() {
 
         this.init();
-
-        //console.log(this.map);
-        //console.log(this.layer);
-
-        //console.log(this.layer.x);
-        //console.log(this.layer.y);
+        this.onClick();
 
     }
 
 }
+
+
+

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
-/*
- * @by: Lypzis Team
+/** 
+ * @by: Lypzis Entertainment
  * @author: Victor V. Piccoli
  * @doc: Options window of the Game
 */
