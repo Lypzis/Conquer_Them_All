@@ -21,30 +21,43 @@ class TheGame {
         utils.navItemSetter('<- Back', 1, 90, target => game.state.start('GameMenu'), null, true);
 
         ////////////////////////////////////////////////////////////////////////////////
-        // Creates the table
-        this.map = game.add.tilemap('tilemap');
-        this.map.addTilesetImage('tableGround-tile');
+        // Creates the table, each level should receive a different map(consideration of levels classes)
+        // and then charge the level in this class
+        maps.loadMap('tilemap');
 
-        this.layer = this.map.createLayer(0); //.resizeWorld();
+        
+        //////////////////////////////////////////////////////////////////////////////////////////
+        // tests
 
-        this.map.setCollision([2, 3], true, this.layer);
+        this.playerStartPoint = maps.getPlayerStartPoint();
 
-        this.start = this.map.objects['StartingPointPlayer'][0];
+        //this.warriors = utils.generateTableUnities('warrior-icon', 2);
 
-        //this.layer.x = this.world.centerX - 357; // needs position improvement;
-        //this.layer.y = this.world.centerY + 16;
+        console.log(this.playerStartPoint);
 
-        //this.map.setCollisionBetween(1,3);
-        ///////////////////////////////////////////////////////////////////////////////////
+        this.iterator = () => {
+            let squares = [];
+            let square = this.playerStartPoint.width/5;
 
-        //console.log(this.layer.x);
-        //console.log(this.layer.y);
-        ///////////////////////////////////////////////////////////////////////////////
+            for (let i = 0; i < 5 ; ++i){
+                let item = i*square;
+                squares.push(item);
+            }
 
-        this.unity = new Unity(game, this.start.x , this.start.y , 'warrior-icon');
-        this.unity2 = new Unity(game, this.start.x , this.start.y+32 , 'warrior-icon');
+            return squares;
+        };
+        console.log(this.playerStartPoint.x + ', ' + this.playerStartPoint.y);
 
 
+
+        // unities
+        this.unity = new Unity(game, this.playerStartPoint.x , this.playerStartPoint.y , 'warrior-icon');
+        this.unity2 = new Unity(game, this.playerStartPoint.x , this.playerStartPoint.y+32 , 'warrior-icon');
+
+        this.unities = [this.unity, this.unity2]; //create generator in unity class
+
+        // end of tests
+        ///////////////////////////////////////////////////////////////////////////////////////////
     }
 
     onClick(){
@@ -56,6 +69,7 @@ class TheGame {
             
             
             // Tell the follower sprite to find its path to the target
+            // for movement test
             this.unity.goTo();
             this.unity2.goTo();
 
@@ -70,8 +84,10 @@ class TheGame {
     }
 
     update(){
-        this.physics.arcade.collide(this.unity, this.layer);
-        this.physics.arcade.collide(this.unity2, this.layer);
+
+        // check for collisions with tablemap obstacles
+        utils.setUnityMapCollision(this.unities);
+
     }
 
 }

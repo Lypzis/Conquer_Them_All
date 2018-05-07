@@ -13,6 +13,7 @@ class Main {
     preload() {
         game.load.script('styles', './lib/styles.js');
         game.load.script('utils', './lib/utils.js');
+        game.load.script('maps', './lib/maps.js');
 
         game.load.image('background', './assets/images/background.png');
         game.load.image('loading', './assets/images/progress-bar.png');
@@ -28,7 +29,7 @@ class Main {
 
 ///////////////////////////////////////////////////////////////////////
 // Initialize Phaser application
-const game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
+const game = new Phaser.Game(832, 608, Phaser.AUTO, 'game');
 
 const gameOptions = {
     playSound: true,

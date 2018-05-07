@@ -8,8 +8,10 @@
 const styles = {
 
     /////////////////////////////////////////////////////////////////////////
-    // Lighter backgrounds font style
-    /** - Turn the header text to a dark color. */
+    // For lighter backgrounds font style
+    /** - Turn the header text to a dark color. 
+     * @returns : Dark header style.
+    */
     darkHeader() {
         return {
             font: 'bold 65pt SkydomeGlory',
@@ -19,8 +21,9 @@ const styles = {
     },
 
     /**
-     * - Turn the navItems text to a dark color.
+     * - Turn the navItem text to a dark color.
      * - Give color change effect of hover over an item.
+     * @returns : Dark navigation item style.
      */
     navDarkItem() {
         return {
@@ -44,8 +47,10 @@ const styles = {
     },
 
     //////////////////////////////////////////////////////////////////////
-    // Darker backgrounds font style
-    /** - Turn the header text to a light color. */
+    // For darker backgrounds font style
+    /** - Turn the header text to a light color. 
+     * @returns : Light header style.
+    */
     lightHeader() {
         return {
             font: 'bold 65pt SkydomeGlory',
@@ -55,8 +60,9 @@ const styles = {
     },
 
     /**
-     * - Turn the navItems text to a light color.
+     * - Turn the navItem text to a light color.
      * - Give color change effect of hover over an item.
+     * @returns : Light navigation item style.
      */
     navLightItem() {
         return {
@@ -80,7 +86,9 @@ const styles = {
 
     ///////////////////////////////////////////////////////////////////////
     // Items alignment
-    /** - Place item to the center X position.*/
+    /** - Place item to the center X position.
+     * @returns : Center position style.
+    */
     centerItem() {
         return {
             startY: 165,
@@ -88,7 +96,9 @@ const styles = {
         }
     },
 
-    /** - Place item to the left. */
+    /** - Place item to the left. 
+     * @returns : Left position style.
+    */
     leftItem() {
         return {
             startY: 165,
