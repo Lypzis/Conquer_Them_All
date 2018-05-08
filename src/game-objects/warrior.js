@@ -1,0 +1,3 @@
+class warrior extends Unity {
+    
+}

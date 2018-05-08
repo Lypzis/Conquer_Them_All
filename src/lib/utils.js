@@ -20,27 +20,48 @@ const utils = {
     },
 
     ///////////////////////////////////////////////////////////////////
-    // Unities factory
-    generateTableUnities(unityIconKey, quantity){
+    /** Unities factory
+     * - Generate unities and places them in the table.
+    * @param {*} unityIconKey : key(name) of the image-icon. 
+    * @param {*} quantity : the quantity to generate, must be less or equals 5.
+    * @param {*} columnNumber : the number of the column to place, 0 to 4 (5 columns).
+    * @returns : Array of unities objects.
+    */
+    generateTableUnities(unityIconKey, quantity, columnNumber) {
         const playerStartPoint = maps.getPlayerStartPoint();
-        
-        const iterator = () => {
-            const squares = [];
-            const square = this.playerStartPoint.width/5;
+        const points = this.squareSizeVerifier(playerStartPoint);
+        const unities = [];
 
-            for (let i = 0; i < 5 ; ++i){
-                let item = i*square;
-                squares.push(item);
+        let x = playerStartPoint.x;
+        let y = playerStartPoint.y;
+
+        if (quantity <= 5 && columnNumber < 5) {
+            for (let i = 0; i < quantity; ++i) {
+                let unity = new Unity(game, x + points[columnNumber], y + points[i], `${unityIconKey}`);
+
+                unities.push(unity);
             }
+        } else {
+            console.log('Invalid quantity or column! must be within the square bounds of the starting point.');
+        }
 
-            return squares;
-        }; 
-        
-        const points = iterator();
-        //let randomPointX = xPlayerStart plus a random point of points 
-        //let randomPointY = yPlayerStart plus a random point of points 
+        return unities;
+    },
 
+    /** - Calculates the size of the squares of the starting point area. 
+     * @param {*} playerStartPoint : Valid starting placement object area.
+     * @returns : squares array.
+    */
+    squareSizeVerifier(playerStartPoint) {
+        const square = playerStartPoint.width / 5;
+        const squares = [];
 
+        for (let i = 0; i < 5; ++i) {
+            let item = i * square;
+            squares.push(item);
+        }
+
+        return squares;
     },
 
     /** - Set unities to collide with the current map layer. 

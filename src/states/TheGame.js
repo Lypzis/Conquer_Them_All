@@ -25,39 +25,8 @@ class TheGame {
         // and then charge the level in this class
         maps.loadMap('tilemap');
 
-        
-        //////////////////////////////////////////////////////////////////////////////////////////
-        // tests
-
-        this.playerStartPoint = maps.getPlayerStartPoint();
-
-        //this.warriors = utils.generateTableUnities('warrior-icon', 2);
-
-        console.log(this.playerStartPoint);
-
-        this.iterator = () => {
-            let squares = [];
-            let square = this.playerStartPoint.width/5;
-
-            for (let i = 0; i < 5 ; ++i){
-                let item = i*square;
-                squares.push(item);
-            }
-
-            return squares;
-        };
-        console.log(this.playerStartPoint.x + ', ' + this.playerStartPoint.y);
-
-
-
-        // unities
-        this.unity = new Unity(game, this.playerStartPoint.x , this.playerStartPoint.y , 'warrior-icon');
-        this.unity2 = new Unity(game, this.playerStartPoint.x , this.playerStartPoint.y+32 , 'warrior-icon');
-
-        this.unities = [this.unity, this.unity2]; //create generator in unity class
-
-        // end of tests
-        ///////////////////////////////////////////////////////////////////////////////////////////
+        this.warriors = utils.generateTableUnities('warrior-icon', 4, 0);
+        //this.warriors2 = utils.generateTableUnities('warrior-icon', 3, 1);
     }
 
     onClick(){
@@ -70,8 +39,8 @@ class TheGame {
             
             // Tell the follower sprite to find its path to the target
             // for movement test
-            this.unity.goTo();
-            this.unity2.goTo();
+            this.warriors[0].goTo();
+            this.warriors[1].goTo();
 
         });
     }
@@ -86,7 +55,7 @@ class TheGame {
     update(){
 
         // check for collisions with tablemap obstacles
-        utils.setUnityMapCollision(this.unities);
+        utils.setUnityMapCollision(this.warriors);
 
     }
 
