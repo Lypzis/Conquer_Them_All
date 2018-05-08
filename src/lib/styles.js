@@ -1,15 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
-/*
- * @by: Lypzis Team
- * @autor: Victor V. Piccoli
- * @doc: Global styles object, each expression returns an style object
+/** 
+ * @by: Lypzis Entertainment
+ * @author: Victor V. Piccoli
+ * @doc: Global styles object, each method returns an style object
 */
 //////////////////////////////////////////////////////////////////////////////
-
 const styles = {
 
     /////////////////////////////////////////////////////////////////////////
-    // For lighter backgrounds
+    // For lighter backgrounds font style
+    /** - Turn the header text to a dark color. 
+     * @returns : Dark header style.
+    */
     darkHeader() {
         return {
             font: 'bold 65pt SkydomeGlory',
@@ -18,6 +20,11 @@ const styles = {
         }
     },
 
+    /**
+     * - Turn the navItem text to a dark color.
+     * - Give color change effect of hover over an item.
+     * @returns : Dark navigation item style.
+     */
     navDarkItem() {
         return {
             base: {
@@ -40,7 +47,10 @@ const styles = {
     },
 
     //////////////////////////////////////////////////////////////////////
-    // For darker backgrounds
+    // For darker backgrounds font style
+    /** - Turn the header text to a light color. 
+     * @returns : Light header style.
+    */
     lightHeader() {
         return {
             font: 'bold 65pt SkydomeGlory',
@@ -49,6 +59,11 @@ const styles = {
         }
     },
 
+    /**
+     * - Turn the navItem text to a light color.
+     * - Give color change effect of hover over an item.
+     * @returns : Light navigation item style.
+     */
     navLightItem() {
         return {
             base: {
@@ -70,7 +85,10 @@ const styles = {
     },
 
     ///////////////////////////////////////////////////////////////////////
-    // Item position
+    // Items alignment
+    /** - Place item to the center X position.
+     * @returns : Center position style.
+    */
     centerItem() {
         return {
             startY: 165,
@@ -78,6 +96,9 @@ const styles = {
         }
     },
 
+    /** - Place item to the left. 
+     * @returns : Left position style.
+    */
     leftItem() {
         return {
             startY: 165,
@@ -85,21 +106,4 @@ const styles = {
         }
     },
 
-    // merges a modifier style object to the base style object then return it
-    assignModifier(modifier, base) {
-        return Object.assign(modifier, base);
-    }
-
 }
-
-/////////////////////////////////////
-// Debbug tests
-/*
-const test = new styles();
-
-let styled = test.navItem();
-
-console.log(styled.another);
-console.log(styled.transform[2]);
-console.log(styled.transform[0]);
-*/

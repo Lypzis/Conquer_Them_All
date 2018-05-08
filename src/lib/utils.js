@@ -1,26 +1,71 @@
-//////////////////////////////////////////////////////////////////////////
-/*
- * @by: Lypzis Team
- * @autor: Victor V. Piccoli
+//////////////////////////////////////////////////////////////////////////////
+/** 
+ * @by: Lypzis Entertainment
+ * @author: Victor V. Piccoli
  * @doc: Global utility object, contains generic functions
 */
 //////////////////////////////////////////////////////////////////////////
 
 const utils = {
-    // receives array of objects and centralizes each one of them
+
+
+
+    /** - Receives array of objects and centralizes each one of them. 
+     * @param {*} objects : Array of objects.
+    */
     centerGameObjects(objects) {
         objects.forEach(object => {
             object.anchor.setTo(0.5);
         });
     },
 
-    // Menu buttons/options factory
-    navItemSetter(text,  order, padding, callback, revert, center){
+    ///////////////////////////////////////////////////////////////////
+    // Unities factory
+    generateTableUnities(unityIconKey, quantity){
+        const playerStartPoint = maps.getPlayerStartPoint();
+        
+        const iterator = () => {
+            const squares = [];
+            const square = this.playerStartPoint.width/5;
+
+            for (let i = 0; i < 5 ; ++i){
+                let item = i*square;
+                squares.push(item);
+            }
+
+            return squares;
+        }; 
+        
+        const points = iterator();
+        //let randomPointX = xPlayerStart plus a random point of points 
+        //let randomPointY = yPlayerStart plus a random point of points 
+
+
+    },
+
+    /** - Set unities to collide with the current map layer. 
+     * @param {*} unities : Array of game-objects.
+    */
+    setUnityMapCollision(unities) {
+        unities.forEach(unity => game.physics.arcade.collide(unity, maps.getLayer()));
+    },
+
+    ///////////////////////////////////////////////////////////////////
+    /** Menu navigation items factory
+     * - Overall setting of a navigation item.
+    * @param {*} text : navItem name displayed. 
+    * @param {*} order : the order it will appear, from top to bottom.
+    * @param {*} padding : space between a previous navItem from the current.
+    * @param {*} callback : function called when the button is clicked.
+    * @param {*} revert : (optional) elements will white(false or null) else  black(true).
+    * @param {*} center : (optional) elements align left(false or null) else center(true). 
+    */
+    navItemSetter(text, order, padding, callback, revert, center) {
         let navMenuStyle;
         let navMenuPosition;
         let anchor;
 
-        if (order <= 0){
+        if (order <= 0) {
             order = 1;
         }
 
@@ -31,7 +76,7 @@ const utils = {
         if (center) {
             navMenuPosition = styles.centerItem();
             anchor = 0.5;
-        } else{ 
+        } else {
             navMenuPosition = styles.leftItem();
             anchor = 0.0;
         }
@@ -42,18 +87,16 @@ const utils = {
         let defaultStyle = navMenuStyle.default;
         let onHoverStyle = navMenuStyle.onHover;
         let baseStyle = navMenuStyle.base;
-        
+
         // automatically set the y position of the option items, so it appends them vertically after each other 
-        const txt = game.add.text(x, (order * padding) + y, text, styles.assignModifier( defaultStyle, baseStyle ));
+        const txt = game.add.text(x, (order * padding) + y, text, Object.assign(defaultStyle, baseStyle));
 
         txt.inputEnabled = true; // makes the item clickable
         txt.events.onInputUp.add(callback); // on click, execute the received function
-        txt.events.onInputOver.add( (target) => target.setStyle( styles.assignModifier( onHoverStyle, baseStyle )));
-        txt.events.onInputOut.add( (target) => target.setStyle( styles.assignModifier( defaultStyle, baseStyle )));
+        txt.events.onInputOver.add(target => target.setStyle(Object.assign(onHoverStyle, baseStyle)));
+        txt.events.onInputOut.add(target => target.setStyle(Object.assign(defaultStyle, baseStyle)));
         txt.anchor.setTo(anchor);
-        
+
     }
-    
+
 }
-
-

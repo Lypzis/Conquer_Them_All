@@ -1,21 +1,10 @@
-////////////////////////////////////////////////////////////////////////
-/*
- * @by: Lypzis Team
+//////////////////////////////////////////////////////////////////////////////
+/** 
+ * @by: Lypzis Entertainment
  * @author: Victor V. Piccoli
  * @doc: Bootstraper of the Phaser application
 */
 ////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////
-// Initialize Phaser application
-const game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
-
-const gameOptions = {
-    playSound: true,
-    playMusic: true
-}
-
-let musicPlayer;
 
 ///////////////////////////////////////////////////////////////////////
 // Main State Configuration
@@ -24,9 +13,7 @@ class Main {
     preload() {
         game.load.script('styles', './lib/styles.js');
         game.load.script('utils', './lib/utils.js');
-
-        // text font manager
-        game.load.script('WebFont', './vendor/webfontloader.js');
+        game.load.script('maps', './lib/maps.js');
 
         game.load.image('background', './assets/images/background.png');
         game.load.image('loading', './assets/images/progress-bar.png');
@@ -35,10 +22,21 @@ class Main {
     }
 
     create() {
-        game.state.add('Splash', new Splash());
+        game.state.add('Splash', Splash);
         game.state.start('Splash');
     }
 }
+
+///////////////////////////////////////////////////////////////////////
+// Initialize Phaser application
+const game = new Phaser.Game(832, 608, Phaser.AUTO, 'game');
+
+const gameOptions = {
+    playSound: true,
+    playMusic: true
+}
+
+let musicPlayer;
 
 // Adds the main configuration to the application and starts it
 game.state.add('Main', Main);
