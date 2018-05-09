@@ -29,7 +29,7 @@ const utils = {
     */
     generateTableUnities(unityIconKey, quantity, columnNumber) {
         const playerStartPoint = maps.getPlayerStartPoint();
-        const points = this.squareSizeVerifier(playerStartPoint);
+        const points = maps.squareSizeSum();
         const unities = [];
 
         let x = playerStartPoint.x;
@@ -46,22 +46,6 @@ const utils = {
         }
 
         return unities;
-    },
-
-    /** - Calculates the size of the squares of the starting point area. 
-     * @param {*} playerStartPoint : Valid starting placement object area.
-     * @returns : squares array.
-    */
-    squareSizeVerifier(playerStartPoint) {
-        const square = playerStartPoint.width / 5;
-        const squares = [];
-
-        for (let i = 0; i < 5; ++i) {
-            let item = i * square;
-            squares.push(item);
-        }
-
-        return squares;
     },
 
     /** - Set unities to collide with the current map layer. 
@@ -113,11 +97,12 @@ const utils = {
         const txt = game.add.text(x, (order * padding) + y, text, Object.assign(defaultStyle, baseStyle));
 
         txt.inputEnabled = true; // makes the item clickable
+
         txt.events.onInputUp.add(callback); // on click, execute the received function
         txt.events.onInputOver.add(target => target.setStyle(Object.assign(onHoverStyle, baseStyle)));
         txt.events.onInputOut.add(target => target.setStyle(Object.assign(defaultStyle, baseStyle)));
+        
         txt.anchor.setTo(anchor);
-
     }
 
 }

@@ -10,59 +10,39 @@ class Unity extends Phaser.Sprite {
     constructor(game, x, y, unityKey) {
         super(game, x, y, unityKey);
         this.game.add.existing(this);
-        this.path = null;
-        this.currentTarget = null;
+        this.active = false;
+        this.inputEnabled = true;
+
+        this.size = maps.getSquareSize();
 
         // Enable arcade physics for moving with velocity
         game.physics.arcade.enable(this);
+
+        this.events.onInputUp.add(target => {
+            target.active = true;
+        });
+
+
     }
 
     goTo() {
 
+        if (this.active) {
             this.body.velocity.x += 32;
+            this.active = false;
+            this.inputEnabled = false;
+        }
 
     }
-
-    update(){
-
-    }
-}
-    /*
 
     update() {
-        // Stop any previous movement
-        this.body.velocity.set(0);
 
-        // If we currently have a valid target location
-        if (this.currentTarget) {
-            // Move towards the target
-            this._moveTowards(this.currentTarget);
+        this.index = maps.getLayerIndex();
+        this.positionX = game.math.snapToFloor(Math.floor(this.x), this.size) / this.size;
+        this.positionY = game.math.snapToFloor(Math.floor(this.y), this.size) / this.size;
 
-            // Check if we have reached the current target (within a fudge factor)
-            const d = this.position.distance(this.currentTarget);
-            if (d < 5) {
-                // If there is path left, grab the next point. Otherwise, null the target.
-                if (this.path.length > 0) this.currentTarget = this.path.shift();
-                else this.currentTarget = null;
-            }
-        }
+
     }
 
-    _moveTowards(position, maxSpeed = 200) {
-        const angle = this.position.angle(position);
 
-        // Move towards target
-        const distance = this.position.distance(position);
-        const targetSpeed = distance / this.game.time.physicsElapsed;
-        const magnitude = Math.min(maxSpeed, targetSpeed);
-        this.body.velocity.x = magnitude * Math.cos(angle);
-        this.body.velocity.y = magnitude * Math.sin(angle);
-
-        // Rotate towards target
-        //this.rotation = angle + Math.PI / 2;
-    }
 }
-
-
-  //export default FollowerSprite;
-*/

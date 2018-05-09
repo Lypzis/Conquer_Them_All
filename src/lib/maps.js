@@ -35,12 +35,39 @@ const maps = {
         return this.layer;
     },
 
+    getLayerIndex() {
+        return this.layer.index;
+    },
+
+    /**
+     * - Get the size of one of the table squares
+     *  @returns : Valid starting placement object area.
+     */
+    getSquareSize(){
+        return this.startPlayerPoint.width/5;
+    },
+
     /**
      * - Get the player starting point in the map.
      * @returns : The player's pieces starting position. 
      */
     getPlayerStartPoint() {
         return this.startPlayerPoint;
+    },
+
+    /** - Increase each next value with the square size * index, starting from 0 to 4(5 values). 
+     * @returns : squares array.
+    */
+    squareSizeSum() {
+        const square = this.getSquareSize();
+        const squares = [];
+
+        for (let i = 0; i < 5; ++i) {
+            let item = i * square;
+            squares.push(item);
+        }
+
+        return squares;
     }
 
 }

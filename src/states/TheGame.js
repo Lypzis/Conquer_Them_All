@@ -27,22 +27,29 @@ class TheGame {
 
         this.warriors = utils.generateTableUnities('warrior-icon', 4, 0);
         //this.warriors2 = utils.generateTableUnities('warrior-icon', 3, 1);
+
+        this.layer = maps.getLayer();
     }
 
-    onClick(){
+    onClick() {
         // On click
         game.input.onDown.add(() => {
-            // Get the location of the mouse
-            //const target = game.input.activePointer.position.clone();
 
-            
-            
-            // Tell the follower sprite to find its path to the target
-            // for movement test
-            this.warriors[0].goTo();
-            this.warriors[1].goTo();
+            this.warriors.forEach(e => {
+                e.goTo();
+
+                //console.clear();
+                console.log('x: ' + e.positionX);
+                console.log('y: ' + e.positionY);
+                console.log('index: ' + e.index);
+                console.log('---------------------');
+
+            });
 
         });
+
+
+
     }
 
     create() {
@@ -50,9 +57,12 @@ class TheGame {
         this.init();
         this.onClick();
 
+
     }
 
-    update(){
+    update() {
+
+
 
         // check for collisions with tablemap obstacles
         utils.setUnityMapCollision(this.warriors);
