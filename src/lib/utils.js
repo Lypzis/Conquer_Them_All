@@ -48,11 +48,22 @@ const utils = {
         return unities;
     },
 
-    /** - Set unities to collide with the current map layer. 
-     * @param {*} unities : Array of game-objects.
+    /** - Checks if objects collide with the current map layer. 
+     * @param {*} unities : Array of game-objects or a single unity object.
     */
-    setUnityMapCollision(unities) {
-        unities.forEach(unity => game.physics.arcade.collide(unity, maps.getLayer()));
+    checkObjectsMapCollision(unities) {
+        if (unities.isArray) {
+            unities.forEach(unity => game.physics.arcade.collide(unity, maps.getLayer()));
+        } else {
+            game.physics.arcade.collide(unities, maps.getLayer());
+        }
+
+    },
+
+    /** - Checks if a single object is colliding with an map obstacle. 
+     * @param {*} unity : .
+    */
+    checkObjectMapCollision(unity) {
     },
 
     ///////////////////////////////////////////////////////////////////
@@ -101,7 +112,7 @@ const utils = {
         txt.events.onInputUp.add(callback); // on click, execute the received function
         txt.events.onInputOver.add(target => target.setStyle(Object.assign(onHoverStyle, baseStyle)));
         txt.events.onInputOut.add(target => target.setStyle(Object.assign(defaultStyle, baseStyle)));
-        
+
         txt.anchor.setTo(anchor);
     }
 

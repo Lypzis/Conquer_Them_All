@@ -1,5 +1,3 @@
-import PhaserNavMesh from 'phaser-navmesh';
-
 //////////////////////////////////////////////////////////////////////////////
 /** 
  * @by: Lypzis Entertainment
@@ -7,10 +5,6 @@ import PhaserNavMesh from 'phaser-navmesh';
  * @doc: Load a level into the game Window ( No levels yet )
 */
 //////////////////////////////////////////////////////////////////////////////
-
-const navMeshPlugin = game.plugins.add(PhaserNavMesh);
-const p1 = new Phaser.Point(30, 30);
-const p2 = new Phaser.Point(60, 60);
 
 class TheGame {
 
@@ -32,24 +26,22 @@ class TheGame {
     }
 
     onClick() {
+
         // On click
         game.input.onDown.add(() => {
+            this.mouseX = maps.gridCoordinateConvert(game.input.x);
+            this.mouseY = maps.gridCoordinateConvert(game.input.y);
+
+            console.log('mouse x: ' + this.mouseX);
+            console.log('mouse y: ' + this.mouseY);
 
             this.warriors.forEach(e => {
-                e.goTo();
 
-                //console.clear();
-                console.log('x: ' + e.positionX);
-                console.log('y: ' + e.positionY);
-                console.log('index: ' + e.index);
-                console.log('---------------------');
+                e.goTo(this.mouseX, this.mouseY);
 
             });
 
         });
-
-
-
     }
 
     create() {
@@ -57,15 +49,12 @@ class TheGame {
         this.init();
         this.onClick();
 
-
     }
 
     update() {
 
-
-
         // check for collisions with tablemap obstacles
-        utils.setUnityMapCollision(this.warriors);
+        utils.checkObjectsMapCollision(this.warriors);
 
     }
 

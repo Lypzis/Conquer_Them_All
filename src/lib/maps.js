@@ -23,6 +23,8 @@ const maps = {
         this.map.setCollision([2, 3], true, this.layer);
 
         this.startPlayerPoint = this.map.objects['StartingPointPlayer'][0];
+
+        this.walkableArea = this.map.objects['WalkableArea'][0];
     },
 
     //////////////////////////////////////////////////////////////////////////
@@ -53,6 +55,25 @@ const maps = {
      */
     getPlayerStartPoint() {
         return this.startPlayerPoint;
+    },
+
+    /**
+     * - Get the table moveable area.
+     * @returns : Moveable area of the table. 
+     */
+    getWalkableArea() {
+        return this.walkableArea;
+    },
+
+    /**
+     * - Receives one of the element location axis(its x or y) and convert to grid table value.
+     * @param {*} currentAxis : y or x target value.
+     * @returns : current converted grid axis coordinate. 
+     */
+    gridCoordinateConvert(currentAxis){
+        const gridSize = this.getSquareSize();
+
+        return game.math.snapToFloor(Math.floor(currentAxis), gridSize) / gridSize;    
     },
 
     /** - Increase each next value with the square size * index, starting from 0 to 4(5 values). 
