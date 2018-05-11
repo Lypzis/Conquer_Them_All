@@ -33,15 +33,14 @@ class TheGame {
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
 
             //perhaps the bug is here, try to make this be called in utils to just the currnt element instead of calling to all
-            /*this.warriors.forEach(e => {
+            this.warriors.forEach(e => {
 
                 e.goTo(this.mouseX, this.mouseY);
-                console.log(e.active);
 
             });
-            */
+            
 
-            this.warriors[0].goTo(this.mouseX, this.mouseY);
+            //this.warriors[0].goTo(this.mouseX, this.mouseY);
 
         });
     }

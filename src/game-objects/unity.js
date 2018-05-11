@@ -11,8 +11,6 @@ class Unity extends Phaser.Sprite {
         super(game, x, y, unityKey);
         this.game.add.existing(this);
 
-        //this.active = false;
-
         this.inputEnabled = true;
 
         this.gridSize = maps.getSquareSize();
@@ -21,25 +19,21 @@ class Unity extends Phaser.Sprite {
         game.physics.arcade.enable(this);
 
         this.events.onInputUp.add(target => {
-
-            target.topCorrection();   
-            target.leftCorrection();
-
-            target.bottomCorrection();
-            target.rightCorrection();
-
+            this.active = true;
         });
 
     }
 
     goTo(mouseX, mouseY) {
 
-        if (!this.moving) {
+        if (!this.moving && this.active) {
             this.mouseX = mouseX;
             this.mouseY = mouseY;
 
             this.moveX();
             this.moveY();
+
+            this.active = false;
         }
 
     }
@@ -49,14 +43,14 @@ class Unity extends Phaser.Sprite {
 
             this.body.velocity.x += 50;
             //this.inputEnabled = false;
-            this.rightCorrect = true; 
+            this.rightCorrect = true;
 
         } else if (this.mouseX < this.positionX) {
 
             this.mouseX -= 1;
             this.body.velocity.x -= 50;
             //this.inputEnabled = false;
-            this.leftCorrect = true; 
+            this.leftCorrect = true;
         }
 
     }
@@ -66,18 +60,18 @@ class Unity extends Phaser.Sprite {
 
             this.body.velocity.y += 50;
             //this.inputEnabled = false;
-            this.bottomCorrect = true; 
+            this.bottomCorrect = true;
 
         } else if (this.mouseY < this.positionY) {
 
             this.mouseY -= 1;
             this.body.velocity.y -= 50;
             //this.inputEnabled = false;
-            this.topCorrect = true; 
+            this.topCorrect = true;
+        }
     }
-}
 
-    leftCorrection(){
+    leftCorrection() {
         if (this.leftCorrect) {
             this.x += 2;
 
@@ -97,7 +91,7 @@ class Unity extends Phaser.Sprite {
         if (this.rightCorrect) {
             this.x -= 1;
 
-            this.rightCorrect = false; 
+            this.rightCorrect = false;
         }
     }
 
@@ -105,7 +99,7 @@ class Unity extends Phaser.Sprite {
         if (this.bottomCorrect) {
             this.y -= 1;
 
-            this.bottomCorrect = false; 
+            this.bottomCorrect = false;
         }
     }
 
@@ -118,28 +112,23 @@ class Unity extends Phaser.Sprite {
         // try check by column number instead of mouse position
         if (utils.checkObjectsMapCollision(this) || this.positionX == this.mouseX) {
             this.body.velocity.x = 0;
-
-            this.topCorrection();   
-            this.leftCorrection();
-            this.bottomCorrection();
-            this.rightCorrection();
         }
 
         if (utils.checkObjectsMapCollision(this) || this.positionY == this.mouseY) {
             this.body.velocity.y = 0;
-
-            this.topCorrection();   
-            this.leftCorrection();
-            this.bottomCorrection();
-            this.rightCorrection();
         }
 
-        if (this.body.velocity.y != 0 || this.body.velocity.x != 0){
+        if (this.body.velocity.y != 0 || this.body.velocity.x != 0) {
             this.inputEnabled = false;
             this.moving = true;
         } else {
             this.inputEnabled = true;
             this.moving = false;
+
+            this.topCorrection();   
+            this.leftCorrection();
+            this.bottomCorrection();
+            this.rightCorrection();
         }
 
     }
