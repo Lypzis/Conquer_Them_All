@@ -32,14 +32,16 @@ class TheGame {
             this.mouseX = maps.gridCoordinateConvert(game.input.x);
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
 
-            console.log('mouse x: ' + this.mouseX);
-            console.log('mouse y: ' + this.mouseY);
-
-            this.warriors.forEach(e => {
+            //perhaps the bug is here, try to make this be called in utils to just the currnt element instead of calling to all
+            /*this.warriors.forEach(e => {
 
                 e.goTo(this.mouseX, this.mouseY);
+                console.log(e.active);
 
             });
+            */
+
+            this.warriors[0].goTo(this.mouseX, this.mouseY);
 
         });
     }
@@ -54,7 +56,7 @@ class TheGame {
     update() {
 
         // check for collisions with tablemap obstacles
-        utils.checkObjectsMapCollision(this.warriors);
+        //utils.checkObjectsMapCollision(this.warriors);
 
     }
 

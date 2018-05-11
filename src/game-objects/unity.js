@@ -11,7 +11,7 @@ class Unity extends Phaser.Sprite {
         super(game, x, y, unityKey);
         this.game.add.existing(this);
 
-        this.active = false;
+        //this.active = false;
 
         this.inputEnabled = true;
 
@@ -21,22 +21,24 @@ class Unity extends Phaser.Sprite {
         game.physics.arcade.enable(this);
 
         this.events.onInputUp.add(target => {
-            target.active = true;
-        });
 
+            target.topCorrection();   
+            target.leftCorrection();
+
+            target.bottomCorrection();
+            target.rightCorrection();
+
+        });
 
     }
 
-    // bug when going backwards
     goTo(mouseX, mouseY) {
 
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
-
-        if (this.active) {
+        if (!this.moving) {
+            this.mouseX = mouseX;
+            this.mouseY = mouseY;
 
             this.moveX();
-
             this.moveY();
         }
 
@@ -45,65 +47,66 @@ class Unity extends Phaser.Sprite {
     moveX() {
         if (this.mouseX > this.positionX) {
 
-            //tests
-
-
             this.body.velocity.x += 50;
-            //this.active = false;
-            this.inputEnabled = false;
+            //this.inputEnabled = false;
+            this.rightCorrect = true; 
 
         } else if (this.mouseX < this.positionX) {
-            
-            // tests
-            //this.mouseX -= 1;
-            //this.width = -this.width;
 
-
+            this.mouseX -= 1;
             this.body.velocity.x -= 50;
-            //this.active = false;
-            this.inputEnabled = false;
-        } else {
-            this.active = false;
+            //this.inputEnabled = false;
+            this.leftCorrect = true; 
         }
 
     }
 
-    // find a way to only move y axis when done moving x
     moveY() {
         if (this.mouseY > this.positionY) {
 
-
-
-
             this.body.velocity.y += 50;
-            this.active = false;
-            this.inputEnabled = false;
-
-            console.log(this.positionY);
+            //this.inputEnabled = false;
+            this.bottomCorrect = true; 
 
         } else if (this.mouseY < this.positionY) {
-            
-            //tests
-            //this.mouseY -= 1; 
 
+            this.mouseY -= 1;
             this.body.velocity.y -= 50;
-            this.active = false;
-            this.inputEnabled = false;
+            //this.inputEnabled = false;
+            this.topCorrect = true; 
+    }
+}
 
-            console.log(this.positionY);
+    leftCorrection(){
+        if (this.leftCorrect) {
+            this.x += 2;
 
-        } else {
-            this.active = false;
+            this.leftCorrect = false;
         }
-
     }
 
-    positionCorrectorX(){
-        this.x -= 1;
+    topCorrection() {
+        if (this.topCorrect) {
+            this.y += 2;
+
+            this.topCorrect = false;
+        }
     }
 
-    positionCorrectorY(){
-        this.y -= 1;
+    rightCorrection() {
+        if (this.rightCorrect) {
+            this.x -= 1;
+
+            this.rightCorrect = false; 
+        }
+    }
+
+    bottomCorrection() {
+        if (this.bottomCorrect) {
+            this.y -= 1;
+
+            this.bottomCorrect = false; 
+        }
     }
 
     update() {
@@ -113,24 +116,32 @@ class Unity extends Phaser.Sprite {
         this.positionY = maps.gridCoordinateConvert(this.y);
 
         // try check by column number instead of mouse position
-
-
-        
-
-        if (utils.checkObjectsMapCollision(this) || this.positionX == this.mouseX) { 
+        if (utils.checkObjectsMapCollision(this) || this.positionX == this.mouseX) {
             this.body.velocity.x = 0;
-            this.inputEnabled = true;
-            this.positionCorrectorX();
+
+            this.topCorrection();   
+            this.leftCorrection();
+            this.bottomCorrection();
+            this.rightCorrection();
         }
 
         if (utils.checkObjectsMapCollision(this) || this.positionY == this.mouseY) {
             this.body.velocity.y = 0;
-            this.inputEnabled = true;  // change later
-            this.positionCorrectorY();
+
+            this.topCorrection();   
+            this.leftCorrection();
+            this.bottomCorrection();
+            this.rightCorrection();
         }
 
+        if (this.body.velocity.y != 0 || this.body.velocity.x != 0){
+            this.inputEnabled = false;
+            this.moving = true;
+        } else {
+            this.inputEnabled = true;
+            this.moving = false;
+        }
 
     }
-
 
 }

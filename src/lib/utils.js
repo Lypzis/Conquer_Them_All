@@ -60,12 +60,6 @@ const utils = {
 
     },
 
-    /** - Checks if a single object is colliding with an map obstacle. 
-     * @param {*} unity : .
-    */
-    checkObjectMapCollision(unity) {
-    },
-
     ///////////////////////////////////////////////////////////////////
     /** Menu navigation items factory
      * - Overall setting of a navigation item.
