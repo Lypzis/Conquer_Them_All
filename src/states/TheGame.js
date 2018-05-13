@@ -39,7 +39,6 @@ class TheGame {
             this.mouseX = maps.gridCoordinateConvert(game.input.x);
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
 
-            //perhaps the bug is here, try to make this be called in utils to just the current element instead of calling to all
             this.warriors.forEach(e => {
 
                 e.setMouseAxis(this.mouseX, this.mouseY);
