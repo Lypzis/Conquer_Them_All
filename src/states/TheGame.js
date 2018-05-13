@@ -12,7 +12,14 @@ class TheGame {
         this.titleText = game.add.text(game.world.centerX, 100, "Game", styles.lightHeader());
         utils.centerGameObjects([this.titleText]);
 
-        utils.navItemSetter('<- Back', 1, 90, target => game.state.start('GameMenu'), null, true);
+        utils.navItemSetter('<- Back', 1, 90, target => {
+            this.mouseX = null;
+            this.mouseY = null;
+            this.warriors = null;
+            this.layer = null;
+
+            game.state.start('GameMenu');
+        }, null, true);
 
         ////////////////////////////////////////////////////////////////////////////////
         // Creates the table, each level should receive a different map(consideration of levels classes)
@@ -32,15 +39,18 @@ class TheGame {
             this.mouseX = maps.gridCoordinateConvert(game.input.x);
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
 
-            //perhaps the bug is here, try to make this be called in utils to just the currnt element instead of calling to all
+            //perhaps the bug is here, try to make this be called in utils to just the current element instead of calling to all
             this.warriors.forEach(e => {
 
-                e.goTo(this.mouseX, this.mouseY);
+                e.setMouseAxis(this.mouseX, this.mouseY);
 
             });
             
 
-            //this.warriors[0].goTo(this.mouseX, this.mouseY);
+           console.log('mouse X:' + this.mouseX);
+           console.log('mouse Y:' + this.mouseY);
+
+            //this.warriors[0].setMouseAxis(this.mouseX, this.mouseY);
 
         });
     }
