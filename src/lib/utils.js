@@ -20,34 +20,44 @@ const utils = {
     },
 
     ///////////////////////////////////////////////////////////////////
-    // Unities factory
-    generateTableUnities(unityIconKey, quantity){
+    /** Unities factory
+     * - Generate unities and places them in the table.
+    * @param {*} unityIconKey : key(name) of the image-icon. 
+    * @param {*} quantity : the quantity to generate, must be less or equals 5.
+    * @param {*} columnNumber : the number of the column to place, 0 to 4 (5 columns).
+    * @returns : Array of unities objects.
+    */
+    generateTableUnities(unityIconKey, quantity, columnNumber) {
         const playerStartPoint = maps.getPlayerStartPoint();
-        
-        const iterator = () => {
-            const squares = [];
-            const square = this.playerStartPoint.width/5;
+        const points = maps.squareSizeSum();
+        const unities = [];
 
-            for (let i = 0; i < 5 ; ++i){
-                let item = i*square;
-                squares.push(item);
+        let x = playerStartPoint.x;
+        let y = playerStartPoint.y;
+
+        if (quantity <= 5 && columnNumber < 5) {
+            for (let i = 0; i < quantity; ++i) {
+                let unity = new Unity(game, x + points[columnNumber], y + points[i], `${unityIconKey}`);
+
+                unities.push(unity);
             }
+        } else {
+            console.log('Invalid quantity or column! must be within the square bounds of the starting point.');
+        }
 
-            return squares;
-        }; 
-        
-        const points = iterator();
-        //let randomPointX = xPlayerStart plus a random point of points 
-        //let randomPointY = yPlayerStart plus a random point of points 
-
-
+        return unities;
     },
 
-    /** - Set unities to collide with the current map layer. 
-     * @param {*} unities : Array of game-objects.
+    /** - Checks if objects collide with the current map layer. 
+     * @param {*} unities : Array of game-objects or a single unity object.
     */
-    setUnityMapCollision(unities) {
-        unities.forEach(unity => game.physics.arcade.collide(unity, maps.getLayer()));
+    checkObjectsMapCollision(unities) {
+        if (unities.isArray) {
+            unities.forEach(unity => game.physics.arcade.collide(unity, maps.getLayer()));
+        } else {
+            game.physics.arcade.collide(unities, maps.getLayer());
+        }
+
     },
 
     ///////////////////////////////////////////////////////////////////
@@ -92,11 +102,12 @@ const utils = {
         const txt = game.add.text(x, (order * padding) + y, text, Object.assign(defaultStyle, baseStyle));
 
         txt.inputEnabled = true; // makes the item clickable
+
         txt.events.onInputUp.add(callback); // on click, execute the received function
         txt.events.onInputOver.add(target => target.setStyle(Object.assign(onHoverStyle, baseStyle)));
         txt.events.onInputOut.add(target => target.setStyle(Object.assign(defaultStyle, baseStyle)));
-        txt.anchor.setTo(anchor);
 
+        txt.anchor.setTo(anchor);
     }
 
 }
