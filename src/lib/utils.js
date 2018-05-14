@@ -34,11 +34,19 @@ const utils = {
 
         let x = playerStartPoint.x;
         let y = playerStartPoint.y;
+        let unity = null;
 
         if (quantity <= 5 && columnNumber < 5) {
             for (let i = 0; i < quantity; ++i) {
-                let unity = new Unity(game, x + points[columnNumber], y + points[i], `${unityIconKey}`);
 
+                switch (unityIconKey){
+                    case ('warrior-icon'): 
+                        unity = new Warrior(game, x + points[columnNumber], y + points[i], `${unityIconKey}`);
+                        break;
+                    default :
+                        console.log('No valid unit chosen. Check Splash.js for valid names!');
+                }
+                
                 unities.push(unity);
             }
         } else {

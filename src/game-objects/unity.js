@@ -20,12 +20,17 @@ class Unity extends Phaser.Sprite {
         // Enable arcade physics for moving with velocity
         game.physics.arcade.enable(this);
 
+        this.animations.add('hovered', [1], 1, true); 
+        this.animations.add('default', [0], 1, true);
+
         this.events.onInputUp.add(target => {
             this.active = true;
 
             console.log('pos X:' + this.positionX);
             console.log('pos Y:' + this.positionY);
         });
+        this.events.onInputOut.add(target => target.animations.play('default'));
+        this.events.onInputOver.add(target => target.animations.play('hovered'));
 
     }
 
@@ -131,7 +136,6 @@ class Unity extends Phaser.Sprite {
         this.index = maps.getLayerIndex();
         this.positionX = maps.gridCoordinateConvert(this.x);
         this.positionY = maps.gridCoordinateConvert(this.y);
-
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         //Reminder: Check which side the collision is coming when
