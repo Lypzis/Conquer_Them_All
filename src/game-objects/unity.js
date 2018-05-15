@@ -13,14 +13,14 @@ class Unity extends Phaser.Sprite {
 
         this.inputEnabled = true;
 
-        this.speed = 50;
-
         this.gridSize = maps.getSquareSize();
 
         // Enable arcade physics for moving with velocity
         game.physics.arcade.enable(this);
 
-        this.animations.add('hovered', [1], 1, true); 
+        this.collided = false;
+
+        this.animations.add('hovered', [1], 1, true);
         this.animations.add('default', [0], 1, true);
 
         this.events.onInputUp.add(target => {
@@ -36,9 +36,19 @@ class Unity extends Phaser.Sprite {
 
     setMouseAxis(mouseX, mouseY) {
         if (!this.moving && this.active) {
+
             this.mouseX = mouseX;
             this.mouseY = mouseY;
+
+            this.setMaximumDistance();
+
         }
+    }
+
+    setMaximumDistance() {
+        this.distanceX = Math.abs(this.mouseX - this.positionX);
+        this.distanceY = Math.abs(this.mouseY - this.positionY);
+        this.distanceL = this.distanceX + this.distanceY;
     }
 
     moveRight() {
@@ -105,28 +115,29 @@ class Unity extends Phaser.Sprite {
     pathSetter() {
         if (this.mouseX != undefined && this.mouseY != undefined) {
 
-            if (this.positionX != this.mouseX && this.positionY != this.mouseY && !this.leftCorrect) {
+            if (this.positionX != this.mouseX && this.positionY != this.mouseY && !this.leftCorrect && this.distanceL <= this.movement) {
 
                 console.log('L movement.');
                 this.moveRight();
                 this.moveLeft();
-
                 this.active = false;
 
-            }else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topCorrect) { 
+            } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topCorrect && this.distanceY <= this.movement) {
 
                 console.log('Vertical movement.');
                 this.moveUp();
                 this.moveDown();
                 this.active = false;
 
-            } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftCorrect) {
+            } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftCorrect && this.distanceX <= this.movement) {
 
                 console.log('Horizontal movement.');
                 this.moveRight();
                 this.moveLeft();
                 this.active = false;
+
             }
+
         }
 
     }
@@ -140,21 +151,32 @@ class Unity extends Phaser.Sprite {
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         //Reminder: Check which side the collision is coming when
         //the strange diagonal movement when going 'L' backwards bug gets corrected.
-        if (utils.checkObjectsMapCollision(this) || this.positionX == this.mouseX && !this.leftCorrect) {
+        if (this.positionX == this.mouseX && !this.leftCorrect) {
             this.body.velocity.x = 0;
-        } else if (utils.checkObjectsMapCollision(this) || this.positionX == this.mouseX - 1) {
+        } else if (this.positionX == this.mouseX - 1) {
             this.body.velocity.x = 0;
         }
 
-        if (utils.checkObjectsMapCollision(this) || this.positionY == this.mouseY && !this.topCorrect) {
+        if (this.positionY == this.mouseY && !this.topCorrect) {
             this.body.velocity.y = 0;
-        } else if (utils.checkObjectsMapCollision(this) || this.positionY == this.mouseY - 1) {
+        } else if (this.positionY == this.mouseY - 1) {
             this.body.velocity.y = 0;
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        utils.checkObjectsMapCollision(this);
 
-        this.pathSetter(); 
+        // stop trying to move
+        if (this.collided) {
+            this.mouseX = null;
+            this.mouseY = null;
+            this.body.velocity.y = 0;
+            this.body.velocity.x = 0;
+
+            this.collided = false;
+        }
+
+        this.pathSetter();
 
         if (this.body.velocity.y != 0 || this.body.velocity.x != 0) {
             this.inputEnabled = false;

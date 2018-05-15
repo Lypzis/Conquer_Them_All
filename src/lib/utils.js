@@ -39,14 +39,19 @@ const utils = {
         if (quantity <= 5 && columnNumber < 5) {
             for (let i = 0; i < quantity; ++i) {
 
-                switch (unityIconKey){
-                    case ('warrior-icon'): 
+                switch (unityIconKey) {
+                    case ('warrior-icon'):
                         unity = new Warrior(game, x + points[columnNumber], y + points[i], `${unityIconKey}`);
                         break;
-                    default :
+                        
+                    case ('hero-icon'):
+                        unity = new Hero(game, x + points[columnNumber], y + points[i], `${unityIconKey}`);
+                        break;
+
+                    default:
                         console.log('No valid unit chosen. Check Splash.js for valid names!');
                 }
-                
+
                 unities.push(unity);
             }
         } else {
@@ -56,16 +61,19 @@ const utils = {
         return unities;
     },
 
-    /** - Checks if objects collide with the current map layer. 
+    /** - Ensure that objects will collide with the current map layer. 
      * @param {*} unities : Array of game-objects or a single unity object.
     */
     checkObjectsMapCollision(unities) {
+
+        // add collide callback
         if (unities.isArray) {
             unities.forEach(unity => game.physics.arcade.collide(unity, maps.getLayer()));
         } else {
-            game.physics.arcade.collide(unities, maps.getLayer());
+            game.physics.arcade.collide(unities, maps.getLayer(), unities => {
+                unities.collided = true;
+            });
         }
-
     },
 
     ///////////////////////////////////////////////////////////////////

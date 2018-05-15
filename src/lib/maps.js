@@ -29,6 +29,7 @@ const maps = {
 
     //////////////////////////////////////////////////////////////////////////
     // Table
+
     /**
      * - Get the current layer displayed.
      * @returns : The current layer.
