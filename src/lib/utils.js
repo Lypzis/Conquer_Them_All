@@ -43,7 +43,7 @@ const utils = {
                     case ('warrior-icon'):
                         unity = new Warrior(game, x + points[columnNumber], y + points[i], `${unityIconKey}`);
                         break;
-                        
+
                     case ('hero-icon'):
                         unity = new Hero(game, x + points[columnNumber], y + points[i], `${unityIconKey}`);
                         break;
@@ -62,18 +62,18 @@ const utils = {
     },
 
     /** - Ensure that objects will collide with the current map layer. 
-     * @param {*} unities : Array of game-objects or a single unity object.
+     * @param {*} unity : An unity object.
     */
-    checkObjectsMapCollision(unities) {
+    checkObjectsMapCollision(unity) {
 
         // add collide callback
-        if (unities.isArray) {
-            unities.forEach(unity => game.physics.arcade.collide(unity, maps.getLayer()));
-        } else {
-            game.physics.arcade.collide(unities, maps.getLayer(), unities => {
-                unities.collided = true;
-            });
-        }
+        //if (unities.isArray) {
+        //unities.forEach(unity => game.physics.arcade.collide(unity, maps.getLayer()));
+        //} else {
+        game.physics.arcade.collide(unity, maps.getLayer(), unity => {
+            unity.collided = true;
+        });
+        //}
     },
 
     ///////////////////////////////////////////////////////////////////

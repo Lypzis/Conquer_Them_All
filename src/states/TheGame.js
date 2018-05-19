@@ -47,10 +47,11 @@ class TheGame {
                 e.setMouseAxis(this.mouseX, this.mouseY);
 
             });
-            */
+            
 
             console.log('mouse X:' + this.mouseX);
             console.log('mouse Y:' + this.mouseY);
+            */
 
             this.warriors[0].setMouseAxis(this.mouseX, this.mouseY);
             this.hero[0].setMouseAxis(this.mouseX, this.mouseY);

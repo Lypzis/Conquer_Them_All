@@ -20,14 +20,19 @@ class Unity extends Phaser.Sprite {
 
         this.collided = false;
 
-        this.animations.add('hovered', [1], 1, true);
         this.animations.add('default', [0], 1, true);
+        this.animations.add('hovered', [1], 1, true);
 
         this.events.onInputUp.add(target => {
             this.active = true;
 
             console.log('pos X:' + this.positionX);
-            console.log('pos Y:' + this.positionY);
+            //console.log('pos Y:' + this.positionY);
+
+
+            console.log(this.rigthSide);
+            console.log(this.leftSide);
+
         });
         this.events.onInputOut.add(target => target.animations.play('default'));
         this.events.onInputOver.add(target => target.animations.play('hovered'));
@@ -117,21 +122,21 @@ class Unity extends Phaser.Sprite {
 
             if (this.positionX != this.mouseX && this.positionY != this.mouseY && !this.leftCorrect && this.distanceL <= this.movement) {
 
-                console.log('L movement.');
+                //console.log('L movement.');
                 this.moveRight();
                 this.moveLeft();
                 this.active = false;
 
             } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topCorrect && this.distanceY <= this.movement) {
 
-                console.log('Vertical movement.');
+                //console.log('Vertical movement.');
                 this.moveUp();
                 this.moveDown();
                 this.active = false;
 
             } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftCorrect && this.distanceX <= this.movement) {
 
-                console.log('Horizontal movement.');
+                //console.log('Horizontal movement.');
                 this.moveRight();
                 this.moveLeft();
                 this.active = false;
@@ -147,6 +152,10 @@ class Unity extends Phaser.Sprite {
         this.index = maps.getLayerIndex();
         this.positionX = maps.gridCoordinateConvert(this.x);
         this.positionY = maps.gridCoordinateConvert(this.y);
+
+        this.leftSide = maps.getSurroudingSquare( this.index, this.positionX, this.positionY, 'left');
+        this.rigthSide = maps.getSurroudingSquare( this.index, this.positionX, this.positionY, 'right');
+        
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         //Reminder: Check which side the collision is coming when

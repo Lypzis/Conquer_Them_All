@@ -4,7 +4,7 @@ class Warrior extends Unity {
         super(game, x, y, unityKey);
 
         
-        this.defence = 0.5;
+        this.defence = 0.6;
         this.attack = 125;
         this.health = 600;
         this.movement = 4;

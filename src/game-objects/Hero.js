@@ -3,7 +3,7 @@ class Hero extends Unity {
     constructor(game, x, y, unityKey){
         super(game, x, y, unityKey);
 
-        this.defence = 0.6;
+        this.defence = 0.5;
         this.attack = 160;
         this.health = 500;
         this.movement = 6;

@@ -3380,10 +3380,6 @@ jade@^1.11.0:
     void-elements "~2.0.1"
     with "~4.0.0"
 
-"javascript-astar@github:mikewesthad/javascript-astar":
-  version "0.4.2"
-  resolved "https://codeload.github.com/mikewesthad/javascript-astar/tar.gz/c0304b12861eda334e27f2f15d701c10b296593f"
-
 jmespath@0.15.0:
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
@@ -4237,12 +4233,6 @@ performance-now@^2.1.0:
 phaser-ce@^2.10.2:
   version "2.10.2"
   resolved "https://registry.yarnpkg.com/phaser-ce/-/phaser-ce-2.10.2.tgz#f084994fdd52112567cb6aee2ca29702d4ba7922"
-
-phaser-navmesh@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/phaser-navmesh/-/phaser-navmesh-1.1.1.tgz#381d7e2019c77ccdcb36a62dbee42623608d177e"
-  dependencies:
-    javascript-astar "github:mikewesthad/javascript-astar"
 
 pify@^2.0.0, pify@^2.3.0:
   version "2.3.0"
