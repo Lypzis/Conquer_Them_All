@@ -9,6 +9,7 @@
 class Unity extends Phaser.Sprite {
     constructor(game, x, y, unityKey) {
         super(game, x, y, unityKey);
+
         this.game.add.existing(this);
 
         this.inputEnabled = true;
@@ -30,8 +31,10 @@ class Unity extends Phaser.Sprite {
             //console.log('pos Y:' + this.positionY);
 
 
-            console.log(this.rigthSide);
-            console.log(this.leftSide);
+            //console.log(this.rigthSide);
+            //console.log(this.leftSide);
+
+            console.log(this.friendly);
 
         });
         this.events.onInputOut.add(target => target.animations.play('default'));

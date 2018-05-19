@@ -24,11 +24,12 @@ const utils = {
      * - Generate unities and places them in the table.
     * @param {*} unityIconKey : key(name) of the image-icon. 
     * @param {*} quantity : the quantity to generate, must be less or equals 5.
-    * @param {*} columnNumber : the number of the column to place, 0 to 4 (5 columns).
+    * @param {*} columnNumber : the number of the column to place, 0 to 4 starting from left(5 columns).
+    * @param {*} friendly : Determines if it will be player's(true) unity(ies) or enemie's(false).
     * @returns : Array of unities objects.
     */
-    generateTableUnities(unityIconKey, quantity, columnNumber) {
-        const playerStartPoint = maps.getPlayerStartPoint();
+    generateTableUnities(unityIconKey, quantity, columnNumber, friendly) {
+        const playerStartPoint = maps.getPlayerStartPoint(friendly);
         const points = maps.squareSizeSum();
         const unities = [];
 
@@ -41,11 +42,19 @@ const utils = {
 
                 switch (unityIconKey) {
                     case ('warrior-icon'):
-                        unity = new Warrior(game, x + points[columnNumber], y + points[i], `${unityIconKey}`);
+                        unity = new Warrior(game, x + points[columnNumber], y + points[i], `${unityIconKey}`, friendly);
                         break;
 
                     case ('hero-icon'):
-                        unity = new Hero(game, x + points[columnNumber], y + points[i], `${unityIconKey}`);
+                        unity = new Hero(game, x + points[columnNumber], y + points[i], `${unityIconKey}`, friendly);
+                        break;
+
+                    case ('enemy-hero-icon'):
+                        unity = new EnemyHero(game, x + points[columnNumber], y + points[i], `${unityIconKey}`, friendly);
+                        break;
+
+                    case ('enemy-warrior-icon'):
+                        unity = new EnemyWarrior(game, x + points[columnNumber], y + points[i], `${unityIconKey}`, friendly);
                         break;
 
                     default:

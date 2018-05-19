@@ -55,7 +55,9 @@ class Splash {
     loadSpriteSheets(){
         const icons = [
             'warrior-icon',
-            'hero-icon'
+            'hero-icon',
+            'enemy-hero-icon',
+            'enemy-warrior-icon'
         ];
 
         icons.forEach( icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 30, 30) );
@@ -79,7 +81,9 @@ class Splash {
         const objects = [
             'Unity',
             'Warrior',
-            'Hero'
+            'Hero',
+            'EnemyHero',
+            'EnemyWarrior'
         ];
 
         objects.forEach( object => game.load.script(`${object}`, `./game-objects/${object}.js`) );

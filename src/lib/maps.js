@@ -65,10 +65,11 @@ const maps = {
 
     /**
      * - Get the player starting point in the map.
-     * @returns : The player's pieces starting position. 
+     * @param {*} friendly : true: left side, false: right side.
+     * @returns : The pieces starting position. 
      */
-    getPlayerStartPoint() {
-        return this.startPlayerPoint;
+    getPlayerStartPoint(friendly) {
+        return friendly ? this.startPlayerPoint : this.startEnemyPoint;
     },
 
     /**

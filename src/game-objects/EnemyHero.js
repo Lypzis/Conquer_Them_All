@@ -1,4 +1,4 @@
-class Hero extends Unity {
+class EnemyHero extends Unity {
 
     constructor(game, x, y, unityKey, friendly){
         super(game, x, y, unityKey);
@@ -6,13 +6,13 @@ class Hero extends Unity {
         this.friendly = friendly;
         
         this.defence = 0.5;
-        this.attack = 160;
+        this.attack = 175;
         this.health = 500;
         this.movement = 6;
         this.speed = 50;
         this.chargeSpeed = 70;
-        this.chargeMaxDamage = 250;
-        this.minChargeDist = 4;
+        this.chargeMaxDamage = 260;
+        this.minChargeDist = 3;
         //this.morale = null; 
 
     }  
