@@ -159,7 +159,6 @@ class Unity extends Phaser.Sprite {
         this.leftSide = maps.getSurroudingSquare( this.index, this.positionX, this.positionY, 'left');
         this.rigthSide = maps.getSurroudingSquare( this.index, this.positionX, this.positionY, 'right');
         
-
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         //Reminder: Check which side the collision is coming when
         //the strange diagonal movement when going 'L' backwards bug gets corrected.

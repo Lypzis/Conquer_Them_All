@@ -74,15 +74,9 @@ const utils = {
      * @param {*} unity : An unity object.
     */
     checkObjectsMapCollision(unity) {
-
-        // add collide callback
-        //if (unities.isArray) {
-        //unities.forEach(unity => game.physics.arcade.collide(unity, maps.getLayer()));
-        //} else {
         game.physics.arcade.collide(unity, maps.getLayer(), unity => {
             unity.collided = true;
         });
-        //}
     },
 
     ///////////////////////////////////////////////////////////////////
