@@ -20,6 +20,11 @@ class Unity extends Phaser.Sprite {
         game.physics.arcade.enable(this);
 
         this.collided = false;
+        this.attacking = false;
+
+        this.walkableTile = 1;
+
+        this.otherUnities = [];
 
         this.animations.add('default', [0], 1, true);
         this.animations.add('hovered', [1], 1, true);
@@ -27,15 +32,16 @@ class Unity extends Phaser.Sprite {
         this.events.onInputUp.add(target => {
             this.active = true;
 
-            console.log('pos X:' + this.positionX);
+            //console.log('pos X:' + this.positionX);
             //console.log('pos Y:' + this.positionY);
 
 
             //console.log(this.rigthSide);
             //console.log(this.leftSide);
 
-            console.log(this.friendly);
+            //console.log(this.friendly);
 
+            //console.log(this.otherUnities);
         });
         this.events.onInputOut.add(target => target.animations.play('default'));
         this.events.onInputOver.add(target => target.animations.play('hovered'));
@@ -94,29 +100,37 @@ class Unity extends Phaser.Sprite {
     }
 
     autoCorrect() {
+        if (this.body.velocity.y != 0 || this.body.velocity.x != 0) {
+            this.inputEnabled = false;
+            this.moving = true;
+        } else {
+            this.inputEnabled = true;
+            this.moving = false;
 
-        if (this.leftCorrect) {
-            this.x += 2;
 
-            this.leftCorrect = false;
-        }
+            if (this.leftCorrect) {
+                this.x += 2;
 
-        if (this.topCorrect) {
-            this.y += 2;
+                this.leftCorrect = false;
+            }
 
-            this.topCorrect = false;
-        }
+            if (this.topCorrect) {
+                this.y += 2;
 
-        if (this.rightCorrect) {
-            this.x -= 1;
+                this.topCorrect = false;
+            }
 
-            this.rightCorrect = false;
-        }
+            if (this.rightCorrect) {
+                this.x -= 1;
 
-        if (this.bottomCorrect) {
-            this.y -= 1;
+                this.rightCorrect = false;
+            }
 
-            this.bottomCorrect = false;
+            if (this.bottomCorrect) {
+                this.y -= 1;
+
+                this.bottomCorrect = false;
+            }
         }
     }
 
@@ -145,20 +159,74 @@ class Unity extends Phaser.Sprite {
                 this.active = false;
 
             }
-
         }
-
     }
 
-    update() {
+    attackOpposition() {
+        if(!this.attacking){
+          
+        // check sprites positions X and Y
+        this.otherUnities.forEach(e => {
+            // if current leftSide.X and Y OR rightSide.X and Y == a oposite sprite positionX and Y AND sprite friendly != this.friendly
+            if ((e.positionX == this.leftSide.x && e.positionY == this.leftSide.y) && e.friendly != this.friendly) {
+                this.attacking = true;
+                // deal damage  
+                console.log('I\'ll kill ya in my left!!!');
+                
+                let damage = e.attack * this.defense;
+                this.health -= damage;
 
+                console.log(damage);
+                console.log(this);
+            }
+
+            if ((e.positionX == this.rightSide.x && e.positionY == this.rightSide.y) && e.friendly != this.friendly) {
+                this.attacking = true;
+
+                console.log('I\'ll kill ya in my right!!!');
+
+                let damage = e.attack * this.defense;
+                this.health -= damage;
+
+                console.log(damage);
+                console.log(this);
+            }
+        });
+    }
+        
+    }
+
+    //obs: AI class?
+    getUnitiesPosition(unities) {
+        //aknowledge itself and other sprites' status
+        this.otherUnities = unities;
+    }
+
+    setPosition() {
         this.index = maps.getLayerIndex();
         this.positionX = maps.gridCoordinateConvert(this.x);
         this.positionY = maps.gridCoordinateConvert(this.y);
 
-        this.leftSide = maps.getSurroudingSquare( this.index, this.positionX, this.positionY, 'left');
-        this.rigthSide = maps.getSurroudingSquare( this.index, this.positionX, this.positionY, 'right');
-        
+        this.leftSide = maps.getSurroudingSquare(this.index, this.positionX, this.positionY, 'left');
+        this.rightSide = maps.getSurroudingSquare(this.index, this.positionX, this.positionY, 'right');
+    }
+
+    checkCollision() {
+        // stop trying to move
+        if (this.collided) {
+            this.mouseX = null;
+            this.mouseY = null;
+            this.body.velocity.y = 0;
+            this.body.velocity.x = 0;
+
+            this.collided = false;
+        }
+    }
+
+    update() {
+
+        this.setPosition();
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         //Reminder: Check which side the collision is coming when
         //the strange diagonal movement when going 'L' backwards bug gets corrected.
@@ -176,29 +244,38 @@ class Unity extends Phaser.Sprite {
         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
         utils.checkObjectsMapCollision(this);
-
-        // stop trying to move
-        if (this.collided) {
-            this.mouseX = null;
-            this.mouseY = null;
-            this.body.velocity.y = 0;
-            this.body.velocity.x = 0;
-
-            this.collided = false;
-        }
-
+        this.checkCollision();
         this.pathSetter();
+        this.autoCorrect();
 
-        if (this.body.velocity.y != 0 || this.body.velocity.x != 0) {
-            this.inputEnabled = false;
-            this.moving = true;
-        } else {
-            this.inputEnabled = true;
-            this.moving = false;
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+       
+            this.attackOpposition();
+        
 
-            this.autoCorrect();
-        }
+        //this.render();
 
     }
 
+    /*
+    render() {
+        let colorLeft = 'rgba(0,255,0,0.3)';
+        let colorRight = 'rgba(0,255,0,0.3)';
+
+        if (this.leftSide.index !== this.walkableTile) {
+            colorLeft = 'rgba(255,0,0,0.3)';
+        }
+
+        if (this.rigthSide.index !== this.walkableTile) {
+            colorRight = 'rgba(255,0,0,0.3)';
+        }
+
+        game.debug.geom(new Phaser.Rectangle(this.leftSide.worldX, this.leftSide.worldY, 32, 32), colorLeft, true);
+        game.debug.geom(new Phaser.Rectangle(this.rigthSide.worldX, this.rigthSide.worldY, 32, 32), colorRight, true);
+            
+    }
+    */
 }
+
+
+

@@ -5,7 +5,7 @@ class EnemyWarrior extends Unity {
 
         this.friendly = friendly;
 
-        this.defence = 0.7;
+        this.defense = 0.7;
         this.attack = 165;
         this.health = 500;
         this.movement = 5;

@@ -5,7 +5,7 @@ class Warrior extends Unity {
         
         this.friendly = friendly;
 
-        this.defence = 0.6;
+        this.defense = 0.6;
         this.attack = 125;
         this.health = 600;
         this.movement = 4;

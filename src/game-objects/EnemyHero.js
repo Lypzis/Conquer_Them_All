@@ -5,7 +5,7 @@ class EnemyHero extends Unity {
 
         this.friendly = friendly;
         
-        this.defence = 0.5;
+        this.defense = 0.5;
         this.attack = 175;
         this.health = 500;
         this.movement = 6;
