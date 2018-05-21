@@ -1,7 +1,7 @@
 {
   "name": "conquer_them_all",
   "productName": "conquer_them_all",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "description": "Medieval Strategy/Action game.",
   "main": "src/index.js",
   "scripts": {
@@ -52,7 +52,6 @@
     "electron-compile": "^6.4.2",
     "electron-squirrel-startup": "^1.0.0",
     "phaser-ce": "^2.10.2",
-    "phaser-navmesh": "^1.1.1",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {

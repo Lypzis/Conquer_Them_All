@@ -13,9 +13,13 @@ class TheGame {
         utils.centerGameObjects([this.titleText]);
 
         utils.navItemSetter('<- Back', 1, 90, target => {
+            this.unities = null;
             this.mouseX = null;
             this.mouseY = null;
             this.warriors = null;
+            this.hero = null;
+            this.enemyHero = null;
+            this.enemyWarriors = null;
             this.layer = null;
 
             game.state.start('GameMenu');
@@ -26,8 +30,18 @@ class TheGame {
         // and then charge the level in this class
         maps.loadMap('tilemap');
 
-        this.warriors = utils.generateTableUnities('warrior-icon', 4, 0);
-        //this.warriors2 = utils.generateTableUnities('warrior-icon', 3, 1);
+        this.warriors = utils.generateTableUnities('warrior-icon', 1, 0, true);
+        this.hero = utils.generateTableUnities('hero-icon', 1, 1, true);
+
+        this.enemyHero = utils.generateTableUnities('enemy-hero-icon', 1, 3, false);
+        this.enemyWarriors = utils.generateTableUnities('enemy-warrior-icon', 2, 4, false);
+
+        this.unities = Array.prototype.concat(
+            this.enemyHero,
+            this.hero,
+            this.enemyWarriors,
+            this.warriors
+        );
 
         this.layer = maps.getLayer();
     }
@@ -39,17 +53,10 @@ class TheGame {
             this.mouseX = maps.gridCoordinateConvert(game.input.x);
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
 
-            this.warriors.forEach(e => {
-
+            this.unities.forEach(e => {
                 e.setMouseAxis(this.mouseX, this.mouseY);
-
+                e.getUnitiesPosition(this.unities);
             });
-            
-
-           console.log('mouse X:' + this.mouseX);
-           console.log('mouse Y:' + this.mouseY);
-
-            //this.warriors[0].setMouseAxis(this.mouseX, this.mouseY);
 
         });
     }
@@ -63,10 +70,11 @@ class TheGame {
 
     update() {
 
-        // check for collisions with tablemap obstacles
-        //utils.checkObjectsMapCollision(this.warriors);
-
+        this.unities.forEach(e => {
+            e.getUnitiesPosition(this.unities);
+        });
     }
+
 
 }
 

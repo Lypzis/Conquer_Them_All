@@ -47,10 +47,20 @@ class Splash {
             'options-bg',
             'quit-bg',
             'tableGround-tile',
-            'warrior-icon'
         ];
 
         images.forEach( image => game.load.image(`${image}`, `./assets/images/${image}.png`) );
+    }
+
+    loadSpriteSheets(){
+        const icons = [
+            'warrior-icon',
+            'hero-icon',
+            'enemy-hero-icon',
+            'enemy-warrior-icon'
+        ];
+
+        icons.forEach( icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 30, 30) );
     }
 
     // loads a custom font
@@ -69,7 +79,11 @@ class Splash {
 
     loadGameObjects(){
         const objects = [
-            'unity'
+            'Unity',
+            'Warrior',
+            'Hero',
+            'EnemyHero',
+            'EnemyWarrior'
         ];
 
         objects.forEach( object => game.load.script(`${object}`, `./game-objects/${object}.js`) );
@@ -90,6 +104,7 @@ class Splash {
         this.loadBgm();
         this.loadMaps();
         this.loadGameObjects();
+        this.loadSpriteSheets();
     }
 
     // enqueue states to the game
