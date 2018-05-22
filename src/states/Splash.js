@@ -79,11 +79,7 @@ class Splash {
 
     loadGameObjects(){
         const objects = [
-            'Unity',
-            'Warrior',
-            'Hero',
-            'EnemyHero',
-            'EnemyWarrior'
+            'Unity'
         ];
 
         objects.forEach( object => game.load.script(`${object}`, `./game-objects/${object}.js`) );

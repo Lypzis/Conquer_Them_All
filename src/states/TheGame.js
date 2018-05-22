@@ -54,8 +54,8 @@ class TheGame {
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
 
             this.unities.forEach(e => {
-                e.setMouseAxis(this.mouseX, this.mouseY);
                 e.getUnitiesPosition(this.unities);
+                e.setMouseAxis(this.mouseX, this.mouseY);
             });
 
         });

@@ -7,24 +7,30 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Unity extends Phaser.Sprite {
-    constructor(game, x, y, unityKey) {
+    constructor(game, x, y, unityKey, unity, friendly) {
         super(game, x, y, unityKey);
 
-        this.game.add.existing(this);
+        this.friendly = friendly;
+        this.defense = unity.defense;
+        this.attack = unity.attack;
+        this.health = unity.health;
+        this.movement = unity.movement;
+        this.speed = unity.speed;
+        this.chargeSpeed = unity.chargeSpeed;
+        this.chargeMaxDamage = unity.chargeMaxDamage;
+        this.minChargeDist = unity.minChargeDist;
+        //this.morale = null; 
 
         this.inputEnabled = true;
-
-        this.gridSize = maps.getSquareSize();
-
-        // Enable arcade physics for moving with velocity
-        game.physics.arcade.enable(this);
-
         this.collided = false;
         this.attacking = false;
-
+        this.otherUnities = [];
+        this.gridSize = maps.getSquareSize();
         this.walkableTile = 1;
 
-        this.otherUnities = [];
+        this.game.add.existing(this);
+        // Enable arcade physics for moving with velocity
+        this.game.physics.arcade.enable(this);
 
         this.animations.add('default', [0], 1, true);
         this.animations.add('hovered', [1], 1, true);
@@ -41,7 +47,7 @@ class Unity extends Phaser.Sprite {
 
             //console.log(this.friendly);
 
-            //console.log(this.otherUnities);
+            console.log(this.otherUnities);
         });
         this.events.onInputOut.add(target => target.animations.play('default'));
         this.events.onInputOver.add(target => target.animations.play('hovered'));
@@ -55,7 +61,6 @@ class Unity extends Phaser.Sprite {
             this.mouseY = mouseY;
 
             this.setMaximumDistance();
-
         }
     }
 
@@ -197,8 +202,10 @@ class Unity extends Phaser.Sprite {
     }
 
     //obs: AI class?
+    // may cause a performance bug in future because
+    // its generating a loop of objects inside objects
+    // maybe setting it outside of this class could solve the issue
     getUnitiesPosition(unities) {
-        //aknowledge itself and other sprites' status
         this.otherUnities = unities;
     }
 
