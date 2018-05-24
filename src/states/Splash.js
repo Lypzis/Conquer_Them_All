@@ -44,6 +44,8 @@ class Splash {
     loadImages() {
         const images = [
             'menu-bg',
+            'menu-clouds-bg',
+            'menu-sky-bg',
             'options-bg',
             'quit-bg',
             'tableGround-tile',
