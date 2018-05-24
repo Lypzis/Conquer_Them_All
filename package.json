@@ -1,7 +1,7 @@
 {
   "name": "conquer_them_all",
   "productName": "conquer_them_all",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Medieval Strategy/Action game.",
   "main": "src/index.js",
   "scripts": {

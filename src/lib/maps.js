@@ -31,7 +31,6 @@ const maps = {
 
     //////////////////////////////////////////////////////////////////////////
     // Table
-
     /**
      * - Get the current layer displayed.
      * @returns : The current layer.
@@ -40,10 +39,22 @@ const maps = {
         return this.layer;
     },
 
+    /**
+     * - Get the current layer index.
+     * @returns : Index number.
+     */
     getLayerIndex() {
         return this.layer.index;
     },
 
+    /**
+     * - Get one of the unity surrounding square coordinates.
+     * @param {*} i : current unity layer index.
+     * @param {*} x : current unity X position.
+     * @param {*} y : current unity y position.
+     * @param {*} side : name of the side to get coordinates('left' or 'right').
+     * @returns : coordinates object. 
+     */    
     getSurroudingSquare(i, x, y, side) {
         switch (side) {
             case 'left':

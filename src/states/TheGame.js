@@ -48,6 +48,8 @@ class TheGame {
 
     onClick() {
 
+        //console.log(maps.getWalkableArea());
+
         // On click
         game.input.onDown.add(() => {
             this.mouseX = maps.gridCoordinateConvert(game.input.x);
@@ -57,8 +59,8 @@ class TheGame {
                 e.getUnitiesPosition(this.unities);
                 e.setMouseAxis(this.mouseX, this.mouseY);
             });
-
         });
+
     }
 
     create() {
@@ -70,13 +72,13 @@ class TheGame {
 
     update() {
 
+        //need avoid this loop, ...somehow
+        //possible performance hit
         this.unities.forEach(e => {
             e.getUnitiesPosition(this.unities);
         });
+
     }
-
-
 }
-
 
 

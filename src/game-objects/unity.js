@@ -2,14 +2,15 @@
 /** 
  * @by: Lypzis Entertainment
  * @author: Victor V. Piccoli
- * @doc: Generic Unity class. (Need Code polishment and minor "L" movement bug solving[check 'update()' method]).
+ * @doc: Generic Unity class.
 */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Unity extends Phaser.Sprite {
-    constructor(game, x, y, unityKey, unity, friendly) {
+    constructor(game, x, y, unityKey, unity, id, friendly) {
         super(game, x, y, unityKey);
 
+        this.id = id;
         this.friendly = friendly;
         this.defense = unity.defense;
         this.attack = unity.attack;
@@ -38,72 +39,78 @@ class Unity extends Phaser.Sprite {
         this.events.onInputUp.add(target => {
             this.active = true;
 
-            //console.log('pos X:' + this.positionX);
-            //console.log('pos Y:' + this.positionY);
-
-
-            //console.log(this.rigthSide);
-            //console.log(this.leftSide);
-
-            //console.log(this.friendly);
-
-            console.log(this.otherUnities);
+            console.log(this);
         });
         this.events.onInputOut.add(target => target.animations.play('default'));
         this.events.onInputOver.add(target => target.animations.play('hovered'));
 
     }
 
+    /**
+     * - Get and set X and Y of the place clicked by the mouse if sprite is active and not moving.
+     * @param {*} mouseX : current mouse X position.
+     * @param {*} mouseY : current mouse Y position.
+     */ 
     setMouseAxis(mouseX, mouseY) {
         if (!this.moving && this.active) {
-
             this.mouseX = mouseX;
             this.mouseY = mouseY;
-
             this.setMaximumDistance();
         }
     }
 
+    /**
+     * - Ensures that this won't move to a place outside its limitation movement range.
+     */ 
     setMaximumDistance() {
         this.distanceX = Math.abs(this.mouseX - this.positionX);
         this.distanceY = Math.abs(this.mouseY - this.positionY);
         this.distanceL = this.distanceX + this.distanceY;
     }
 
+    /**
+     * - Give positive speed to move to the X right direction.
+     */ 
     moveRight() {
         if (this.mouseX > this.positionX) {
-
             this.body.velocity.x = this.speed;
             this.rightCorrect = true;
-
         }
     }
 
+    /**
+     * - Give negative speed to move to the X left direction.
+     */ 
     moveLeft() {
         if (this.mouseX < this.positionX) {
-
             this.body.velocity.x = -this.speed;
             this.leftCorrect = true;
         }
     }
 
+    /**
+     * - Give negative speed to move to the Y top direction.
+     */ 
     moveUp() {
         if (this.mouseY < this.positionY) {
-
             this.body.velocity.y = -this.speed;
             this.topCorrect = true;
         }
     }
 
+    /**
+     * - Give positive speed to move to the Y bottom direction.
+     */ 
     moveDown() {
         if (this.mouseY > this.positionY) {
-
             this.body.velocity.y = this.speed;
             this.bottomCorrect = true;
-
         }
     }
 
+    /**
+     * - The sprite deslocate itself from the center of the square after it moves, this adjust him back when it stops moving.
+     */ 
     autoCorrect() {
         if (this.body.velocity.y != 0 || this.body.velocity.x != 0) {
             this.inputEnabled = false;
@@ -111,34 +118,34 @@ class Unity extends Phaser.Sprite {
         } else {
             this.inputEnabled = true;
             this.moving = false;
-
+            this.lCorrect = false;
 
             if (this.leftCorrect) {
                 this.x += 2;
-
                 this.leftCorrect = false;
             }
 
             if (this.topCorrect) {
                 this.y += 2;
-
                 this.topCorrect = false;
             }
 
             if (this.rightCorrect) {
                 this.x -= 1;
-
                 this.rightCorrect = false;
             }
 
             if (this.bottomCorrect) {
                 this.y -= 1;
-
                 this.bottomCorrect = false;
             }
         }
     }
 
+    //obs: being called multiple times when moving to right, bottom or L in the respective directions
+     /**
+     * - If distance, mouseX and mouseY have valid values, verify which type of movement it needs to execute.
+     */ 
     pathSetter() {
         if (this.mouseX != undefined && this.mouseY != undefined) {
 
@@ -147,6 +154,7 @@ class Unity extends Phaser.Sprite {
                 //console.log('L movement.');
                 this.moveRight();
                 this.moveLeft();
+                this.lCorrect = true;
                 this.active = false;
 
             } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topCorrect && this.distanceY <= this.movement) {
@@ -167,57 +175,60 @@ class Unity extends Phaser.Sprite {
         }
     }
 
+     /**
+     * - Cause attack damage to enemy health standing in the right or left position(1 square distance).
+     */ 
     attackOpposition() {
-        if(!this.attacking){
-          
-        // check sprites positions X and Y
-        this.otherUnities.forEach(e => {
-            // if current leftSide.X and Y OR rightSide.X and Y == a oposite sprite positionX and Y AND sprite friendly != this.friendly
-            if ((e.positionX == this.leftSide.x && e.positionY == this.leftSide.y) && e.friendly != this.friendly) {
-                this.attacking = true;
-                // deal damage  
-                console.log('I\'ll kill ya in my left!!!');
-                
-                let damage = e.attack * this.defense;
-                this.health -= damage;
+        // damage only once, per turn
+        if (!this.attacking) {
 
-                console.log(damage);
-                console.log(this);
-            }
+            // verifies other unities status in the field
+            this.otherUnities.forEach(e => {
+                // if there is an unity in the left side of this and is considered enemy
+                if ((e.positionX == this.leftSide.x && e.positionY == this.leftSide.y) && e.friendly != this.friendly) {
+                    this.attacking = true;
 
-            if ((e.positionX == this.rightSide.x && e.positionY == this.rightSide.y) && e.friendly != this.friendly) {
-                this.attacking = true;
+                    let damage = e.attack * this.defense;
+                    this.health -= damage;
+                }
 
-                console.log('I\'ll kill ya in my right!!!');
+                // if thre is an unity in the right side of this and is considered enemy
+                if ((e.positionX == this.rightSide.x && e.positionY == this.rightSide.y) && e.friendly != this.friendly) {
+                    this.attacking = true;
 
-                let damage = e.attack * this.defense;
-                this.health -= damage;
+                    let damage = e.attack * this.defense;
+                    this.health -= damage;
+                }
+            });
+        }
 
-                console.log(damage);
-                console.log(this);
-            }
-        });
-    }
-        
     }
 
-    //obs: AI class?
-    // may cause a performance bug in future because
-    // its generating a loop of objects inside objects
-    // maybe setting it outside of this class could solve the issue
+    /**
+     * - Acknowledge all other unities in the field.
+     * @param {*} unities : array of all current unities created.
+     */ 
     getUnitiesPosition(unities) {
-        this.otherUnities = unities;
+        //no need to acknowledge ourselves, that's what filter is for :D
+        this.otherUnities = unities.filter(e => e.id != this.id);
     }
 
+     /**
+     * - Set the its rightSide and leftSide and position X and Y in tiles squares rather than by window size axis, this makes easier for positioning.
+     */ 
     setPosition() {
         this.index = maps.getLayerIndex();
         this.positionX = maps.gridCoordinateConvert(this.x);
         this.positionY = maps.gridCoordinateConvert(this.y);
 
+        // the right and left square coordinates of this.
         this.leftSide = maps.getSurroudingSquare(this.index, this.positionX, this.positionY, 'left');
         this.rightSide = maps.getSurroudingSquare(this.index, this.positionX, this.positionY, 'right');
     }
 
+    /**
+     * - Stops and reset mouse axis values if a wall is hitted.
+     */
     checkCollision() {
         // stop trying to move
         if (this.collided) {
@@ -230,41 +241,44 @@ class Unity extends Phaser.Sprite {
         }
     }
 
-    update() {
+    /**
+     * - Reset speed to 0(stops) when this position axis is equals to the mouse axis given.
+     */
+    stopMovementTrigger() {
+        if (this.lCorrect && this.mouseX < this.positionX) {
+            this.leftCorrect = true;
+            this.topCorrect = true;
+        }
 
-        this.setPosition();
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Reminder: Check which side the collision is coming when
-        //the strange diagonal movement when going 'L' backwards bug gets corrected.
         if (this.positionX == this.mouseX && !this.leftCorrect) {
             this.body.velocity.x = 0;
         } else if (this.positionX == this.mouseX - 1) {
             this.body.velocity.x = 0;
         }
 
-        if (this.positionY == this.mouseY && !this.topCorrect) {
+        if (this.positionY == this.mouseY && !this.topCorrect) { 
             this.body.velocity.y = 0;
         } else if (this.positionY == this.mouseY - 1) {
             this.body.velocity.y = 0;
         }
-        //////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+
+    update() {
 
         utils.checkObjectsMapCollision(this);
-        this.checkCollision();
-        this.pathSetter();
-        this.autoCorrect();
 
-        //////////////////////////////////////////////////////////////////////////////////////////////////////
-       
-            this.attackOpposition();
-        
+        this.setPosition();
+        this.checkCollision();
+        this.stopMovementTrigger();
+        this.pathSetter(); // now here;
+        this.autoCorrect();
+        this.attackOpposition();
 
         //this.render();
-
     }
 
     /*
+    //future implementation
     render() {
         let colorLeft = 'rgba(0,255,0,0.3)';
         let colorRight = 'rgba(0,255,0,0.3)';

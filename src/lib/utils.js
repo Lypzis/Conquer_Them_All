@@ -37,12 +37,14 @@ const utils = {
 
         if (quantity <= 5 && columnNumber < 5) {
             for (let i = 0; i < quantity; ++i) {
+                let id = unityIconKey+i;
 
                 unity = new Unity(
                     game,
                     x + points[columnNumber],
                     y + points[i], `${unityIconKey}`,
                     unities.getObject(unityIconKey),
+                    id,
                     friendly
                 );
 
