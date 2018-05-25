@@ -8,8 +8,6 @@
 
 const utils = {
 
-
-
     /** - Receives array of objects and centralizes each one of them. 
      * @param {*} objects : Array of objects.
     */
@@ -31,7 +29,7 @@ const utils = {
     generateTableUnities(unityIconKey, quantity, columnNumber, friendly) {
         const playerStartPoint = maps.getPlayerStartPoint(friendly);
         const points = maps.squareSizeSum();
-        const unities = [];
+        const objects = [];
 
         let x = playerStartPoint.x;
         let y = playerStartPoint.y;
@@ -39,38 +37,27 @@ const utils = {
 
         if (quantity <= 5 && columnNumber < 5) {
             for (let i = 0; i < quantity; ++i) {
+                let id = unityIconKey+i;
 
-                switch (unityIconKey) {
-                    case ('warrior-icon'):
-                        unity = new Warrior(game, x + points[columnNumber], y + points[i], `${unityIconKey}`, friendly);
-                        break;
+                unity = new Unity(
+                    game,
+                    x + points[columnNumber],
+                    y + points[i], `${unityIconKey}`,
+                    unities.getObject(unityIconKey),
+                    id,
+                    friendly
+                );
 
-                    case ('hero-icon'):
-                        unity = new Hero(game, x + points[columnNumber], y + points[i], `${unityIconKey}`, friendly);
-                        break;
-
-                    case ('enemy-hero-icon'):
-                        unity = new EnemyHero(game, x + points[columnNumber], y + points[i], `${unityIconKey}`, friendly);
-                        break;
-
-                    case ('enemy-warrior-icon'):
-                        unity = new EnemyWarrior(game, x + points[columnNumber], y + points[i], `${unityIconKey}`, friendly);
-                        break;
-
-                    default:
-                        console.log('No valid unit chosen. Check Splash.js for valid names!');
-                }
-
-                unities.push(unity);
+                objects.push(unity);
             }
         } else {
             console.log('Invalid quantity or column! must be within the square bounds of the starting point.');
         }
 
-        return unities;
+        return objects;
     },
 
-    /** - Ensure that objects will collide with the current map layer. 
+    /** - Ensure that objects collide properly with the current map layer. 
      * @param {*} unity : An unity object.
     */
     checkObjectsMapCollision(unity) {

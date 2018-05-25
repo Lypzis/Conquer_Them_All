@@ -14,8 +14,8 @@ class Main {
         game.load.script('styles', './lib/styles.js');
         game.load.script('utils', './lib/utils.js');
         game.load.script('maps', './lib/maps.js');
+        game.load.script('unities', './lib/unities.js');
 
-        game.load.image('background', './assets/images/background.png');
         game.load.image('loading', './assets/images/progress-bar.png');
         game.load.image('brand', './assets/images/logo.png');
         game.load.script('Splash', './states/Splash.js');

@@ -44,6 +44,8 @@ class Splash {
     loadImages() {
         const images = [
             'menu-bg',
+            'menu-clouds-bg',
+            'menu-sky-bg',
             'options-bg',
             'quit-bg',
             'tableGround-tile',
@@ -74,16 +76,12 @@ class Splash {
     }
 
     loadMaps(){
-        game.load.tilemap('tilemap', './assets/maps/tableGround-map.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('tilemap', './assets/maps/tableGround-map.txt', null, Phaser.Tilemap.TILED_JSON);
     }
 
     loadGameObjects(){
         const objects = [
-            'Unity',
-            'Warrior',
-            'Hero',
-            'EnemyHero',
-            'EnemyWarrior'
+            'Unity'
         ];
 
         objects.forEach( object => game.load.script(`${object}`, `./game-objects/${object}.js`) );
@@ -91,7 +89,6 @@ class Splash {
 
     preload() {
         // load sprites to the stage
-        game.add.sprite(0, 0, 'background');
         game.add.existing(this.logo) //.scale.setTo(0.5) deprecated
         game.add.existing(this.loadingBar);
         game.add.existing(this.status);
@@ -132,7 +129,7 @@ class Splash {
 
         setTimeout(() => {
             game.state.start('GameMenu');
-        }, 1000); //1000ms = 1s before loading next screen
+        }, 2000); //2000ms = 2s before loading next screen
 
 
     }

@@ -15,6 +15,9 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 832,
     height: 608,
+    //resizable: false, //
+    //frame: false, //
+    //show: false, //
   });
 
   // and load the index.html of the app.
@@ -25,7 +28,7 @@ const createWindow = () => {
   });
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools(); //
 
   // Emitted when the window is closed.
   mainWindow.on("closed", () => {
