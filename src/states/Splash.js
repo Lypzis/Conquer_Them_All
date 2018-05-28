@@ -65,6 +65,14 @@ class Splash {
         icons.forEach( icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 30, 30) );
     }
 
+    loadButtons(){
+        const buttons = [
+            'execute-btn'
+        ];
+
+        buttons.forEach( button => game.load.spritesheet(`${button}`, `./assets/images/${button}.png`, 165, 34) );
+    }
+
     // loads a custom font
     loadFonts() {
         WebFont.load({
@@ -100,6 +108,7 @@ class Splash {
         this.loadFonts();
         this.loadBgm();
         this.loadMaps();
+        this.loadButtons();
         this.loadGameObjects();
         this.loadSpriteSheets();
     }

@@ -10,7 +10,17 @@ class TheGame {
 
     init() {
         this.titleText = game.add.text(game.world.centerX, 100, "Game", styles.lightHeader());
-        utils.centerGameObjects([this.titleText]);
+
+        this.executeActions = this.add.button(
+            this.world.centerX,
+            this.world.height - 48,
+            'execute-btn',
+            () => {
+                console.log('button pressed!');
+            }
+            , this, 1, 0, 2, 0);
+
+        utils.centerGameObjects([this.titleText, this.executeActions]);
 
         utils.navItemSetter('<- Back', 1, 90, target => {
             this.unities = null;
@@ -21,6 +31,7 @@ class TheGame {
             this.enemyHero = null;
             this.enemyWarriors = null;
             this.layer = null;
+            this.executeActions = null;
 
             game.state.start('GameMenu');
         }, null, true);
