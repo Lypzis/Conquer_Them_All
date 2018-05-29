@@ -11,16 +11,14 @@ class TheGame {
     init() {
         this.titleText = game.add.text(game.world.centerX, 100, "Game", styles.lightHeader());
 
-        this.executeActions = this.add.button(
+        this.executeActionsBtn = this.add.button(
             this.world.centerX,
             this.world.height - 48,
             'execute-btn',
-            () => {
-                console.log('button pressed!');
-            }
-            , this, 1, 0, 2, 0);
+            this.executeActions,
+            this, 1, 0, 2, 0);
 
-        utils.centerGameObjects([this.titleText, this.executeActions]);
+        utils.centerGameObjects([this.titleText, this.executeActionsBtn]);
 
         utils.navItemSetter('<- Back', 1, 90, target => {
             this.unities = null;
@@ -31,7 +29,7 @@ class TheGame {
             this.enemyHero = null;
             this.enemyWarriors = null;
             this.layer = null;
-            this.executeActions = null;
+            this.executeActionsBtn = null;
 
             game.state.start('GameMenu');
         }, null, true);
@@ -66,19 +64,30 @@ class TheGame {
             this.mouseX = maps.gridCoordinateConvert(game.input.x);
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
 
+            //if a proper walkable area is given
             this.unities.forEach(e => {
-                e.getUnitiesPosition(this.unities);
-                e.setMouseAxis(this.mouseX, this.mouseY);
+                // only give a 'new' place to go to the one we've selected
+                if(e.active)
+                    e.setMouseAxis(this.mouseX, this.mouseY); // NO NO NO, TIME TO MAKE USE OF THE WALKABLE AREA AND THE IDs
             });
+
+            console.log(this.unities);
+        });
+
+    }
+
+    // unities that have been given a proper place to go will now be ordered to move to it
+    executeActions(){
+        this.unities.forEach(e => {
+            if (e.mouseX != null && e.mouseY != null)
+                e.execute = true;
         });
 
     }
 
     create() {
-
         this.init();
         this.onClick();
-
     }
 
     update() {

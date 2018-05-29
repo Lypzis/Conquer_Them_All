@@ -29,6 +29,19 @@ class Unity extends Phaser.Sprite {
         this.gridSize = maps.getSquareSize();
         this.walkableTile = 1;
 
+        this.index = null;
+        this.positionX = null;
+        this.positionY = null;
+        this.leftSide = null;
+        this.rightSide = null;
+        this.mouseX = null;
+        this.mouseY = null;
+        this.distanceX = null;
+        this.distanceY = null;
+        this.distanceL = null;
+        this.moving = null;
+        this.execute = null;
+
         this.game.add.existing(this);
         // Enable arcade physics for moving with velocity
         this.game.physics.arcade.enable(this);
@@ -39,7 +52,7 @@ class Unity extends Phaser.Sprite {
         this.events.onInputUp.add(target => {
             this.active = true;
 
-            console.log(this);
+            this.execute = false; // it should wait for the 'Execute Actions' signal to do its action 
         });
         this.events.onInputOut.add(target => target.animations.play('default'));
         this.events.onInputOver.add(target => target.animations.play('hovered'));
@@ -56,6 +69,8 @@ class Unity extends Phaser.Sprite {
             this.mouseX = mouseX;
             this.mouseY = mouseY;
             this.setMaximumDistance();
+
+            this.active = false;
         }
     }
 
@@ -155,22 +170,18 @@ class Unity extends Phaser.Sprite {
                 this.moveRight();
                 this.moveLeft();
                 this.lCorrect = true;
-                this.active = false;
 
             } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topCorrect && this.distanceY <= this.movement) {
 
                 //console.log('Vertical movement.');
                 this.moveUp();
                 this.moveDown();
-                this.active = false;
 
             } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftCorrect && this.distanceX <= this.movement) {
 
                 //console.log('Horizontal movement.');
                 this.moveRight();
                 this.moveLeft();
-                this.active = false;
-
             }
         }
     }
@@ -270,7 +281,12 @@ class Unity extends Phaser.Sprite {
         this.setPosition();
         this.checkCollision();
         this.stopMovementTrigger();
-        this.pathSetter(); // now here;
+        
+        //this.pathSetter();
+        if(this.execute){
+            this.pathSetter();
+        } 
+
         this.autoCorrect();
         this.attackOpposition();
 
