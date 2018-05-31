@@ -8,6 +8,8 @@
 
 const utils = {
 
+    activated: [],
+
     /** - Receives array of objects and centralizes each one of them. 
      * @param {*} objects : Array of objects.
     */
@@ -70,20 +72,16 @@ const utils = {
     /** Menu navigation items factory
      * - Overall setting of a navigation item.
     * @param {*} text : navItem name displayed. 
-    * @param {*} order : the order it will appear, from top to bottom.
+    * @param {*} order : the order it will appear, from top to bottom (default is 1).
     * @param {*} padding : space between a previous navItem from the current.
     * @param {*} callback : function called when the button is clicked.
     * @param {*} revert : (optional) elements will white(false or null) else  black(true).
     * @param {*} center : (optional) elements align left(false or null) else center(true). 
     */
-    navItemSetter(text, order, padding, callback, revert, center) {
+    navItemSetter(text, order = 1, padding, callback, revert, center) {
         let navMenuStyle;
         let navMenuPosition;
         let anchor;
-
-        if (order <= 0) {
-            order = 1;
-        }
 
         // set to dark ? Default is light
         revert ? navMenuStyle = styles.navDarkItem() : navMenuStyle = styles.navLightItem();

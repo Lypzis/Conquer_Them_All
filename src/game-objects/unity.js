@@ -22,6 +22,8 @@ class Unity extends Phaser.Sprite {
         this.minChargeDist = unity.minChargeDist;
         //this.morale = null; 
 
+        //this.active = false;
+        this.active = false;
         this.inputEnabled = true;
         this.collided = false;
         this.attacking = false;
@@ -34,8 +36,6 @@ class Unity extends Phaser.Sprite {
         this.positionY = null;
         this.leftSide = null;
         this.rightSide = null;
-        this.mouseX = null;
-        this.mouseY = null;
         this.distanceX = null;
         this.distanceY = null;
         this.distanceL = null;
@@ -50,33 +50,84 @@ class Unity extends Phaser.Sprite {
         this.animations.add('hovered', [1], 1, true);
 
         this.events.onInputUp.add(target => {
-            this.active = true;
+            target.active = target.active ? false : true;
 
-            this.execute = false; // it should wait for the 'Execute Actions' signal to do its action 
+            console.log(target.active);
+
+            target.execute = false; // it should wait for the 'Execute Actions' signal to do its action 
         });
+
         this.events.onInputOut.add(target => target.animations.play('default'));
         this.events.onInputOver.add(target => target.animations.play('hovered'));
-
     }
 
     /**
      * - Get and set X and Y of the place clicked by the mouse if sprite is active and not moving.
      * @param {*} mouseX : current mouse X position.
      * @param {*} mouseY : current mouse Y position.
-     */ 
+     */
     setMouseAxis(mouseX, mouseY) {
-        if (!this.moving && this.active) {
-            this.mouseX = mouseX;
-            this.mouseY = mouseY;
-            this.setMaximumDistance();
+        const limit = maps.checkAcceptableAreaLimit(mouseX, mouseY);
 
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+
+        this.setMaximumDistance();
+
+        if(!limit || (this.distanceL > this.movement || this.distanceX > this.movement || this.distanceY > this.movement)){
+            this.active = false;
+            this.mouseX = null;
+            this.mouseY = null;
+        }else {
+            if (!this.moving && this.active) {
+                this.active = false;
+                utils.activated.push(this);
+            }
+            /*
+            Things to consider:
+                1-Object needs to properly deactivate if clicked to 
+                an unlawfull area(out of board or greater than its movement distance) 
+                or itself a second time.
+                2-Queue lib to handle objects with orders in wait to execute.
+            */
+           
+        }
+        /*
+        if (!this.moving && this.active) {
+                const temp = utils.activated.find(e => e.id === this.id);
+
+                if(temp === undefined){
+                    utils.activated.push(this);
+                }else {
+                    utils.activated.splice( utils.activated.indexOf(temp.id), 1);
+                }
+                
+            }
+        */
+
+        //console.log(this.active);
+        // if in the acceptable limit and not the same position as it is now
+        /*
+        if (limit && !(mouseX == this.positionX && mouseY == this.positionY)) {
+            if (!this.moving && this.active) {
+                this.mouseX = mouseX;
+                this.mouseY = mouseY;
+                this.setMaximumDistance();
+
+                this.active = false;
+
+                utils.activated.push(this);
+            }
+        } else {
+            // check if this is in activated array;
             this.active = false;
         }
+        */
     }
 
     /**
      * - Ensures that this won't move to a place outside its limitation movement range.
-     */ 
+     */
     setMaximumDistance() {
         this.distanceX = Math.abs(this.mouseX - this.positionX);
         this.distanceY = Math.abs(this.mouseY - this.positionY);
@@ -85,7 +136,7 @@ class Unity extends Phaser.Sprite {
 
     /**
      * - Give positive speed to move to the X right direction.
-     */ 
+     */
     moveRight() {
         if (this.mouseX > this.positionX) {
             this.body.velocity.x = this.speed;
@@ -95,7 +146,7 @@ class Unity extends Phaser.Sprite {
 
     /**
      * - Give negative speed to move to the X left direction.
-     */ 
+     */
     moveLeft() {
         if (this.mouseX < this.positionX) {
             this.body.velocity.x = -this.speed;
@@ -105,7 +156,7 @@ class Unity extends Phaser.Sprite {
 
     /**
      * - Give negative speed to move to the Y top direction.
-     */ 
+     */
     moveUp() {
         if (this.mouseY < this.positionY) {
             this.body.velocity.y = -this.speed;
@@ -115,7 +166,7 @@ class Unity extends Phaser.Sprite {
 
     /**
      * - Give positive speed to move to the Y bottom direction.
-     */ 
+     */
     moveDown() {
         if (this.mouseY > this.positionY) {
             this.body.velocity.y = this.speed;
@@ -125,7 +176,7 @@ class Unity extends Phaser.Sprite {
 
     /**
      * - The sprite deslocate itself from the center of the square after it moves, this adjust him back when it stops moving.
-     */ 
+     */
     autoCorrect() {
         if (this.body.velocity.y != 0 || this.body.velocity.x != 0) {
             this.inputEnabled = false;
@@ -158,9 +209,9 @@ class Unity extends Phaser.Sprite {
     }
 
     //obs: being called multiple times when moving to right, bottom or L in the respective directions
-     /**
-     * - If distance, mouseX and mouseY have valid values, verify which type of movement it needs to execute.
-     */ 
+    /**
+    * - If distance, mouseX and mouseY have valid values, verify which type of movement it needs to execute.
+    */
     pathSetter() {
         if (this.mouseX != undefined && this.mouseY != undefined) {
 
@@ -184,11 +235,12 @@ class Unity extends Phaser.Sprite {
                 this.moveLeft();
             }
         }
+
     }
 
-     /**
-     * - Cause attack damage to enemy health standing in the right or left position(1 square distance).
-     */ 
+    /**
+    * - Cause attack damage to enemy health standing in the right or left position(1 square distance).
+    */
     attackOpposition() {
         // damage only once, per turn
         if (!this.attacking) {
@@ -218,15 +270,15 @@ class Unity extends Phaser.Sprite {
     /**
      * - Acknowledge all other unities in the field.
      * @param {*} unities : array of all current unities created.
-     */ 
+     */
     getUnitiesPosition(unities) {
         //no need to acknowledge ourselves, that's what filter is for :D
         this.otherUnities = unities.filter(e => e.id != this.id);
     }
 
-     /**
-     * - Set the its rightSide and leftSide and position X and Y in tiles squares rather than by window size axis, this makes easier for positioning.
-     */ 
+    /**
+    * - Set the its rightSide and leftSide and position X and Y in tiles squares rather than by window size axis, this makes easier for positioning.
+    */
     setPosition() {
         this.index = maps.getLayerIndex();
         this.positionX = maps.gridCoordinateConvert(this.x);
@@ -267,11 +319,12 @@ class Unity extends Phaser.Sprite {
             this.body.velocity.x = 0;
         }
 
-        if (this.positionY == this.mouseY && !this.topCorrect) { 
+        if (this.positionY == this.mouseY && !this.topCorrect) {
             this.body.velocity.y = 0;
         } else if (this.positionY == this.mouseY - 1) {
             this.body.velocity.y = 0;
         }
+
     }
 
     update() {
@@ -281,14 +334,23 @@ class Unity extends Phaser.Sprite {
         this.setPosition();
         this.checkCollision();
         this.stopMovementTrigger();
-        
+
+        /////////////////////////////////////////////////////////
         //this.pathSetter();
-        if(this.execute){
+        if (this.execute) {
             this.pathSetter();
-        } 
+        }
+        /////////////////////////////////////////////////////////
+
 
         this.autoCorrect();
         this.attackOpposition();
+
+        /*
+        if (this.positionX === this.mouseX && this.positionY === this.mouseY) {
+            this.done = true;
+        }
+        */
 
         //this.render();
     }

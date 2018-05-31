@@ -84,11 +84,23 @@ const maps = {
     },
 
     /**
-     * - Get the table moveable area.
-     * @returns : Moveable area of the table. 
+     * - Get the table moveable area parameters.
+     * @returns : Moveable limits area of the table. 
      */
     getWalkableArea() {
-        return this.walkableArea;
+        return {
+            minY: maps.gridCoordinateConvert(this.walkableArea.y),
+            minX: maps.gridCoordinateConvert(this.walkableArea.x),
+            maxY: maps.gridCoordinateConvert(this.walkableArea.y + this.walkableArea.height) - 1,
+            maxX: maps.gridCoordinateConvert(this.walkableArea.x + this.walkableArea.width) - 1
+        };
+    },
+
+    checkAcceptableAreaLimit(mouseX, mouseY){
+        const area = this.getWalkableArea(); 
+
+        return  (mouseX >= area.minX && mouseX <= area.maxX) && 
+                (mouseY >= area.minY && mouseY <= area.maxY);
     },
 
     /**

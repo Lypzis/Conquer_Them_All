@@ -29,6 +29,7 @@ class TheGame {
             this.enemyHero = null;
             this.enemyWarriors = null;
             this.layer = null;
+            //this.limits = null;
             this.executeActionsBtn = null;
 
             game.state.start('GameMenu');
@@ -52,37 +53,44 @@ class TheGame {
             this.warriors
         );
 
+        this.executeActionsOrder = [];
+
         this.layer = maps.getLayer();
     }
 
     onClick() {
-
-        //console.log(maps.getWalkableArea());
-
         // On click
         game.input.onDown.add(() => {
+            // capture click axis
             this.mouseX = maps.gridCoordinateConvert(game.input.x);
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
 
-            //if a proper walkable area is given
+            //this.limits = maps.checkAcceptableAreaLimit(this.mouseX, this.mouseY);
+
+            // gets the id of the activated object
             this.unities.forEach(e => {
-                // only give a 'new' place to go to the one we've selected
-                if(e.active)
-                    e.setMouseAxis(this.mouseX, this.mouseY); // NO NO NO, TIME TO MAKE USE OF THE WALKABLE AREA AND THE IDs
+                if (e.active) {
+                    e.setMouseAxis(this.mouseX, this.mouseY);
+                    //this.executeActionsOrder.push(e);
+                }
             });
 
-            console.log(this.unities);
-        });
 
+        });
     }
 
     // unities that have been given a proper place to go will now be ordered to move to it
-    executeActions(){
-        this.unities.forEach(e => {
-            if (e.mouseX != null && e.mouseY != null)
+    executeActions() {
+        console.log(utils.activated)
+
+        utils.activated.forEach(e => {
+            if (e.mouseX != null && e.mouseY != null) {
                 e.execute = true;
+            }
         });
 
+        utils.activated = [];
+        
     }
 
     create() {
@@ -91,6 +99,7 @@ class TheGame {
     }
 
     update() {
+        //this.doneExecuting = this.unities.map(e => e.done);
 
         //need avoid this loop, ...somehow
         //possible performance hit
