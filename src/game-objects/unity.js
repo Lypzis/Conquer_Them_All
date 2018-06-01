@@ -50,9 +50,15 @@ class Unity extends Phaser.Sprite {
         this.animations.add('hovered', [1], 1, true);
 
         this.events.onInputUp.add(target => {
-            target.active = target.active ? false : true;
 
-            console.log(target.active);
+            //removes from the queue list if clicked when already received an order
+            if (queue.checkExists(this)) {
+                queue.removeExists(this);
+                this.active = false;
+            } else {
+                // inactivate if active else active to receive order
+                this.active = this.active ? !this.active : true;
+            }
 
             target.execute = false; // it should wait for the 'Execute Actions' signal to do its action 
         });
@@ -72,66 +78,30 @@ class Unity extends Phaser.Sprite {
         this.mouseX = mouseX;
         this.mouseY = mouseY;
 
-        this.setMaximumDistance();
+        const invalidDistance = this.setMaximumDistance();
 
-        if(!limit || (this.distanceL > this.movement || this.distanceX > this.movement || this.distanceY > this.movement)){
+        if (!limit || invalidDistance) {
             this.active = false;
             this.mouseX = null;
             this.mouseY = null;
-        }else {
-            if (!this.moving && this.active) {
-                this.active = false;
-                utils.activated.push(this);
-            }
-            /*
-            Things to consider:
-                1-Object needs to properly deactivate if clicked to 
-                an unlawfull area(out of board or greater than its movement distance) 
-                or itself a second time.
-                2-Queue lib to handle objects with orders in wait to execute.
-            */
-           
-        }
-        /*
-        if (!this.moving && this.active) {
-                const temp = utils.activated.find(e => e.id === this.id);
-
-                if(temp === undefined){
-                    utils.activated.push(this);
-                }else {
-                    utils.activated.splice( utils.activated.indexOf(temp.id), 1);
-                }
-                
-            }
-        */
-
-        //console.log(this.active);
-        // if in the acceptable limit and not the same position as it is now
-        /*
-        if (limit && !(mouseX == this.positionX && mouseY == this.positionY)) {
-            if (!this.moving && this.active) {
-                this.mouseX = mouseX;
-                this.mouseY = mouseY;
-                this.setMaximumDistance();
-
-                this.active = false;
-
-                utils.activated.push(this);
-            }
         } else {
-            // check if this is in activated array;
-            this.active = false;
+            if (!this.moving && this.active) {
+                this.active = false;
+                queue.add(this);
+            }
         }
-        */
     }
 
     /**
      * - Ensures that this won't move to a place outside its limitation movement range.
-     */
+     * @returns : True, if distance is invalid.
+    */
     setMaximumDistance() {
         this.distanceX = Math.abs(this.mouseX - this.positionX);
         this.distanceY = Math.abs(this.mouseY - this.positionY);
         this.distanceL = this.distanceX + this.distanceY;
+
+        return this.distanceL > this.movement || this.distanceX > this.movement || this.distanceY > this.movement;
     }
 
     /**
@@ -215,20 +185,20 @@ class Unity extends Phaser.Sprite {
     pathSetter() {
         if (this.mouseX != undefined && this.mouseY != undefined) {
 
-            if (this.positionX != this.mouseX && this.positionY != this.mouseY && !this.leftCorrect && this.distanceL <= this.movement) {
+            if (this.positionX != this.mouseX && this.positionY != this.mouseY && !this.leftCorrect) { 
 
                 //console.log('L movement.');
                 this.moveRight();
                 this.moveLeft();
                 this.lCorrect = true;
 
-            } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topCorrect && this.distanceY <= this.movement) {
+            } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topCorrect) { 
 
                 //console.log('Vertical movement.');
                 this.moveUp();
                 this.moveDown();
 
-            } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftCorrect && this.distanceX <= this.movement) {
+            } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftCorrect) { 
 
                 //console.log('Horizontal movement.');
                 this.moveRight();
@@ -342,15 +312,8 @@ class Unity extends Phaser.Sprite {
         }
         /////////////////////////////////////////////////////////
 
-
         this.autoCorrect();
         this.attackOpposition();
-
-        /*
-        if (this.positionX === this.mouseX && this.positionY === this.mouseY) {
-            this.done = true;
-        }
-        */
 
         //this.render();
     }
@@ -360,15 +323,15 @@ class Unity extends Phaser.Sprite {
     render() {
         let colorLeft = 'rgba(0,255,0,0.3)';
         let colorRight = 'rgba(0,255,0,0.3)';
-
+ 
         if (this.leftSide.index !== this.walkableTile) {
             colorLeft = 'rgba(255,0,0,0.3)';
         }
-
+ 
         if (this.rigthSide.index !== this.walkableTile) {
             colorRight = 'rgba(255,0,0,0.3)';
         }
-
+ 
         game.debug.geom(new Phaser.Rectangle(this.leftSide.worldX, this.leftSide.worldY, 32, 32), colorLeft, true);
         game.debug.geom(new Phaser.Rectangle(this.rigthSide.worldX, this.rigthSide.worldY, 32, 32), colorRight, true);
             

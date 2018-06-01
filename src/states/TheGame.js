@@ -56,6 +56,27 @@ class TheGame {
         this.executeActionsOrder = [];
 
         this.layer = maps.getLayer();
+
+        /////////////////////////////////////////////////////////////////////
+        //Queue tests
+        /*
+        //adding
+        queue.add(this.unities[0]);
+        queue.add(this.unities[0]);
+        //console.log(queue.activated);
+
+        //removing
+        console.log('removed: ' + this.unities[2].id);
+        queue.add(this.unities[1]);
+        queue.add(this.unities[2]);
+        console.log(queue.activated);
+        queue.removeExists(this.unities[2]);
+        console.log('removed: ' + this.unities[0].id);
+        queue.removeExists(this.unities[0]);
+        queue.removeExists(this.unities[0]);
+        console.log(queue.activated);
+        */
+        ////////////////////////////////////////////////////////////////////
     }
 
     onClick() {
@@ -81,15 +102,14 @@ class TheGame {
 
     // unities that have been given a proper place to go will now be ordered to move to it
     executeActions() {
-        console.log(utils.activated)
 
-        utils.activated.forEach(e => {
+        queue.activated.forEach(e => {
             if (e.mouseX != null && e.mouseY != null) {
                 e.execute = true;
             }
         });
 
-        utils.activated = [];
+        queue.activated = [];
         
     }
 

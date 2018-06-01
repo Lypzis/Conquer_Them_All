@@ -15,6 +15,7 @@ class Main {
         game.load.script('utils', './lib/utils.js');
         game.load.script('maps', './lib/maps.js');
         game.load.script('unities', './lib/unities.js');
+        game.load.script('queue', './lib/queue.js');
 
         game.load.image('loading', './assets/images/progress-bar.png');
         game.load.image('brand', './assets/images/logo.png');

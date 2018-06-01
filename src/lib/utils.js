@@ -8,8 +8,6 @@
 
 const utils = {
 
-    activated: [],
-
     /** - Receives array of objects and centralizes each one of them. 
      * @param {*} objects : Array of objects.
     */
