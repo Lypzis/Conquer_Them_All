@@ -102,14 +102,23 @@ class TheGame {
 
     // unities that have been given a proper place to go will now be ordered to move to it
     executeActions() {
+        
+        // verify if previous is stoped
+
+        //let time = 0;
 
         queue.activated.forEach(e => {
-            if (e.mouseX != null && e.mouseY != null) {
+            //setTimeout(() => {
                 e.execute = true;
-            }
+            //}, time);
+
+            //time += 2000; // migué 
         });
 
-        queue.activated = [];
+       
+
+       console.log(queue.activated);
+        //queue.activated = [];
         
     }
 

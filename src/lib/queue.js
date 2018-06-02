@@ -32,7 +32,15 @@ const queue = {
             this.activated.push(unity);
     },
 
-    awaitNextInLine(array) {
+    safeClear(){
+        this.activated.forEach(e => {
+            e.active = false;
+            e.mouseX = null;
+            e.mouseY = null;
+            e.execute = false;   
+        });
 
+        this.activated = [];
     }
+
 }

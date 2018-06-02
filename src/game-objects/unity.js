@@ -185,20 +185,20 @@ class Unity extends Phaser.Sprite {
     pathSetter() {
         if (this.mouseX != undefined && this.mouseY != undefined) {
 
-            if (this.positionX != this.mouseX && this.positionY != this.mouseY && !this.leftCorrect) { 
+            if (this.positionX != this.mouseX && this.positionY != this.mouseY && !this.leftCorrect) {
 
                 //console.log('L movement.');
                 this.moveRight();
                 this.moveLeft();
                 this.lCorrect = true;
 
-            } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topCorrect) { 
+            } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topCorrect) {
 
                 //console.log('Vertical movement.');
                 this.moveUp();
                 this.moveDown();
 
-            } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftCorrect) { 
+            } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftCorrect) {
 
                 //console.log('Horizontal movement.');
                 this.moveRight();
@@ -297,6 +297,37 @@ class Unity extends Phaser.Sprite {
 
     }
 
+    ////////////////////////////////////////////////////////////////////
+    checkAll() {
+        if (queue.activated.length > 0) {
+
+            const index = queue.activated.indexOf(this);
+            const lastIndex = queue.activated.length - 1;
+
+            if (index === lastIndex) {
+                return (!queue.activated[lastIndex].moving && (queue.activated[lastIndex].body.velocity.y == 0 && queue.activated[lastIndex].body.velocity.x == 0) &&
+                    (queue.activated[lastIndex].mouseX == queue.activated[lastIndex].positionX && queue.activated[lastIndex].mouseY == queue.activated[lastIndex].positionY));
+            }
+
+            return false;
+        }
+    }
+    ///////////////////////////////////////////////////////////////////
+
+    checkPreviousExecuted() {
+        if (queue.activated.length > 0) {
+            const index = queue.activated.indexOf(this);
+
+            if (index == 0) {
+                return true;
+            }
+
+            return (!queue.activated[index - 1].moving && (queue.activated[index - 1].body.velocity.y == 0 && queue.activated[index - 1].body.velocity.x == 0) &&
+                (queue.activated[index - 1].mouseX == queue.activated[index - 1].positionX && queue.activated[index - 1].mouseY == queue.activated[index - 1].positionY));
+        }
+    }
+
+
     update() {
 
         utils.checkObjectsMapCollision(this);
@@ -307,10 +338,16 @@ class Unity extends Phaser.Sprite {
 
         /////////////////////////////////////////////////////////
         //this.pathSetter();
-        if (this.execute) {
+        if (this.execute && this.checkPreviousExecuted()) {
             this.pathSetter();
         }
-        /////////////////////////////////////////////////////////
+
+        ///////////////////////////////////////////////
+        if (this.execute && this.checkAll()) {
+            // turn their execute false again before removing
+            queue.safeClear();
+        }
+        //////////////////////////////////////////////
 
         this.autoCorrect();
         this.attackOpposition();
