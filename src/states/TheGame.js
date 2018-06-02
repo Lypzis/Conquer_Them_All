@@ -11,6 +11,15 @@ class TheGame {
     init() {
         this.titleText = game.add.text(game.world.centerX, 100, "Game", styles.lightHeader());
 
+        // add game-table-bg, it should place itself right above the table, then some pixels left and some to top;
+        this.tableBG = game.add.image(0, 0, 'game-table-bg');
+
+        // total army feedback main player image
+        this.army1 = game.add.sprite(80, game.world.centerY - 32, 'hero-icon-64', 0);
+        
+        // total army feedback main enemy image
+        this.army2 = game.add.sprite(game.world.width - 80, game.world.centerY - 32, 'enemy-hero-icon-64', 0);
+
         this.executeActionsBtn = this.add.button(
             this.world.centerX,
             this.world.height - 48,
@@ -18,7 +27,7 @@ class TheGame {
             this.executeActions,
             this, 1, 0, 2, 0);
 
-        utils.centerGameObjects([this.titleText, this.executeActionsBtn]);
+        utils.centerGameObjects([this.titleText, this.executeActionsBtn, this.army1, this.army2]);
 
         utils.navItemSetter('<- Back', 1, 90, target => {
             this.unities = null;

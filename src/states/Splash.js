@@ -48,6 +48,7 @@ class Splash {
             'menu-sky-bg',
             'options-bg',
             'quit-bg',
+            'game-table-bg',
             'tableGround-tile',
         ];
 
@@ -62,6 +63,14 @@ class Splash {
             'enemy-warrior-icon'
         ];
 
+        const icons64 = [
+            'warrior-icon-64',
+            'hero-icon-64',
+            'enemy-hero-icon-64',
+            'enemy-warrior-icon-64'
+        ];
+
+        icons64.forEach( icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 60, 60) );
         icons.forEach( icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 30, 30) );
     }
 
