@@ -42,7 +42,8 @@ const utils = {
                 unity = new Unity(
                     game,
                     x + points[columnNumber],
-                    y + points[i], `${unityIconKey}`,
+                    y + points[i], 
+                    `${unityIconKey}`,
                     unities.getObject(unityIconKey),
                     id,
                     friendly

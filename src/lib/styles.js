@@ -5,7 +5,15 @@
  * @doc: Global styles object, each method returns an style object
 */
 //////////////////////////////////////////////////////////////////////////////
+
 const styles = {
+
+    ////////////////////////////////////////////////////////////////////
+    fonts: ['Kaisg', 'OldLondon-Alternate', 'OldLondon'],
+    index: 0, //header 
+    index2: 2,  //navigation items
+    // is it necessary to have one for texts? or at least the one used in navigation items but of different size?
+    ////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
     // For lighter backgrounds font style
@@ -14,7 +22,7 @@ const styles = {
     */
     darkHeader() {
         return {
-            font: 'bold 65pt SkydomeGlory',
+            font: `65pt ${headers}`,
             fill: 'black',
             align: 'center'
         }
@@ -28,9 +36,9 @@ const styles = {
     navDarkItem() {
         return {
             base: {
-                font: '30pt SkydomeGlory',
+                font: `30pt ${navItems}`,
                 align: 'left',
-                strokeThickness: 4,
+                strokeThickness: 2,
             },
 
             default: {
@@ -53,7 +61,7 @@ const styles = {
     */
     lightHeader() {
         return {
-            font: 'bold 65pt SkydomeGlory',
+            font: `65pt ${headers}`,
             fill: '#fdfdfd',
             align: 'center'
         }
@@ -67,7 +75,7 @@ const styles = {
     navLightItem() {
         return {
             base: {
-                font: '30pt SkydomeGlory',
+                font: `30pt ${navItems}`,
                 align: 'left',
                 strokeThickness: 4,
             },
@@ -84,6 +92,27 @@ const styles = {
         }
     },
 
+
+    textInfoTitle() {
+        return {
+            font: `18pt ${navItems}`,
+            align: 'left',
+            fill: 'white',
+            stroke: 'rgba(0,0,0,0)',
+            strokeThickness: 4,
+        }
+    },
+
+    textInfoStatus() {
+        return {
+            font: `16pt ${navItems}`, 
+            align: 'left',
+            fill: 'white',
+            stroke: 'rgba(0,0,0,0)',
+            strokeThickness: 4,
+        }
+    },
+
     ///////////////////////////////////////////////////////////////////////
     // Items alignment
     /** - Place item to the center X position.
@@ -96,14 +125,19 @@ const styles = {
         }
     },
 
-    /** - Place item to the left. 
-     * @returns : Left position style.
-    */
-    leftItem() {
-        return {
-            startY: 165,
-            startX: 30
-        }
-    },
+        /** - Place item to the left. 
+         * @returns : Left position style.
+        */
+        leftItem() {
+    return {
+        startY: 165,
+        startX: 30
+    }
+},
 
 }
+
+/////////////////////////////////////////////////////////////////////
+const headers = styles.fonts[styles.index];
+const navItems = styles.fonts[styles.index2];
+/////////////////////////////////////////////////////////////////////

@@ -15,8 +15,8 @@ class GameMenu {
         this.titleText = game.add.text(game.world.centerX, 100, "Conquer Them All", styles.lightHeader());
 
         utils.navItemSetter('Start', 2, 60, target => game.state.start('TheGame') );
-        utils.navItemSetter('Options', 3, 60, target => game.state.start('Options') );
-        utils.navItemSetter('Instructions', 4, 60, target => console.log('You clicked instructions!') );
+        utils.navItemSetter('Instructions', 3, 60, target => console.log('You clicked instructions!') );
+        utils.navItemSetter('Options', 4, 60, target => game.state.start('Options') );
         utils.navItemSetter('Credits', 5, 60, target => console.log('Credits') );
         utils.navItemSetter('Quit', 6, 60, () => ipcRenderer.send('quit') ); //needs "Are you sure?" question
 

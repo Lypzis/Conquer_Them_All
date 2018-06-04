@@ -6,6 +6,8 @@
 */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//Urgent: Needs a treshhold when moving left and up to avoid collision and interation problems
+
 class Unity extends Phaser.Sprite {
     constructor(game, x, y, unityKey, unity, id, friendly) {
         super(game, x, y, unityKey);
@@ -22,9 +24,10 @@ class Unity extends Phaser.Sprite {
         this.minChargeDist = unity.minChargeDist;
         //this.morale = null; 
 
-        //this.active = false;
+        //this.check = false;
         this.active = false;
         this.inputEnabled = true;
+        this.executePressed = false; 
         this.collided = false;
         this.attacking = false;
         this.otherUnities = [];
@@ -63,8 +66,9 @@ class Unity extends Phaser.Sprite {
             target.execute = false; // it should wait for the 'Execute Actions' signal to do its action 
         });
 
-        this.events.onInputOut.add(target => target.animations.play('default'));
-        this.events.onInputOver.add(target => target.animations.play('hovered'));
+        this.events.onInputOut.add(target => {this.check = false; target.animations.play('default');  console.log(this.check)});
+
+        this.events.onInputOver.add(target => {this.check = true; target.animations.play('hovered');  console.log(this.check)});
     }
 
     /**
@@ -225,13 +229,16 @@ class Unity extends Phaser.Sprite {
                     this.health -= damage;
                 }
 
-                // if thre is an unity in the right side of this and is considered enemy
+                // if there is an unity in the right side of this and is considered enemy
                 if ((e.positionX == this.rightSide.x && e.positionY == this.rightSide.y) && e.friendly != this.friendly) {
                     this.attacking = true;
 
                     let damage = e.attack * this.defense;
-                    this.health -= damage;
+                    this.health -= damage;   
                 }
+
+                if(this.health < 0)
+                    this.health = 0;
             });
         }
 
@@ -242,8 +249,8 @@ class Unity extends Phaser.Sprite {
      * @param {*} unities : array of all current unities created.
      */
     getUnitiesPosition(unities) {
-        //no need to acknowledge ourselves, that's what filter is for :D
-        this.otherUnities = unities.filter(e => e.id != this.id);
+        //no need to acknowledge ourselves or something dead..., that's what filter is for :D
+        this.otherUnities = unities.filter(e => e.id != this.id && e.alive);
     }
 
     /**
@@ -312,7 +319,6 @@ class Unity extends Phaser.Sprite {
             return false;
         }
     }
-    ///////////////////////////////////////////////////////////////////
 
     checkPreviousExecuted() {
         if (queue.activated.length > 0) {
@@ -327,9 +333,13 @@ class Unity extends Phaser.Sprite {
         }
     }
 
+    amIalive(){
+        if(this.health <= 0)
+            this.destroy();
+    }
+    ///////////////////////////////////////////////////////////////////
 
     update() {
-
         utils.checkObjectsMapCollision(this);
 
         this.setPosition();
@@ -347,10 +357,16 @@ class Unity extends Phaser.Sprite {
             // turn their execute false again before removing
             queue.safeClear();
         }
+
+        if(this.executePressed){
+            this.attacking = false;
+            this.executePressed = false;
+        }
         //////////////////////////////////////////////
 
         this.autoCorrect();
         this.attackOpposition();
+        this.amIalive();
 
         //this.render();
     }

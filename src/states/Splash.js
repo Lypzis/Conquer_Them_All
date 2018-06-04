@@ -29,7 +29,7 @@ class Splash {
             'Options'
         ];
 
-        states.forEach( state => game.load.script(`${state}`, `./states/${state}.js`) );
+        states.forEach(state => game.load.script(`${state}`, `./states/${state}.js`));
     }
 
     loadBgm() {
@@ -38,7 +38,7 @@ class Splash {
             'fear_and_wonder'
         ];
 
-        audios.forEach( audio => game.load.audio(`${audio}`, `./assets/bgm/${audio}.mp3`) );
+        audios.forEach(audio => game.load.audio(`${audio}`, `./assets/bgm/${audio}.mp3`));
     }
 
     loadImages() {
@@ -52,10 +52,10 @@ class Splash {
             'tableGround-tile',
         ];
 
-        images.forEach( image => game.load.image(`${image}`, `./assets/images/${image}.png`) );
+        images.forEach(image => game.load.image(`${image}`, `./assets/images/${image}.png`));
     }
 
-    loadSpriteSheets(){
+    loadSpriteSheets() {
         const icons = [
             'warrior-icon',
             'hero-icon',
@@ -70,38 +70,44 @@ class Splash {
             'enemy-warrior-icon-64'
         ];
 
-        icons64.forEach( icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 60, 60) );
-        icons.forEach( icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 30, 30) );
+        icons64.forEach(icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 60, 60));
+        icons.forEach(icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 30, 30));
     }
 
-    loadButtons(){
+    loadButtons() {
         const buttons = [
             'execute-btn'
         ];
 
-        buttons.forEach( button => game.load.spritesheet(`${button}`, `./assets/images/${button}.png`, 165, 34) );
+        buttons.forEach(button => game.load.spritesheet(`${button}`, `./assets/images/${button}.png`, 165, 34));
     }
 
     // loads a custom font
     loadFonts() {
         WebFont.load({
             custom: {
-                families: ['SkydomeGlory'],
-                urls: ['./assets/style/skydome-glory.css']
+                families: [
+                    'Kaisg',
+                    'OldLondon-Alternate',
+                    'OldLondon'
+                ],
+                urls: [
+                    './assets/style/fonts.css', 
+                ]
             }
         })
     }
 
-    loadMaps(){
+    loadMaps() {
         game.load.tilemap('tilemap', './assets/maps/tableGround-map.txt', null, Phaser.Tilemap.TILED_JSON);
     }
 
-    loadGameObjects(){
+    loadGameObjects() {
         const objects = [
             'Unity'
         ];
 
-        objects.forEach( object => game.load.script(`${object}`, `./game-objects/${object}.js`) );
+        objects.forEach(object => game.load.script(`${object}`, `./game-objects/${object}.js`));
     }
 
     preload() {
