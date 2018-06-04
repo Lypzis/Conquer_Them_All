@@ -113,6 +113,16 @@ const styles = {
         }
     },
 
+    version() {
+        return {
+            font: `10pt ${navItems}`, 
+            align: 'right',
+            fill: 'white',
+            stroke: 'rgba(0,0,0,0)',
+            strokeThickness: 4,
+        }
+    },
+
     ///////////////////////////////////////////////////////////////////////
     // Items alignment
     /** - Place item to the center X position.

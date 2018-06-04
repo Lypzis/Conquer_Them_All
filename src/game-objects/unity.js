@@ -13,6 +13,7 @@ class Unity extends Phaser.Sprite {
         super(game, x, y, unityKey);
 
         this.id = id;
+        this.key = unityKey;
         this.friendly = friendly;
         this.defense = unity.defense;
         this.attack = unity.attack;
@@ -66,9 +67,15 @@ class Unity extends Phaser.Sprite {
             target.execute = false; // it should wait for the 'Execute Actions' signal to do its action 
         });
 
-        this.events.onInputOut.add(target => {this.check = false; target.animations.play('default');  console.log(this.check)});
+        this.events.onInputOut.add(target => {
+            this.check = false; 
+            target.animations.play('default');
+        });
 
-        this.events.onInputOver.add(target => {this.check = true; target.animations.play('hovered');  console.log(this.check)});
+        this.events.onInputOver.add(target => {
+            this.check = true; 
+            target.animations.play('hovered');  
+        });
     }
 
     /**

@@ -13,6 +13,8 @@ class GameMenu {
     init(){
 
         this.titleText = game.add.text(game.world.centerX, 100, "Conquer Them All", styles.lightHeader());
+        
+        this.version = game.add.text(game.world.width - 64, game.world.height - 48, "0.7.0", styles.version());
 
         utils.navItemSetter('Start', 2, 60, target => game.state.start('TheGame') );
         utils.navItemSetter('Instructions', 3, 60, target => console.log('You clicked instructions!') );

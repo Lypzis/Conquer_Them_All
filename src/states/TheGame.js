@@ -58,16 +58,19 @@ class TheGame {
 
         //////////////////////////////////////////////////////////////////////////////////////////////
         // total army feedback main player image
-        this.army1 = game.add.sprite(80, game.world.centerY - 32, 'hero-icon-64', 0);
+        this.army1 = game.add.sprite(80, game.world.centerY - 32, 'hero-icon-64', 0); //
 
-        this.army1Title = game.add.text(this.army1.x + (this.army1.width*2), game.world.centerY - 40, "Hero Army", styles.textInfoTitle());
+        this.army1Title = game.add.text(this.army1.x + (this.army1.width*2), game.world.centerY - 40, null, styles.textInfoTitle());
         this.army1Status = game.add.text(this.army1.x + (this.army1.width*2), game.world.centerY - 16, null, styles.textInfoStatus());
 
         // total army feedback main enemy image
-        this.army2 = game.add.sprite(game.world.width - 80, game.world.centerY - 32, 'enemy-hero-icon-64', 0);
+        this.army2 = game.add.sprite(game.world.width - 80, game.world.centerY - 32, 'enemy-hero-icon-64', 0); 
 
-        this.army2Title = game.add.text(this.army2.x - (this.army2.width*2), game.world.centerY - 40, "Enemy Army", styles.textInfoTitle());
+        this.army2Title = game.add.text(this.army2.x - (this.army2.width*2), game.world.centerY - 40, null, styles.textInfoTitle());
         this.army2Status = game.add.text(this.army2.x - (this.army2.width*2), game.world.centerY - 16, null, styles.textInfoStatus());
+        
+        this.overWrite = false; //??
+        this.onHover = false; //??
         //////////////////////////////////////////////////////////////////////////////////////////////
 
         utils.centerGameObjects([
@@ -82,7 +85,7 @@ class TheGame {
         ]);
     }
 
-    calculateTotalTroops(){
+    checkTotalTroops(){
         let enemyTotal = 0;
         let friendlyTotal = 0;
         
@@ -93,18 +96,48 @@ class TheGame {
                 enemyTotal += e.health;
         });
 
+        this.army1Title.text = 'Hero Army';
+        this.army2Title.text = 'Enemy Army';
         this.army1Status.text = friendlyTotal;
         this.army2Status.text = enemyTotal;
+
     }
 
     // how to???????????
     checkUnitStatusOnHover(){
+        this.unity = {
+            //name: null, future implementation
+            key: null,
+            health: null,
+            attack: null,
+            defense: null,
+            friendly: null,
+        };
+
+        //let picture = '-64';
+        
         this.unities.forEach(e => {
             if(e.check){
-                console.log(`${e.id}\n${e.health}\n${e.attack}\n${e.defense}`);
+                this.unity.key = e.key;
+                this.unity.health = e.health;
+                this.unity.attack = e.attack;
+                this.unity.defense = `${Math.floor((1 - e.defense) * 100)}%`;
+                this.unity.friendly = e.friendly;
             }
         });
-        //console.log(target.events.onInputOver._shouldPropagate)
+
+        if(this.unity.key != null){
+            let str = `${this.unity.health} ${this.unity.attack} ${this.unity.defense}`
+
+            if(this.unity.friendly){
+                this.army1Title.text = this.unity.key;
+                this.army1Status.text = str;
+            } else {
+                this.army2Title.text = this.unity.key;
+                this.army2Status.text = str;
+            }
+        }
+
     }
 
     onClick() {
@@ -113,8 +146,6 @@ class TheGame {
             // capture click axis
             this.mouseX = maps.gridCoordinateConvert(game.input.x);
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
-
-            //this.limits = maps.checkAcceptableAreaLimit(this.mouseX, this.mouseY);
 
             // gets the id of the activated object
             this.unities.forEach(e => {
@@ -151,9 +182,9 @@ class TheGame {
             e.getUnitiesPosition(this.unities);
         });
 
-        this.calculateTotalTroops();
-
-        this.checkUnitStatusOnHover(); // works, put a trigger to call only once though
+        // works, put a trigger to call only once though
+        this.checkTotalTroops(); 
+        this.checkUnitStatusOnHover(); 
     }
 }
 
