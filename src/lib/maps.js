@@ -61,6 +61,10 @@ const maps = {
                 return this.map.getTileLeft(i, x, y);
             case 'right':
                 return this.map.getTileRight(i, x, y);
+            case 'top':
+                return this.map.getTileAbove(i, x, y);
+            case 'bottom':
+                return this.map.getTileBelow(i, x, y);
             default:
                 return -1;
         }

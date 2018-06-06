@@ -8,6 +8,8 @@
 
 const unities = {
 
+    unitiesCreated: [],
+
     objects: [
         {
             key: 'warrior-icon',

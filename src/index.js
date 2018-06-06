@@ -16,8 +16,8 @@ const createWindow = () => {
     width: 832,
     height: 608,
     //resizable: false, //
-    //frame: false, //
-    //show: false, //
+   // frame: false, //
+  //  show: false, //
   });
 
   // and load the index.html of the app.

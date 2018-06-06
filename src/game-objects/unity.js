@@ -25,15 +25,15 @@ class Unity extends Phaser.Sprite {
         this.minChargeDist = unity.minChargeDist;
         //this.morale = null; 
 
-        //this.check = false;
         this.active = false;
         this.inputEnabled = true;
-        this.executePressed = false; 
+        this.executePressed = false;
         this.collided = false;
         this.attacking = false;
         this.otherUnities = [];
         this.gridSize = maps.getSquareSize();
         this.walkableTile = 1;
+        this.threshold = 2;
 
         this.index = null;
         this.positionX = null;
@@ -43,8 +43,9 @@ class Unity extends Phaser.Sprite {
         this.distanceX = null;
         this.distanceY = null;
         this.distanceL = null;
-        this.moving = null;
         this.execute = null;
+
+        this.turnPoint = new Phaser.Point();
 
         this.game.add.existing(this);
         // Enable arcade physics for moving with velocity
@@ -64,17 +65,17 @@ class Unity extends Phaser.Sprite {
                 this.active = this.active ? !this.active : true;
             }
 
-            target.execute = false; // it should wait for the 'Execute Actions' signal to do its action 
+            target.execute = false; // it should wait for the 'Execute Actions' signal to do its action.
         });
 
         this.events.onInputOut.add(target => {
-            this.check = false; 
+            this.check = false;
             target.animations.play('default');
         });
 
         this.events.onInputOver.add(target => {
-            this.check = true; 
-            target.animations.play('hovered');  
+            this.check = true;
+            target.animations.play('hovered');
         });
     }
 
@@ -96,7 +97,7 @@ class Unity extends Phaser.Sprite {
             this.mouseX = null;
             this.mouseY = null;
         } else {
-            if (!this.moving && this.active) {
+            if (this.active) {
                 this.active = false;
                 queue.add(this);
             }
@@ -121,7 +122,6 @@ class Unity extends Phaser.Sprite {
     moveRight() {
         if (this.mouseX > this.positionX) {
             this.body.velocity.x = this.speed;
-            this.rightCorrect = true;
         }
     }
 
@@ -151,40 +151,68 @@ class Unity extends Phaser.Sprite {
     moveDown() {
         if (this.mouseY > this.positionY) {
             this.body.velocity.y = this.speed;
-            this.bottomCorrect = true;
         }
     }
 
     /**
-     * - The sprite deslocate itself from the center of the square after it moves, this adjust him back when it stops moving.
+    * - Set the its rightSide and leftSide and position X and Y in tiles squares rather than by window size axis.
+    */
+   setPosition() {
+    this.index = maps.getLayerIndex();
+
+    this.positionX = maps.gridCoordinateConvert(this.x);
+    this.positionY = maps.gridCoordinateConvert(this.y);
+   }
+
+   /**
+    * - Set in window size pixels the point clicked.
+    */
+   setStopPoint() {
+       this.turnPoint.y = this.mouseY * this.gridSize;
+       this.turnPoint.x = this.mouseX * this.gridSize;
+   }
+
+    /**
+    * - Set its right, left, top and bottom adjacent square axis in tiles squares.
+    */
+    setSideCoordinates() {
+        this.leftSide = maps.getSurroudingSquare(this.index, this.positionX, this.positionY, 'left');
+        this.rightSide = maps.getSurroudingSquare(this.index, this.positionX, this.positionY, 'right');
+        this.topSide = maps.getSurroudingSquare(this.index, this.positionX, this.positionY, 'top');
+        this.bottomSide = maps.getSurroudingSquare(this.index, this.positionX, this.positionY, 'bottom');
+    }
+
+    /**
+     * - Reset speed to 0(stops) when threshold is reached.
      */
-    autoCorrect() {
-        if (this.body.velocity.y != 0 || this.body.velocity.x != 0) {
-            this.inputEnabled = false;
-            this.moving = true;
-        } else {
-            this.inputEnabled = true;
-            this.moving = false;
+    stopMovementTrigger() {
+        if (this.lCorrect && this.mouseX < this.positionX) {
+            this.leftCorrect = true;
+            this.topCorrect = true;
+        }
+
+        if (game.math.fuzzyEqual(this.turnPoint.x, this.x, this.threshold)) {
+            this.body.velocity.x = 0;
+        }
+        
+        if (game.math.fuzzyEqual(this.turnPoint.y, this.y, this.threshold)) {
+            this.body.velocity.y = 0;
+        }
+    }
+
+    /**
+     * - Checks if the sprite is moving. ///??? is it needed?
+     */
+    movementCheck() {
+        if (this.body.velocity.y == 0 && this.body.velocity.x == 0) {
             this.lCorrect = false;
 
             if (this.leftCorrect) {
-                this.x += 2;
                 this.leftCorrect = false;
             }
 
             if (this.topCorrect) {
-                this.y += 2;
                 this.topCorrect = false;
-            }
-
-            if (this.rightCorrect) {
-                this.x -= 1;
-                this.rightCorrect = false;
-            }
-
-            if (this.bottomCorrect) {
-                this.y -= 1;
-                this.bottomCorrect = false;
             }
         }
     }
@@ -241,10 +269,10 @@ class Unity extends Phaser.Sprite {
                     this.attacking = true;
 
                     let damage = e.attack * this.defense;
-                    this.health -= damage;   
+                    this.health -= damage;
                 }
 
-                if(this.health < 0)
+                if (this.health < 0)
                     this.health = 0;
             });
         }
@@ -261,22 +289,10 @@ class Unity extends Phaser.Sprite {
     }
 
     /**
-    * - Set the its rightSide and leftSide and position X and Y in tiles squares rather than by window size axis, this makes easier for positioning.
-    */
-    setPosition() {
-        this.index = maps.getLayerIndex();
-        this.positionX = maps.gridCoordinateConvert(this.x);
-        this.positionY = maps.gridCoordinateConvert(this.y);
-
-        // the right and left square coordinates of this.
-        this.leftSide = maps.getSurroudingSquare(this.index, this.positionX, this.positionY, 'left');
-        this.rightSide = maps.getSurroudingSquare(this.index, this.positionX, this.positionY, 'right');
-    }
-
-    /**
      * - Stops and reset mouse axis values if a wall is hitted.
      */
     checkCollision() {
+        // needs improving
         // stop trying to move
         if (this.collided) {
             this.mouseX = null;
@@ -288,93 +304,41 @@ class Unity extends Phaser.Sprite {
         }
     }
 
-    /**
-     * - Reset speed to 0(stops) when this position axis is equals to the mouse axis given.
-     */
-    stopMovementTrigger() {
-        if (this.lCorrect && this.mouseX < this.positionX) {
-            this.leftCorrect = true;
-            this.topCorrect = true;
-        }
-
-        if (this.positionX == this.mouseX && !this.leftCorrect) {
-            this.body.velocity.x = 0;
-        } else if (this.positionX == this.mouseX - 1) {
-            this.body.velocity.x = 0;
-        }
-
-        if (this.positionY == this.mouseY && !this.topCorrect) {
-            this.body.velocity.y = 0;
-        } else if (this.positionY == this.mouseY - 1) {
-            this.body.velocity.y = 0;
-        }
-
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    checkAll() {
-        if (queue.activated.length > 0) {
-
-            const index = queue.activated.indexOf(this);
-            const lastIndex = queue.activated.length - 1;
-
-            if (index === lastIndex) {
-                return (!queue.activated[lastIndex].moving && (queue.activated[lastIndex].body.velocity.y == 0 && queue.activated[lastIndex].body.velocity.x == 0) &&
-                    (queue.activated[lastIndex].mouseX == queue.activated[lastIndex].positionX && queue.activated[lastIndex].mouseY == queue.activated[lastIndex].positionY));
-            }
-
-            return false;
-        }
-    }
-
-    checkPreviousExecuted() {
-        if (queue.activated.length > 0) {
-            const index = queue.activated.indexOf(this);
-
-            if (index == 0) {
-                return true;
-            }
-
-            return (!queue.activated[index - 1].moving && (queue.activated[index - 1].body.velocity.y == 0 && queue.activated[index - 1].body.velocity.x == 0) &&
-                (queue.activated[index - 1].mouseX == queue.activated[index - 1].positionX && queue.activated[index - 1].mouseY == queue.activated[index - 1].positionY));
-        }
-    }
-
-    amIalive(){
-        if(this.health <= 0)
+    amIalive() {
+        if (this.health <= 0)
             this.destroy();
     }
-    ///////////////////////////////////////////////////////////////////
+    
+    executeOrder(){
+        if (this.execute && queue.checkPreviousExecuted(this)) { //this.checkPreviousExecuted()
+            this.pathSetter();
+        }
+
+        if (this.execute && queue.checkFinished(this)) { 
+            queue.safeClear();
+        }
+
+        if (this.executePressed) {
+            this.attacking = false;
+            this.executePressed = false;
+        }
+    }
 
     update() {
         utils.checkObjectsMapCollision(this);
 
         this.setPosition();
+        this.setStopPoint();
+        this.setSideCoordinates();
+        
         this.checkCollision();
         this.stopMovementTrigger();
+        this.movementCheck();
 
-        /////////////////////////////////////////////////////////
-        //this.pathSetter();
-        if (this.execute && this.checkPreviousExecuted()) {
-            this.pathSetter();
-        }
+        this.executeOrder();
 
-        ///////////////////////////////////////////////
-        if (this.execute && this.checkAll()) {
-            // turn their execute false again before removing
-            queue.safeClear();
-        }
-
-        if(this.executePressed){
-            this.attacking = false;
-            this.executePressed = false;
-        }
-        //////////////////////////////////////////////
-
-        this.autoCorrect();
         this.attackOpposition();
         this.amIalive();
-
         //this.render();
     }
 

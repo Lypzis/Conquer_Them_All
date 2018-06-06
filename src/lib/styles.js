@@ -92,30 +92,13 @@ const styles = {
         }
     },
 
-
-    textInfoTitle() {
+    /** - Overall text format within the game.
+     * @param fontSize : String size of the letter (ex: '18pt').
+     * @returns : Custom font size style.
+    */
+    customText(fontSize) {
         return {
-            font: `18pt ${navItems}`,
-            align: 'left',
-            fill: 'white',
-            stroke: 'rgba(0,0,0,0)',
-            strokeThickness: 4,
-        }
-    },
-
-    textInfoStatus() {
-        return {
-            font: `16pt ${navItems}`, 
-            align: 'left',
-            fill: 'white',
-            stroke: 'rgba(0,0,0,0)',
-            strokeThickness: 4,
-        }
-    },
-
-    version() {
-        return {
-            font: `10pt ${navItems}`, 
+            font: `${fontSize} ${navItems}`,
             align: 'right',
             fill: 'white',
             stroke: 'rgba(0,0,0,0)',
@@ -135,15 +118,15 @@ const styles = {
         }
     },
 
-        /** - Place item to the left. 
-         * @returns : Left position style.
-        */
-        leftItem() {
-    return {
-        startY: 165,
-        startX: 30
-    }
-},
+    /** - Place item to the left. 
+     * @returns : Left position style.
+    */
+    leftItem() {
+        return {
+            startY: 165,
+            startX: 30
+        }
+    },
 
 }
 

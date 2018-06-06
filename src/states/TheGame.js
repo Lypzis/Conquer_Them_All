@@ -22,7 +22,6 @@ class TheGame {
             this, 1, 0, 2, 0);
 
         utils.navItemSetter('<- Back', 1, 90, target => {
-            this.unities = null;
             this.mouseX = null;
             this.mouseY = null;
             this.warriors = null;
@@ -32,6 +31,9 @@ class TheGame {
             this.layer = null;
             this.executeActionsBtn = null;
             this.total = null;
+
+            queue.activated = [];
+            unities.unitiesCreated = [];
 
             game.state.start('GameMenu');
         }, null, true);
@@ -47,7 +49,7 @@ class TheGame {
         this.enemyHero = utils.generateTableUnities('enemy-hero-icon', 1, 3, false);
         this.enemyWarriors = utils.generateTableUnities('enemy-warrior-icon', 2, 4, false);
 
-        this.unities = Array.prototype.concat(
+        unities.unitiesCreated = Array.prototype.concat(
             this.enemyHero,
             this.hero,
             this.enemyWarriors,
@@ -60,23 +62,23 @@ class TheGame {
         // total army feedback main player image
         this.army1 = game.add.sprite(80, game.world.centerY - 32, 'hero-icon-64', 0); //
 
-        this.army1Title = game.add.text(this.army1.x + (this.army1.width*2), game.world.centerY - 40, null, styles.textInfoTitle());
-        this.army1Status = game.add.text(this.army1.x + (this.army1.width*2), game.world.centerY - 16, null, styles.textInfoStatus());
+        this.army1Title = game.add.text(this.army1.x + (this.army1.width * 2), game.world.centerY - 40, null, styles.customText('18pt'));
+        this.army1Status = game.add.text(this.army1.x + (this.army1.width * 2), game.world.centerY - 16, null, styles.customText('16pt'));
 
         // total army feedback main enemy image
-        this.army2 = game.add.sprite(game.world.width - 80, game.world.centerY - 32, 'enemy-hero-icon-64', 0); 
+        this.army2 = game.add.sprite(game.world.width - 80, game.world.centerY - 32, 'enemy-hero-icon-64', 0);
 
-        this.army2Title = game.add.text(this.army2.x - (this.army2.width*2), game.world.centerY - 40, null, styles.textInfoTitle());
-        this.army2Status = game.add.text(this.army2.x - (this.army2.width*2), game.world.centerY - 16, null, styles.textInfoStatus());
-        
+        this.army2Title = game.add.text(this.army2.x - (this.army2.width * 2), game.world.centerY - 40, null, styles.customText('18pt'));
+        this.army2Status = game.add.text(this.army2.x - (this.army2.width * 2), game.world.centerY - 16, null, styles.customText('16pt'));
+
         this.overWrite = false; //??
         this.onHover = false; //??
         //////////////////////////////////////////////////////////////////////////////////////////////
 
         utils.centerGameObjects([
-            this.titleText, 
-            this.executeActionsBtn, 
-            this.army1, 
+            this.titleText,
+            this.executeActionsBtn,
+            this.army1,
             this.army2,
             this.army1Title,
             this.army2Title,
@@ -85,11 +87,11 @@ class TheGame {
         ]);
     }
 
-    checkTotalTroops(){
+    checkTotalTroops() {
         let enemyTotal = 0;
         let friendlyTotal = 0;
-        
-        this.unities.forEach(e => {
+
+        unities.unitiesCreated.forEach(e => {
             if (e.friendly)
                 friendlyTotal += e.health;
             else
@@ -104,7 +106,7 @@ class TheGame {
     }
 
     // how to???????????
-    checkUnitStatusOnHover(){
+    checkUnitStatusOnHover() {
         this.unity = {
             //name: null, future implementation
             key: null,
@@ -115,9 +117,9 @@ class TheGame {
         };
 
         //let picture = '-64';
-        
-        this.unities.forEach(e => {
-            if(e.check){
+
+        unities.unitiesCreated.forEach(e => {
+            if (e.check) {
                 this.unity.key = e.key;
                 this.unity.health = e.health;
                 this.unity.attack = e.attack;
@@ -126,10 +128,10 @@ class TheGame {
             }
         });
 
-        if(this.unity.key != null){
+        if (this.unity.key != null) {
             let str = `${this.unity.health} ${this.unity.attack} ${this.unity.defense}`
 
-            if(this.unity.friendly){
+            if (this.unity.friendly) {
                 this.army1Title.text = this.unity.key;
                 this.army1Status.text = str;
             } else {
@@ -148,7 +150,7 @@ class TheGame {
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
 
             // gets the id of the activated object
-            this.unities.forEach(e => {
+            unities.unitiesCreated.forEach(e => {
                 if (e.active) {
                     e.setMouseAxis(this.mouseX, this.mouseY);
                 }
@@ -159,12 +161,14 @@ class TheGame {
     // unities that have been given a proper place to go will now be ordered to move to it
     executeActions() {
         queue.activated.forEach(e => {
-                e.execute = true;
+            e.execute = true;
         });
 
-        this.unities.forEach(e => {
-            e.executePressed = true;
-        });
+        if (queue.activated.length > 0)
+            unities.unitiesCreated.forEach(e => {
+                e.inputEnabled = false;
+                e.executePressed = true;
+            });
     }
 
     create() {
@@ -173,18 +177,18 @@ class TheGame {
     }
 
     update() {
-        //this.doneExecuting = this.unities.map(e => e.done);
+        //this.doneExecuting = unities.unitiesCreated.map(e => e.done);
 
         //need avoid this loop, ...somehow
         //possible performance hit
         //check if alive is false;
-        this.unities.forEach(e => {
-            e.getUnitiesPosition(this.unities);
+        unities.unitiesCreated.forEach(e => {
+            e.getUnitiesPosition(unities.unitiesCreated);
         });
 
         // works, put a trigger to call only once though
-        this.checkTotalTroops(); 
-        this.checkUnitStatusOnHover(); 
+        this.checkTotalTroops();
+        this.checkUnitStatusOnHover();
     }
 }
 
