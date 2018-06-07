@@ -1,6 +1,6 @@
 # Conquer_Them_All
 
-## To run(depending of what package manager you use):
+## To run:
 - npm run electron
 
 or

@@ -6,8 +6,6 @@
 */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//Urgent: Needs a treshhold when moving left and up to avoid collision and interation problems
-
 class Unity extends Phaser.Sprite {
     constructor(game, x, y, unityKey, unity, id, friendly) {
         super(game, x, y, unityKey);
@@ -40,6 +38,8 @@ class Unity extends Phaser.Sprite {
         this.positionY = null;
         this.leftSide = null;
         this.rightSide = null;
+        this.topSide = null;
+        this.bottomSide = null;
         this.distanceX = null;
         this.distanceY = null;
         this.distanceL = null;
@@ -66,6 +66,12 @@ class Unity extends Phaser.Sprite {
             }
 
             target.execute = false; // it should wait for the 'Execute Actions' signal to do its action.
+
+
+            console.log('bottom ' + this.bottomMovement);
+            console.log('top: ' + this.topMovement);
+            console.log('right: ' + this.rightMovement);
+            console.log('left: ' + this.leftMovement);
         });
 
         this.events.onInputOut.add(target => {
@@ -122,6 +128,9 @@ class Unity extends Phaser.Sprite {
     moveRight() {
         if (this.mouseX > this.positionX) {
             this.body.velocity.x = this.speed;
+            this.rightMovement = true;
+
+            console.log('right: ' + this.rightMovement);
         }
     }
 
@@ -131,7 +140,9 @@ class Unity extends Phaser.Sprite {
     moveLeft() {
         if (this.mouseX < this.positionX) {
             this.body.velocity.x = -this.speed;
-            this.leftCorrect = true;
+            this.leftMovement = true;
+
+            console.log('left: ' + this.leftMovement);
         }
     }
 
@@ -141,7 +152,9 @@ class Unity extends Phaser.Sprite {
     moveUp() {
         if (this.mouseY < this.positionY) {
             this.body.velocity.y = -this.speed;
-            this.topCorrect = true;
+            this.topMovement = true;
+
+            console.log('top: ' + this.topMovement);
         }
     }
 
@@ -151,26 +164,29 @@ class Unity extends Phaser.Sprite {
     moveDown() {
         if (this.mouseY > this.positionY) {
             this.body.velocity.y = this.speed;
+            this.bottomMovement = true;
+
+            console.log('bottom ' + this.bottomMovement);
         }
     }
 
     /**
     * - Set the its rightSide and leftSide and position X and Y in tiles squares rather than by window size axis.
     */
-   setPosition() {
-    this.index = maps.getLayerIndex();
+    setPosition() {
+        this.index = maps.getLayerIndex();
 
-    this.positionX = maps.gridCoordinateConvert(this.x);
-    this.positionY = maps.gridCoordinateConvert(this.y);
-   }
+        this.positionX = maps.gridCoordinateConvert(this.x);
+        this.positionY = maps.gridCoordinateConvert(this.y);
+    }
 
-   /**
-    * - Set in window size pixels the point clicked.
-    */
-   setStopPoint() {
-       this.turnPoint.y = this.mouseY * this.gridSize;
-       this.turnPoint.x = this.mouseX * this.gridSize;
-   }
+    /**
+     * - Set in window size pixels the point clicked.
+     */
+    setStopPoint() {
+        this.turnPoint.y = this.mouseY * this.gridSize;
+        this.turnPoint.x = this.mouseX * this.gridSize;
+    }
 
     /**
     * - Set its right, left, top and bottom adjacent square axis in tiles squares.
@@ -186,34 +202,50 @@ class Unity extends Phaser.Sprite {
      * - Reset speed to 0(stops) when threshold is reached.
      */
     stopMovementTrigger() {
-        if (this.lCorrect && this.mouseX < this.positionX) {
-            this.leftCorrect = true;
-            this.topCorrect = true;
+        if (this.lMovement && this.mouseX < this.positionX) {
+            this.leftMovement = true;
+            this.topMovement = true;
         }
 
         if (game.math.fuzzyEqual(this.turnPoint.x, this.x, this.threshold)) {
             this.body.velocity.x = 0;
         }
-        
+
         if (game.math.fuzzyEqual(this.turnPoint.y, this.y, this.threshold)) {
             this.body.velocity.y = 0;
         }
     }
 
     /**
-     * - Checks if the sprite is moving. ///??? is it needed?
+    * - Stops and reset mouse axis values if a wall is hitted.
+    */
+    checkCollision() {
+
+        // need to check if next tile to where its heading is walkable
+        // if not reset the mouseX to be the current posX 
+
+        if (this.leftSide.index !== this.walkableTile && this.leftMovement)
+            return true;
+        if (this.rightSide.index !== this.walkableTile && this.rightMovement)
+            return true;
+        if (this.bottomSide.index !== this.walkableTile && this.bottomMovement)
+            return true;
+        if (this.topSide.index !== this.walkableTile && this.topMovement)
+            return true;
+
+        return false;
+    }
+
+    /**
+     * - Resets the directions of where the sprite was heading when it stops moving.      
      */
     movementCheck() {
         if (this.body.velocity.y == 0 && this.body.velocity.x == 0) {
-            this.lCorrect = false;
-
-            if (this.leftCorrect) {
-                this.leftCorrect = false;
-            }
-
-            if (this.topCorrect) {
-                this.topCorrect = false;
-            }
+            this.lMovement = false;
+            this.leftMovement = false;
+            this.topMovement = false;
+            this.bottomMovement = false;
+            this.rightMovement = false;
         }
     }
 
@@ -224,20 +256,20 @@ class Unity extends Phaser.Sprite {
     pathSetter() {
         if (this.mouseX != undefined && this.mouseY != undefined) {
 
-            if (this.positionX != this.mouseX && this.positionY != this.mouseY && !this.leftCorrect) {
+            if (this.positionX != this.mouseX && this.positionY != this.mouseY && !this.leftMovement) {
 
                 //console.log('L movement.');
                 this.moveRight();
                 this.moveLeft();
-                this.lCorrect = true;
+                this.lMovement = true;
 
-            } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topCorrect) {
+            } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topMovement) {
 
                 //console.log('Vertical movement.');
                 this.moveUp();
                 this.moveDown();
 
-            } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftCorrect) {
+            } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftMovement) {
 
                 //console.log('Horizontal movement.');
                 this.moveRight();
@@ -281,40 +313,23 @@ class Unity extends Phaser.Sprite {
 
     /**
      * - Acknowledge all other unities in the field.
-     * @param {*} unities : array of all current unities created.
      */
-    getUnitiesPosition(unities) {
+    checkUnitiesStatus() {
         //no need to acknowledge ourselves or something dead..., that's what filter is for :D
-        this.otherUnities = unities.filter(e => e.id != this.id && e.alive);
-    }
-
-    /**
-     * - Stops and reset mouse axis values if a wall is hitted.
-     */
-    checkCollision() {
-        // needs improving
-        // stop trying to move
-        if (this.collided) {
-            this.mouseX = null;
-            this.mouseY = null;
-            this.body.velocity.y = 0;
-            this.body.velocity.x = 0;
-
-            this.collided = false;
-        }
+        this.otherUnities = unities.unitiesCreated.filter(e => e.id != this.id && e.alive);
     }
 
     amIalive() {
         if (this.health <= 0)
             this.destroy();
     }
-    
-    executeOrder(){
+
+    executeOrder() {
         if (this.execute && queue.checkPreviousExecuted(this)) { //this.checkPreviousExecuted()
             this.pathSetter();
         }
 
-        if (this.execute && queue.checkFinished(this)) { 
+        if (this.execute && queue.checkFinished(this)) {
             queue.safeClear();
         }
 
@@ -328,10 +343,12 @@ class Unity extends Phaser.Sprite {
         utils.checkObjectsMapCollision(this);
 
         this.setPosition();
-        this.setStopPoint();
         this.setSideCoordinates();
-        
         this.checkCollision();
+        
+        this.checkUnitiesStatus();
+        this.setStopPoint();
+
         this.stopMovementTrigger();
         this.movementCheck();
 
@@ -339,28 +356,42 @@ class Unity extends Phaser.Sprite {
 
         this.attackOpposition();
         this.amIalive();
-        //this.render();
+
+        this.render();
     }
 
-    /*
     //future implementation
     render() {
         let colorLeft = 'rgba(0,255,0,0.3)';
         let colorRight = 'rgba(0,255,0,0.3)';
- 
+        let colorTop = 'rgba(0,255,0,0.3)';
+        let colorBottom = 'rgba(0,255,0,0.3)';
+
         if (this.leftSide.index !== this.walkableTile) {
             colorLeft = 'rgba(255,0,0,0.3)';
         }
- 
-        if (this.rigthSide.index !== this.walkableTile) {
+
+        if (this.rightSide.index !== this.walkableTile) {
             colorRight = 'rgba(255,0,0,0.3)';
         }
- 
+
+        if (this.topSide.index !== this.walkableTile) {
+            colorTop = 'rgba(255,0,0,0.3)';
+        }
+
+        if (this.bottomSide.index !== this.walkableTile) {
+            colorBottom = 'rgba(255,0,0,0.3)';
+        }
+
+        //if (this.active && this.mouseX == null && this.mouseY == null) {
         game.debug.geom(new Phaser.Rectangle(this.leftSide.worldX, this.leftSide.worldY, 32, 32), colorLeft, true);
-        game.debug.geom(new Phaser.Rectangle(this.rigthSide.worldX, this.rigthSide.worldY, 32, 32), colorRight, true);
-            
+        game.debug.geom(new Phaser.Rectangle(this.rightSide.worldX, this.rightSide.worldY, 32, 32), colorRight, true);
+        game.debug.geom(new Phaser.Rectangle(this.topSide.worldX, this.topSide.worldY, 32, 32), colorTop, true);
+        game.debug.geom(new Phaser.Rectangle(this.bottomSide.worldX, this.bottomSide.worldY, 32, 32), colorBottom, true);
+        //}
+
     }
-    */
+
 }
 
 

@@ -105,7 +105,6 @@ class TheGame {
 
     }
 
-    // how to???????????
     checkUnitStatusOnHover() {
         this.unity = {
             //name: null, future implementation
@@ -160,15 +159,23 @@ class TheGame {
 
     // unities that have been given a proper place to go will now be ordered to move to it
     executeActions() {
-        queue.activated.forEach(e => {
-            e.execute = true;
-        });
+        // no need to store dead stuff.
+        unities.unitiesCreated = unities.unitiesCreated.filter(e => e.alive);
 
         if (queue.activated.length > 0)
             unities.unitiesCreated.forEach(e => {
                 e.inputEnabled = false;
                 e.executePressed = true;
             });
+        else
+            unities.unitiesCreated.forEach(e => {
+                e.inputEnabled = true;
+                e.executePressed = true;
+            });
+
+        queue.activated.forEach(e => {
+            e.execute = true;
+        });
     }
 
     create() {
@@ -177,15 +184,7 @@ class TheGame {
     }
 
     update() {
-        //this.doneExecuting = unities.unitiesCreated.map(e => e.done);
-
-        //need avoid this loop, ...somehow
-        //possible performance hit
-        //check if alive is false;
-        unities.unitiesCreated.forEach(e => {
-            e.getUnitiesPosition(unities.unitiesCreated);
-        });
-
+    
         // works, put a trigger to call only once though
         this.checkTotalTroops();
         this.checkUnitStatusOnHover();

@@ -2,13 +2,17 @@
 /** 
  * @by: Lypzis Entertainment
  * @author: Victor V. Piccoli
- * @doc: Global queue, handle objects in wait
+ * @doc: Global queue, stores activated objects and handles their execution order.
 */
-//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 const queue = {
     activated: [],
 
+    /** - Check if a unity is already in the queue.
+    * @param {*} unity : an unity object.
+    * @returns : If the unity exists in the queue, returns true, otherwise, false.
+    */
     checkExists(unity) {
         const temp = this.activated.find(e => e.id === unity.id);
 
@@ -18,20 +22,25 @@ const queue = {
         return true;
     },
 
+    /** - Removes an unity from the queue.
+    * @param {*} unity : an unity object.
+    */
     removeExists(unity) {
 
         if (this.checkExists(unity))
             this.activated.splice(this.activated.indexOf(unity), 1);
-        else
-            console.log('not found!');
-
     },
 
+    /** - Add an unity to the queue.
+    * @param {*} unity : an unity object.
+    */
     add(unity) {
         if (!this.checkExists(unity))
             this.activated.push(unity);
     },
 
+    /** - Clears the queue, reseting objects in the process.
+    */
     safeClear() {
         this.activated.forEach(e => {
             e.active = false;
@@ -47,6 +56,10 @@ const queue = {
         this.activated = [];
     },
 
+    /** - Check if the unity is the last of the queue.
+    * @param {*} unity : an unity object.
+    * @returns : True if it is the last and is done executing.
+    */
     checkFinished(unity) {
         if (this.activated.length > 0) {
 
@@ -68,6 +81,10 @@ const queue = {
         }
     },
 
+    /** - Check if the previous unity in the queue is still executing.
+    * @param {*} unity : an unity object.
+    * @returns : True if it is the first or previous is done executing.
+    */
     checkPreviousExecuted(unity) {
         if (queue.activated.length > 0) {
             const index = queue.activated.indexOf(unity);
