@@ -67,11 +67,10 @@ class Unity extends Phaser.Sprite {
 
             target.execute = false; // it should wait for the 'Execute Actions' signal to do its action.
 
+            // if active
+            // show available points to move
 
-            console.log('bottom ' + this.bottomMovement);
-            console.log('top: ' + this.topMovement);
-            console.log('right: ' + this.rightMovement);
-            console.log('left: ' + this.leftMovement);
+            this.renderAvailable();
         });
 
         this.events.onInputOut.add(target => {
@@ -121,6 +120,52 @@ class Unity extends Phaser.Sprite {
 
         return this.distanceL > this.movement || this.distanceX > this.movement || this.distanceY > this.movement;
     }
+    // should update after finishes moving
+    renderAvailable() {
+        this.availableSquares = [];
+        const posX = this.positionX;
+        const posY = this.positionY;
+
+        let maxRight = posX + this.movement;
+        let maxLeft = posX - this.movement;
+
+        let maxTop = posY - this.movement;
+        let maxBottom = posY + this.movement;
+
+        console.log('posX: ' + this.positionX + ', posY: ' + this.positionY);
+        console.log('maxRight: ' + maxRight);
+        console.log('maxLeft: ' + maxLeft);
+        console.log('maxTop: ' + maxTop);
+        console.log('maxBottom: ' + maxBottom);
+        
+        /*
+                *
+              * * *
+            * * x * *
+        */
+        for (let y = this.positionY; y > maxTop; --y) { // 5 negative y
+            for (let x = this.positionX - 1; x >= maxLeft; --x) {
+                this.availableSquares.push({ y, x }); // {y,x}
+            }
+
+            for (let x = this.positionX + 1; x <= maxRight; ++x) {
+                this.availableSquares.push({ y, x }); // {y,x}
+            }
+
+            this.availableSquares.push({ y, posX });
+            ++maxLeft;
+            --maxRight;
+        }
+
+        /*
+              * * *
+                * 
+        */
+
+        console.log(this.availableSquares);
+        console.log(this.availableSquares.length);
+        // return this.availablePlaces
+    }
 
     /**
      * - Give positive speed to move to the X right direction.
@@ -129,8 +174,6 @@ class Unity extends Phaser.Sprite {
         if (this.mouseX > this.positionX) {
             this.body.velocity.x = this.speed;
             this.rightMovement = true;
-
-            console.log('right: ' + this.rightMovement);
         }
     }
 
@@ -141,8 +184,6 @@ class Unity extends Phaser.Sprite {
         if (this.mouseX < this.positionX) {
             this.body.velocity.x = -this.speed;
             this.leftMovement = true;
-
-            console.log('left: ' + this.leftMovement);
         }
     }
 
@@ -153,8 +194,6 @@ class Unity extends Phaser.Sprite {
         if (this.mouseY < this.positionY) {
             this.body.velocity.y = -this.speed;
             this.topMovement = true;
-
-            console.log('top: ' + this.topMovement);
         }
     }
 
@@ -165,8 +204,6 @@ class Unity extends Phaser.Sprite {
         if (this.mouseY > this.positionY) {
             this.body.velocity.y = this.speed;
             this.bottomMovement = true;
-
-            console.log('bottom ' + this.bottomMovement);
         }
     }
 
@@ -202,10 +239,11 @@ class Unity extends Phaser.Sprite {
      * - Reset speed to 0(stops) when threshold is reached.
      */
     stopMovementTrigger() {
+        /*
         if (this.lMovement && this.mouseX < this.positionX) {
             this.leftMovement = true;
             this.topMovement = true;
-        }
+        } */
 
         if (game.math.fuzzyEqual(this.turnPoint.x, this.x, this.threshold)) {
             this.body.velocity.x = 0;
@@ -222,7 +260,12 @@ class Unity extends Phaser.Sprite {
     checkCollision() {
 
         // need to check if next tile to where its heading is walkable
-        // if not reset the mouseX to be the current posX 
+        // if not reset the mouseX to be the current posX (Works !)
+
+        // Future implementation
+        // const movements = [{lMovement: false}, {leftMovement: false},{topMovement: false},{bottomMovement: false},{rightMovement: false}];
+        // now check if a sprite is in the way and make it never start any movement
+        // if there is osbtacle right next to it
 
         if (this.leftSide.index !== this.walkableTile && this.leftMovement)
             return true;
@@ -240,6 +283,8 @@ class Unity extends Phaser.Sprite {
      * - Resets the directions of where the sprite was heading when it stops moving.      
      */
     movementCheck() {
+
+
         if (this.body.velocity.y == 0 && this.body.velocity.x == 0) {
             this.lMovement = false;
             this.leftMovement = false;
@@ -254,29 +299,25 @@ class Unity extends Phaser.Sprite {
     * - If distance, mouseX and mouseY have valid values, verify which type of movement it needs to execute.
     */
     pathSetter() {
-        if (this.mouseX != undefined && this.mouseY != undefined) {
+        if (this.positionX != this.mouseX && this.positionY != this.mouseY) {
 
-            if (this.positionX != this.mouseX && this.positionY != this.mouseY && !this.leftMovement) {
+            console.log('L movement.');
+            this.moveRight();
+            this.moveLeft();
+            this.lMovement = true;
 
-                //console.log('L movement.');
-                this.moveRight();
-                this.moveLeft();
-                this.lMovement = true;
+        } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.lMovement) {
 
-            } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.topMovement) {
+            console.log('Vertical movement.');
+            this.moveUp();
+            this.moveDown();
 
-                //console.log('Vertical movement.');
-                this.moveUp();
-                this.moveDown();
+        } else if (this.positionX != this.mouseX && this.positionY == this.mouseY) {
 
-            } else if (this.positionX != this.mouseX && this.positionY == this.mouseY && !this.leftMovement) {
-
-                //console.log('Horizontal movement.');
-                this.moveRight();
-                this.moveLeft();
-            }
+            console.log('Horizontal movement.');
+            this.moveRight();
+            this.moveLeft();
         }
-
     }
 
     /**
@@ -325,7 +366,7 @@ class Unity extends Phaser.Sprite {
     }
 
     executeOrder() {
-        if (this.execute && queue.checkPreviousExecuted(this)) { //this.checkPreviousExecuted()
+        if (this.execute && queue.checkPreviousExecuted(this)) {
             this.pathSetter();
         }
 
@@ -345,7 +386,16 @@ class Unity extends Phaser.Sprite {
         this.setPosition();
         this.setSideCoordinates();
         this.checkCollision();
-        
+
+        //////////////////////////////////////////////////////
+        if (this.checkCollision() && (this.leftMovement || this.rightMovement)) {
+            this.mouseX = this.positionX;
+        } else if (this.checkCollision()) {
+            this.mouseY = this.positionY;
+        }
+        /////////////////////////////////////////////////////
+
+
         this.checkUnitiesStatus();
         this.setStopPoint();
 
@@ -356,43 +406,5 @@ class Unity extends Phaser.Sprite {
 
         this.attackOpposition();
         this.amIalive();
-
-        this.render();
     }
-
-    //future implementation
-    render() {
-        let colorLeft = 'rgba(0,255,0,0.3)';
-        let colorRight = 'rgba(0,255,0,0.3)';
-        let colorTop = 'rgba(0,255,0,0.3)';
-        let colorBottom = 'rgba(0,255,0,0.3)';
-
-        if (this.leftSide.index !== this.walkableTile) {
-            colorLeft = 'rgba(255,0,0,0.3)';
-        }
-
-        if (this.rightSide.index !== this.walkableTile) {
-            colorRight = 'rgba(255,0,0,0.3)';
-        }
-
-        if (this.topSide.index !== this.walkableTile) {
-            colorTop = 'rgba(255,0,0,0.3)';
-        }
-
-        if (this.bottomSide.index !== this.walkableTile) {
-            colorBottom = 'rgba(255,0,0,0.3)';
-        }
-
-        //if (this.active && this.mouseX == null && this.mouseY == null) {
-        game.debug.geom(new Phaser.Rectangle(this.leftSide.worldX, this.leftSide.worldY, 32, 32), colorLeft, true);
-        game.debug.geom(new Phaser.Rectangle(this.rightSide.worldX, this.rightSide.worldY, 32, 32), colorRight, true);
-        game.debug.geom(new Phaser.Rectangle(this.topSide.worldX, this.topSide.worldY, 32, 32), colorTop, true);
-        game.debug.geom(new Phaser.Rectangle(this.bottomSide.worldX, this.bottomSide.worldY, 32, 32), colorBottom, true);
-        //}
-
-    }
-
 }
-
-
-

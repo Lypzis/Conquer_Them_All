@@ -17,6 +17,29 @@ const utils = {
         });
     },
 
+    /** - Ensure that objects collide properly with the current map layer. 
+     * @param {*} unity : An unity object.
+    */
+    checkObjectsMapCollision(unity) {
+        game.physics.arcade.collide(unity, maps.getLayer(), unity => {
+            unity.collided = true;
+        });
+    },
+
+    drawRectangle(x, y) {
+        let drawnObject;
+        const width = 32 // example;
+        const height = 32 // example;
+        const bmd = game.add.bitmapData(width, height);
+
+        bmd.ctx.beginPath();
+        bmd.ctx.rect(0, 0, width, height);
+        bmd.ctx.fillStyle = 'rgba(0,255,0,0.3)';
+        bmd.ctx.fill();
+
+        return game.add.sprite(x, y, bmd);
+    },
+
     ///////////////////////////////////////////////////////////////////
     /** Unities factory
      * - Generate unities and places them in the table.
@@ -37,12 +60,12 @@ const utils = {
 
         if (quantity <= 5 && columnNumber < 5) {
             for (let i = 0; i < quantity; ++i) {
-                let id = unityIconKey+i;
+                let id = unityIconKey + i;
 
                 unity = new Unity(
                     game,
                     x + points[columnNumber],
-                    y + points[i], 
+                    y + points[i],
                     `${unityIconKey}`,
                     unities.getObject(unityIconKey),
                     id,
@@ -56,15 +79,6 @@ const utils = {
         }
 
         return objects;
-    },
-
-    /** - Ensure that objects collide properly with the current map layer. 
-     * @param {*} unity : An unity object.
-    */
-    checkObjectsMapCollision(unity) {
-        game.physics.arcade.collide(unity, maps.getLayer(), unity => {
-            unity.collided = true;
-        });
     },
 
     ///////////////////////////////////////////////////////////////////

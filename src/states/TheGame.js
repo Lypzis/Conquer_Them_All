@@ -85,6 +85,9 @@ class TheGame {
             this.army1Status,
             this.army2Status,
         ]);
+
+        // FPS
+        game.time.advancedTiming = true;
     }
 
     checkTotalTroops() {
@@ -184,7 +187,8 @@ class TheGame {
     }
 
     update() {
-    
+        game.debug.text(game.time.fps, 34, 46, "#00ff00");
+
         // works, put a trigger to call only once though
         this.checkTotalTroops();
         this.checkUnitStatusOnHover();
