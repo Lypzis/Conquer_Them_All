@@ -103,15 +103,21 @@ class Unity extends Phaser.Sprite {
     }
 
     /**
-     * - Ensures that this won't move to a place outside its limitation movement range.
+     * - Ensures that this won't move to a place outside its limitation movement range or above other unity.
      * @returns : True, if coordinate is out of range.
     */
     checkDistanceLimit() {
+        // find a way to make the 'this.availableCoordinates' not include this and other unities positions;
         const coordinate = this.availableCoordinates.find(e => e.x == this.mouseX && e.y == this.mouseY);
+        let notTaken = this.otherUnities.find(e => e.positionX == coordinate.x && e.positionY == coordinate.y);
 
-        if (coordinate != undefined)
+        if (coordinate != undefined && notTaken == undefined){ 
+            notTaken = null;
             return false;
+        }
 
+        notTaken = null;
+        
         return true;
     }
 

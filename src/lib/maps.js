@@ -90,7 +90,7 @@ const maps = {
     },
 
     /**
-     * - Sets all available coordinates in range of the object movement.
+     * - Sets all valid available coordinates in range of the object movement.
      * @param {*} posX : X coordinate of the object.
      * @param {*} posY : Y coordinate of the object.
      * @param {*} moveN : Movement range of the object.
@@ -146,11 +146,10 @@ const maps = {
             --maxRight;
         }
 
-        //challeng: Now make this don't accept where other unities are located also, including itself!!!
         return availableSquares.filter(e => 
             this.map.getTile(e.x, e.y, this.getLayerIndex()) != null && 
             this.map.getTile(e.x, e.y, this.getLayerIndex()).index == this.walkableTile
-        );
+        ); 
     },
 
     /**

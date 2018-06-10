@@ -153,6 +153,7 @@ class TheGame {
 
             //console.log(this.mouseX)
             //console.log(this.mouseY)
+            //console.log(unities.unitiesCreated);
 
             // gets the id of the activated object
             unities.unitiesCreated.forEach(e => {
