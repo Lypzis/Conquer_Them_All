@@ -29,21 +29,15 @@ class Unity extends Phaser.Sprite {
         this.collided = false;
         this.attacking = false;
         this.otherUnities = [];
-        this.gridSize = maps.getSquareSize();
-        this.walkableTile = 1;
+        this.gridSize = maps.getSquareSize(); //???
+        this.walkableTile = 1; // ???
         this.threshold = 2;
 
-        this.index = null;
-        this.positionX = null;
-        this.positionY = null;
-        this.leftSide = null;
-        this.rightSide = null;
-        this.topSide = null;
-        this.bottomSide = null;
-        this.distanceX = null;
-        this.distanceY = null;
-        this.distanceL = null;
-        this.execute = null;
+        this.index = maps.getLayerIndex();
+        this.positionX = maps.gridCoordinateConvert(this.x);
+        this.positionY = maps.gridCoordinateConvert(this.y);
+        //when to update?
+        this.availableCoordinates = maps.availableCoordinates(this.positionX, this.positionY, this.movement);
 
         this.turnPoint = new Phaser.Point();
 
@@ -70,7 +64,8 @@ class Unity extends Phaser.Sprite {
             // if active
             // show available points to move
 
-            this.renderAvailable();
+            //this.renderAvailable();
+            //console.log(this.availableCoordinates);
         });
 
         this.events.onInputOut.add(target => {
@@ -90,14 +85,12 @@ class Unity extends Phaser.Sprite {
      * @param {*} mouseY : current mouse Y position.
      */
     setMouseAxis(mouseX, mouseY) {
-        const limit = maps.checkAcceptableAreaLimit(mouseX, mouseY);
-
         this.mouseX = mouseX;
         this.mouseY = mouseY;
 
-        const invalidDistance = this.setMaximumDistance();
+        const invalidDistance = this.checkDistanceLimit();
 
-        if (!limit || invalidDistance) {
+        if (invalidDistance) { 
             this.active = false;
             this.mouseX = null;
             this.mouseY = null;
@@ -111,60 +104,15 @@ class Unity extends Phaser.Sprite {
 
     /**
      * - Ensures that this won't move to a place outside its limitation movement range.
-     * @returns : True, if distance is invalid.
+     * @returns : True, if coordinate is out of range.
     */
-    setMaximumDistance() {
-        this.distanceX = Math.abs(this.mouseX - this.positionX);
-        this.distanceY = Math.abs(this.mouseY - this.positionY);
-        this.distanceL = this.distanceX + this.distanceY;
+    checkDistanceLimit() {
+        const coordinate = this.availableCoordinates.find(e => e.x == this.mouseX && e.y == this.mouseY);
 
-        return this.distanceL > this.movement || this.distanceX > this.movement || this.distanceY > this.movement;
-    }
-    // should update after finishes moving
-    renderAvailable() {
-        this.availableSquares = [];
-        const posX = this.positionX;
-        const posY = this.positionY;
+        if (coordinate != undefined)
+            return false;
 
-        let maxRight = posX + this.movement;
-        let maxLeft = posX - this.movement;
-
-        let maxTop = posY - this.movement;
-        let maxBottom = posY + this.movement;
-
-        console.log('posX: ' + this.positionX + ', posY: ' + this.positionY);
-        console.log('maxRight: ' + maxRight);
-        console.log('maxLeft: ' + maxLeft);
-        console.log('maxTop: ' + maxTop);
-        console.log('maxBottom: ' + maxBottom);
-        
-        /*
-                *
-              * * *
-            * * x * *
-        */
-        for (let y = this.positionY; y > maxTop; --y) { // 5 negative y
-            for (let x = this.positionX - 1; x >= maxLeft; --x) {
-                this.availableSquares.push({ y, x }); // {y,x}
-            }
-
-            for (let x = this.positionX + 1; x <= maxRight; ++x) {
-                this.availableSquares.push({ y, x }); // {y,x}
-            }
-
-            this.availableSquares.push({ y, posX });
-            ++maxLeft;
-            --maxRight;
-        }
-
-        /*
-              * * *
-                * 
-        */
-
-        console.log(this.availableSquares);
-        console.log(this.availableSquares.length);
-        // return this.availablePlaces
+        return true;
     }
 
     /**
@@ -239,12 +187,6 @@ class Unity extends Phaser.Sprite {
      * - Reset speed to 0(stops) when threshold is reached.
      */
     stopMovementTrigger() {
-        /*
-        if (this.lMovement && this.mouseX < this.positionX) {
-            this.leftMovement = true;
-            this.topMovement = true;
-        } */
-
         if (game.math.fuzzyEqual(this.turnPoint.x, this.x, this.threshold)) {
             this.body.velocity.x = 0;
         }
@@ -394,7 +336,6 @@ class Unity extends Phaser.Sprite {
             this.mouseY = this.positionY;
         }
         /////////////////////////////////////////////////////
-
 
         this.checkUnitiesStatus();
         this.setStopPoint();

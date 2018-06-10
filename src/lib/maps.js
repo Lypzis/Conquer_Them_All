@@ -22,6 +22,8 @@ const maps = {
 
         this.map.setCollision([2, 3], true, this.layer);
 
+        this.walkableTile = 1;
+
         this.startPlayerPoint = this.map.objects['StartingPointPlayer'][0];
 
         this.walkableArea = this.map.objects['WalkableArea'][0];
@@ -54,7 +56,7 @@ const maps = {
      * @param {*} y : current unity y position.
      * @param {*} side : name of the side to get coordinates('left' or 'right').
      * @returns : coordinates object. 
-     */    
+     */
     getSurroudingSquare(i, x, y, side) {
         switch (side) {
             case 'left':
@@ -88,23 +90,67 @@ const maps = {
     },
 
     /**
-     * - Get the table moveable area parameters.
-     * @returns : Moveable limits area of the table. 
+     * - Sets all available coordinates in range of the object movement.
+     * @param {*} posX : X coordinate of the object.
+     * @param {*} posY : Y coordinate of the object.
+     * @param {*} moveN : Movement range of the object.
+     * @returns : Array of available coordinates that the object can move to. 
      */
-    getWalkableArea() {
-        return {
-            minY: maps.gridCoordinateConvert(this.walkableArea.y),
-            minX: maps.gridCoordinateConvert(this.walkableArea.x),
-            maxY: maps.gridCoordinateConvert(this.walkableArea.y + this.walkableArea.height) - 1,
-            maxX: maps.gridCoordinateConvert(this.walkableArea.x + this.walkableArea.width) - 1
-        };
-    },
+    availableCoordinates(posX, posY, moveN) {
+        const availableSquares = [];
 
-    checkAcceptableAreaLimit(mouseX, mouseY){
-        const area = this.getWalkableArea(); 
+        let maxRight = posX + moveN;
+        let maxLeft = posX - moveN;
+        let maxTop = posY - moveN;
+        let maxBottom = posY + moveN;
 
-        return  (mouseX >= area.minX && mouseX <= area.maxX) && 
-                (mouseY >= area.minY && mouseY <= area.maxY);
+        /*
+        ex: Something with moveN equals 2;
+        
+                *
+              * * *
+            * * x * *
+        */
+        for (let y = posY; y > maxTop; --y) {
+            for (let x = posX - 1; x >= maxLeft; --x) {
+                availableSquares.push({ y, x });
+            }
+
+            for (let x = posX + 1; x <= maxRight; ++x) {
+                availableSquares.push({ y, x });
+            }
+
+            availableSquares.push({ y, x: posX });
+            ++maxLeft;
+            --maxRight;
+        }
+
+        /*
+              * * *
+                * 
+        */
+        maxRight = posX + moveN;
+        maxLeft = posX - moveN;
+
+        for (let y = posY + 1; y <= maxBottom; ++y) {
+            for (let x = posX - 1; x > maxLeft; --x) {
+                availableSquares.push({ y, x });
+            }
+
+            for (let x = posX + 1; x < maxRight; ++x) {
+                availableSquares.push({ y, x });
+            }
+
+            availableSquares.push({ y, x: posX });
+            ++maxLeft;
+            --maxRight;
+        }
+
+        //challeng: Now make this don't accept where other unities are located also, including itself!!!
+        return availableSquares.filter(e => 
+            this.map.getTile(e.x, e.y, this.getLayerIndex()) != null && 
+            this.map.getTile(e.x, e.y, this.getLayerIndex()).index == this.walkableTile
+        );
     },
 
     /**
@@ -133,4 +179,5 @@ const maps = {
         return squares;
     }
 
-}
+};
+

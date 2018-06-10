@@ -47,6 +47,7 @@ const queue = {
             e.mouseX = null;
             e.mouseY = null;
             e.execute = false;
+            e.availableCoordinates = maps.availableCoordinates(e.positionX, e.positionY, e.movement);
         });
 
         unities.unitiesCreated.forEach(e => {
