@@ -22,13 +22,18 @@ const queue = {
         return true;
     },
 
-    /** - Removes an unity from the queue.
+    /** - Removes an unity from the queue, turning it inactive and removing its marker.
     * @param {*} unity : an unity object.
     */
     removeExists(unity) {
 
-        if (this.checkExists(unity))
-            this.activated.splice(this.activated.indexOf(unity), 1);
+        if (this.checkExists(unity)){
+            const index = this.activated.indexOf(unity);
+            this.activated[index].active = false;
+            this.activated[index].coordinateMarker.destroy();
+
+            this.activated.splice(index, 1); //this.activated.indexOf(unity)
+        }
     },
 
     /** - Add an unity to the queue.
@@ -46,6 +51,7 @@ const queue = {
             e.active = false;
             e.mouseX = null;
             e.mouseY = null;
+            e.coordinateMarker.destroy();
             e.execute = false;
         });
 
@@ -86,7 +92,7 @@ const queue = {
     * @param {*} unity : an unity object.
     * @returns : True if it is the first or previous is done executing.
     */
-    checkPreviousExecuted(unity) {
+    checkPreviousExecuted(unity) { //bugged when moving vertically (URGENT);
         if (queue.activated.length > 0) {
             const index = queue.activated.indexOf(unity);
 

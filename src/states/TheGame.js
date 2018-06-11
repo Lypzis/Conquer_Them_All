@@ -8,7 +8,7 @@
 
 class TheGame {
 
-    init() {
+    create() {
         this.titleText = game.add.text(game.world.centerX, 100, "Game", styles.lightHeader());
 
         // add game-table-bg, it should place itself right above the table, then some pixels left and some to top;
@@ -88,6 +88,7 @@ class TheGame {
 
         // FPS
         game.time.advancedTiming = true;
+        this.onClick();
     }
 
     checkTotalTroops() {
@@ -183,11 +184,6 @@ class TheGame {
         queue.activated.forEach(e => {
             e.execute = true;
         });
-    }
-
-    create() {
-        this.init();
-        this.onClick();
     }
 
     update() {

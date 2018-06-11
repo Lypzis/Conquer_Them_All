@@ -10,7 +10,10 @@ import { ipcRenderer } from "electron";
 
 class GameMenu {
 
-    init(){
+    create() {
+        game.add.sprite(0, 0, 'menu-sky-bg');
+        this.clouds = game.add.tileSprite(0, 0, 832, 608, 'menu-clouds-bg');
+        game.add.sprite(0, 0, 'menu-bg');
 
         this.titleText = game.add.text(game.world.centerX, 100, "Conquer Them All", styles.lightHeader());
         
@@ -24,15 +27,6 @@ class GameMenu {
 
         this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
         utils.centerGameObjects([this.titleText]);
-        
-    }
-
-    create() {
-        game.add.sprite(0, 0, 'menu-sky-bg');
-        this.clouds = game.add.tileSprite(0, 0, 832, 608, 'menu-clouds-bg');
-        game.add.sprite(0, 0, 'menu-bg');
-
-        this.init();
 
         // game continue even when not focused
         game.stage.disableVisibilityChange = true;

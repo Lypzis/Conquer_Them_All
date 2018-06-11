@@ -26,18 +26,22 @@ const utils = {
         });
     },
 
-    drawRectangle(x, y) {
+    drawCoordinates(coordinatesArray) {
         let drawnObject;
-        const width = 32 // example;
-        const height = 32 // example;
+        
+        const squareSize = maps.getSquareSize();
+        const width = squareSize;
+        const height = squareSize;
         const bmd = game.add.bitmapData(width, height);
 
         bmd.ctx.beginPath();
         bmd.ctx.rect(0, 0, width, height);
-        bmd.ctx.fillStyle = 'rgba(0,255,0,0.3)';
+        bmd.ctx.fillStyle = 'rgba(0,255,0,0.2)';
         bmd.ctx.fill();
 
-        return game.add.sprite(x, y, bmd);
+        return coordinatesArray.map(e => 
+            game.add.sprite(e.x*squareSize, e.y*squareSize, bmd)
+        );
     },
 
     ///////////////////////////////////////////////////////////////////

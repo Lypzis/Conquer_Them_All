@@ -6,6 +6,8 @@
 */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Obs: bugs queue when moving vertically(URGENT);
+
 class Unity extends Phaser.Sprite {
     constructor(game, x, y, unityKey, unity, id, friendly) {
         super(game, x, y, unityKey);
@@ -36,8 +38,9 @@ class Unity extends Phaser.Sprite {
         this.index = maps.getLayerIndex();
         this.positionX = maps.gridCoordinateConvert(this.x);
         this.positionY = maps.gridCoordinateConvert(this.y);
-        //when to update?
+
         this.availableCoordinates = maps.availableCoordinates(this.positionX, this.positionY, this.movement);
+        this.coordinateMarker = null;
 
         this.turnPoint = new Phaser.Point();
 
@@ -53,19 +56,19 @@ class Unity extends Phaser.Sprite {
             //removes from the queue list if clicked when already received an order
             if (queue.checkExists(this)) {
                 queue.removeExists(this);
-                this.active = false;
+                //this.coordinateMarker.destroy(); //?? perhaps put this inside the removeExists
+                //this.active = false;
             } else {
                 // inactivate if active else active to receive order
-                this.active = this.active ? !this.active : true;
+                if (this.active) {
+                    this.active = !this.active;
+                } else {
+                    this.highlightCoordinates = utils.drawCoordinates(this.availableCoordinates); //
+                    this.active = true;
+                }
             }
 
             target.execute = false; // it should wait for the 'Execute Actions' signal to do its action.
-
-            // if active
-            // show available points to move
-
-            //this.renderAvailable();
-            //console.log(this.availableCoordinates);
         });
 
         this.events.onInputOut.add(target => {
@@ -90,15 +93,36 @@ class Unity extends Phaser.Sprite {
 
         const invalidDistance = this.checkDistanceLimit();
 
-        if (invalidDistance) { 
+        if (invalidDistance) {
             this.active = false;
             this.mouseX = null;
             this.mouseY = null;
         } else {
             if (this.active) {
                 this.active = false;
+                this.setCoordinateMarker();
                 queue.add(this);
             }
+        }
+
+        this.highlightCoordinates.forEach(e => e.destroy());
+        this.highlightCoordinates = null;
+    }
+
+    /**
+    * - Sets a marker to a valid clicked position from one of the highlighted coordinates.
+   */
+    setCoordinateMarker() {
+        this.coordinateMarker = this.highlightCoordinates.find(e =>
+            e.x / this.gridSize == this.mouseX &&
+            e.y / this.gridSize == this.mouseY
+        );
+
+        const x = maps.gridCoordinateConvert(this.coordinateMarker.x);
+        const y = maps.gridCoordinateConvert(this.coordinateMarker.y);
+
+        if (this.coordinateMarker != undefined && !(this.positionX == x && this.positionY == y)) {
+            this.highlightCoordinates.splice(this.highlightCoordinates.indexOf(this.coordinateMarker), 1);
         }
     }
 
@@ -109,15 +133,18 @@ class Unity extends Phaser.Sprite {
     checkDistanceLimit() {
         // find a way to make the 'this.availableCoordinates' not include this and other unities positions;
         const coordinate = this.availableCoordinates.find(e => e.x == this.mouseX && e.y == this.mouseY);
-        let notTaken = this.otherUnities.find(e => e.positionX == coordinate.x && e.positionY == coordinate.y);
+        let notTaken;
 
-        if (coordinate != undefined && notTaken == undefined){ 
+        if (coordinate != undefined)
+            notTaken = this.otherUnities.find(e => e.positionX == coordinate.x && e.positionY == coordinate.y);
+
+        if (coordinate != undefined && notTaken == undefined) {
             notTaken = null;
             return false;
         }
 
         notTaken = null;
-        
+
         return true;
     }
 

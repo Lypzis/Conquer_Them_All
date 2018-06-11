@@ -8,7 +8,9 @@
 
 class Options{
 
-    init(){
+    create(){
+        game.add.sprite(0, 0, 'options-bg'); // obs: create a script to store keys in the future
+
         this.titleText = game.add.text(game.world.centerX, 100, "Options", styles.darkHeader());
         this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
         utils.centerGameObjects([this.titleText]);
@@ -25,13 +27,6 @@ class Options{
         }, true, true);
 
         utils.navItemSetter('<- Back', 3, 90, target => game.state.start('GameMenu'), true, true );
-
-    }
-
-    create(){
-        game.add.sprite(0, 0, 'options-bg'); // obs: create a script to store keys in the future
-
-        this.init(); 
     }
     
 }
