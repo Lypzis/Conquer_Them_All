@@ -56,8 +56,6 @@ class Unity extends Phaser.Sprite {
             //removes from the queue list if clicked when already received an order
             if (queue.checkExists(this)) {
                 queue.removeExists(this);
-                //this.coordinateMarker.destroy(); //?? perhaps put this inside the removeExists
-                //this.active = false;
             } else {
                 // inactivate if active else active to receive order
                 if (this.active) {

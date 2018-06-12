@@ -59,20 +59,27 @@ class TheGame {
         this.layer = maps.getLayer();
 
         //////////////////////////////////////////////////////////////////////////////////////////////
+        this.portraits = ['hero-icon', 'enemy-hero-icon', 'enemy-warrior-icon', 'warrior-icon'];
+
         // total army feedback main player image
-        this.army1 = game.add.sprite(80, game.world.centerY - 32, 'hero-icon-64', 0); //
+        this.army1 = game.add.sprite(80, game.world.centerY - 32, 'unities-portrait', 0); 
 
         this.army1Title = game.add.text(this.army1.x + (this.army1.width * 2), game.world.centerY - 40, null, styles.customText('18pt'));
         this.army1Status = game.add.text(this.army1.x + (this.army1.width * 2), game.world.centerY - 16, null, styles.customText('16pt'));
 
         // total army feedback main enemy image
-        this.army2 = game.add.sprite(game.world.width - 80, game.world.centerY - 32, 'enemy-hero-icon-64', 0);
+        this.army2 = game.add.sprite(game.world.width - 80, game.world.centerY - 32, 'unities-portrait', 0);
 
         this.army2Title = game.add.text(this.army2.x - (this.army2.width * 2), game.world.centerY - 40, null, styles.customText('18pt'));
         this.army2Status = game.add.text(this.army2.x - (this.army2.width * 2), game.world.centerY - 16, null, styles.customText('16pt'));
 
         this.overWrite = false; //??
         this.onHover = false; //??
+
+        this.portraits.forEach((e, index,) => {
+            this.army1.animations.add(e, [index], 1, true);
+            this.army2.animations.add(e, [index], 1, true);
+        })
         //////////////////////////////////////////////////////////////////////////////////////////////
 
         utils.centerGameObjects([
@@ -135,12 +142,17 @@ class TheGame {
             let str = `${this.unity.health} ${this.unity.attack} ${this.unity.defense}`
 
             if (this.unity.friendly) {
+                this.army1.animations.play(`${this.unity.key}`);
                 this.army1Title.text = this.unity.key;
                 this.army1Status.text = str;
             } else {
+                this.army2.animations.play(`${this.unity.key}`);
                 this.army2Title.text = this.unity.key;
                 this.army2Status.text = str;
             }
+        } else {
+            this.army1.animations.play('hero-icon');
+            this.army2.animations.play('enemy-hero-icon');
         }
 
     }

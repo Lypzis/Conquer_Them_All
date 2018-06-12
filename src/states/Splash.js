@@ -63,14 +63,9 @@ class Splash {
             'enemy-warrior-icon'
         ];
 
-        const icons64 = [
-            'warrior-icon-64',
-            'hero-icon-64',
-            'enemy-hero-icon-64',
-            'enemy-warrior-icon-64'
-        ];
+        // portraits
+        game.load.spritesheet('unities-portrait', './assets/images/unities-portrait.png', 60, 60);
 
-        icons64.forEach(icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 60, 60));
         icons.forEach(icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 30, 30));
     }
 
