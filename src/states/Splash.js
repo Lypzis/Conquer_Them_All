@@ -49,6 +49,9 @@ class Splash {
             'options-bg',
             'quit-bg',
             'game-table-bg',
+            'level1-bg',
+            'vegetation1',
+            'vegetation2',
             'tableGround-tile',
         ];
 

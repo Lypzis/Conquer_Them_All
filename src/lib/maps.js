@@ -16,11 +16,12 @@ const maps = {
      */
     loadMap(tileMapName) {
         this.map = game.add.tilemap(tileMapName);
+        
         this.map.addTilesetImage('tableGround-tile');
 
         this.layer = this.map.createLayer(0);
 
-        this.map.setCollision([2, 3], true, this.layer);
+        this.map.setCollisionByExclusion([1], true, this.layer);
 
         this.walkableTile = 1;
 

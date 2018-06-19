@@ -17,17 +17,19 @@ const createWindow = () => {
     height: 608,
     backgroundColor: '#020202',
     backgroundThrottling: false,
-    
+
     //resizable: false, //
     //frame: false, //
     //show: false, //
   });
+
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
+
   });
 
   // Open the DevTools.

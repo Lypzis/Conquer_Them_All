@@ -129,7 +129,6 @@ class Unity extends Phaser.Sprite {
      * @returns : True, if coordinate is out of range.
     */
     checkDistanceLimit() {
-        // find a way to make the 'this.availableCoordinates' not include this and other unities positions;
         const coordinate = this.availableCoordinates.find(e => e.x == this.mouseX && e.y == this.mouseY);
         let notTaken;
 
@@ -146,45 +145,6 @@ class Unity extends Phaser.Sprite {
         return true;
     }
 
-    /**
-     * - Give positive speed to move to the X right direction.
-     */
-    moveRight() {
-        if (this.mouseX > this.positionX) {
-            this.body.velocity.x = this.speed;
-            this.rightMovement = true;
-        }
-    }
-
-    /**
-     * - Give negative speed to move to the X left direction.
-     */
-    moveLeft() {
-        if (this.mouseX < this.positionX) {
-            this.body.velocity.x = -this.speed;
-            this.leftMovement = true;
-        }
-    }
-
-    /**
-     * - Give negative speed to move to the Y top direction.
-     */
-    moveUp() {
-        if (this.mouseY < this.positionY) {
-            this.body.velocity.y = -this.speed;
-            this.topMovement = true;
-        }
-    }
-
-    /**
-     * - Give positive speed to move to the Y bottom direction.
-     */
-    moveDown() {
-        if (this.mouseY > this.positionY) {
-            this.body.velocity.y = this.speed;
-            this.bottomMovement = true;
-        }
-    }
 
     /**
     * - Set the its rightSide and leftSide and position X and Y in tiles squares rather than by window size axis.
@@ -228,35 +188,9 @@ class Unity extends Phaser.Sprite {
     }
 
     /**
-    * - Stops and reset mouse axis values if a wall is hitted.
-    */
-    checkCollision() {
-
-        // need to check if next tile to where its heading is walkable
-        // if not reset the mouseX to be the current posX (Works !)
-
-        // Future implementation
-        // const movements = [{lMovement: false}, {leftMovement: false},{topMovement: false},{bottomMovement: false},{rightMovement: false}];
-        // now check if a sprite is in the way and make it never start any movement
-        // if there is osbtacle right next to it
-
-        if (this.leftSide.index !== this.walkableTile && this.leftMovement)
-            return true;
-        if (this.rightSide.index !== this.walkableTile && this.rightMovement)
-            return true;
-        if (this.bottomSide.index !== this.walkableTile && this.bottomMovement)
-            return true;
-        if (this.topSide.index !== this.walkableTile && this.topMovement)
-            return true;
-
-        return false;
-    }
-
-    /**
      * - Resets the directions of where the sprite was heading when it stops moving.      
      */
     movementCheck() {
-
 
         if (this.body.velocity.y == 0 && this.body.velocity.x == 0) {
             this.lMovement = false;
@@ -265,6 +199,95 @@ class Unity extends Phaser.Sprite {
             this.bottomMovement = false;
             this.rightMovement = false;
         }
+
+    }
+
+    /**
+     * - Give positive speed to move to the X right direction.
+     */
+    moveRight() {
+        this.body.velocity.x = this.speed;
+        this.rightMovement = true;
+    }
+
+    /**
+     * - Give negative speed to move to the X left direction.
+     */
+    moveLeft() {
+        this.body.velocity.x = -this.speed;
+        this.leftMovement = true;
+    }
+
+    /**
+     * - Give negative speed to move to the Y top direction.
+     */
+    moveUp() {
+        this.body.velocity.y = -this.speed;
+        this.topMovement = true;
+    }
+
+    /**
+     * - Give positive speed to move to the Y bottom direction.
+     */
+    moveDown() {
+        this.body.velocity.y = this.speed;
+        this.bottomMovement = true;
+    }
+
+    checkObstacle(side) {
+        
+        switch (side) {
+            case this.leftSide:
+                if (side.index !== this.walkableTile) {
+                    this.mouseX = this.positionX;
+                    return false;
+                }
+                break;
+            case this.rightSide:
+                if (side.index !== this.walkableTile) {
+                    this.mouseX = this.positionX;
+                    return false;
+                }
+                break;
+            case this.topSide:
+                if (side.index !== this.walkableTile) {
+                    this.mouseY = this.positionY;
+                    return false;
+                }
+                break;
+            case this.bottomSide:
+                if (side.index !== this.walkableTile) {
+                    this.mouseY = this.positionY;
+                    return false;
+                }
+        } 
+
+        //try using phaser collide or coallesce between sprites
+
+        const opposites = this.otherUnities.map(e => {
+            switch (side) {
+                case this.leftSide:
+                    return e.rightSide;
+
+                case this.rightSide:
+                    return e.leftSide;
+
+                case this.topSide:
+                    return e.bottomSide;
+
+                case this.bottomSide:
+                    return e.topSide;
+            }
+        });
+
+        for (let i = 0; i < opposites.length; ++i) {
+            if (opposites[i].x == side.x && opposites[i].y == side.y) {
+                this.mouseX = opposites[i].x;
+                this.mouseY = opposites[i].y;
+            }
+        }
+             
+        return side.index === this.walkableTile;
     }
 
     //obs: being called multiple times when moving to right, bottom or L in the respective directions
@@ -275,21 +298,32 @@ class Unity extends Phaser.Sprite {
         if (this.positionX != this.mouseX && this.positionY != this.mouseY) {
 
             console.log('L movement.');
-            this.moveRight();
-            this.moveLeft();
+            if (this.mouseX >= this.positionX && this.checkObstacle(this.rightSide)) {
+                this.moveRight();
+            } else if (this.mouseX <= this.positionX && this.checkObstacle(this.leftSide)) {
+                this.moveLeft();
+            } 
+
             this.lMovement = true;
 
         } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.lMovement) {
 
             console.log('Vertical movement.');
-            this.moveUp();
-            this.moveDown();
+            if (this.mouseY <= this.positionY && this.checkObstacle(this.topSide)) {
+                this.moveUp();
+            } else if (this.mouseY >= this.positionY && this.checkObstacle(this.bottomSide)) {
+                this.moveDown();
+            } 
 
         } else if (this.positionX != this.mouseX && this.positionY == this.mouseY) {
 
             console.log('Horizontal movement.');
-            this.moveRight();
-            this.moveLeft();
+            if (this.mouseX >= this.positionX && this.checkObstacle(this.rightSide)) {
+                this.moveRight();
+            } else if (this.mouseX <= this.positionX && this.checkObstacle(this.leftSide)) {
+                this.moveLeft();
+            }
+
         }
     }
 
@@ -358,15 +392,6 @@ class Unity extends Phaser.Sprite {
 
         this.setPosition();
         this.setSideCoordinates();
-        this.checkCollision();
-
-        //////////////////////////////////////////////////////
-        if (this.checkCollision() && (this.leftMovement || this.rightMovement)) {
-            this.mouseX = this.positionX;
-        } else if (this.checkCollision()) {
-            this.mouseY = this.positionY;
-        }
-        /////////////////////////////////////////////////////
 
         this.checkUnitiesStatus();
         this.setStopPoint();

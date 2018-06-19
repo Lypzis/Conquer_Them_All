@@ -1,3 +1,5 @@
+import { ipcRenderer } from 'electron';
+
 //////////////////////////////////////////////////////////////////////////////
 /** 
  * @by: Lypzis Entertainment
@@ -30,7 +32,7 @@ class Main {
 
 ///////////////////////////////////////////////////////////////////////
 // Initialize Phaser application
-const game = new Phaser.Game(832, 608, Phaser.AUTO, 'game');
+const game = new Phaser.Game(832, 608, Phaser.AUTO, 'game'); //832, 608
 
 const gameOptions = {
     playSound: true,

@@ -9,7 +9,13 @@
 class TheGame {
 
     create() {
-        this.titleText = game.add.text(game.world.centerX, 100, "Game", styles.lightHeader());
+        game.add.sprite(0, 0, 'level1-bg');
+
+        this.obstacleLayer4 = game.add.sprite(game.world.centerX - 144, game.world.centerY - 192, 'vegetation1');
+        this.obstacleLayer4.scale.setTo(0.6, 1);
+
+        this.obstacleLayer2 = game.add.sprite(game.world.centerX + 216, game.world.centerY - 144, 'vegetation2');
+        this.obstacleLayer2.scale.setTo(0.4, 0.8);
 
         // add game-table-bg, it should place itself right above the table, then some pixels left and some to top;
         this.tableBG = game.add.image(0, 0, 'game-table-bg');
@@ -21,7 +27,7 @@ class TheGame {
             this.executeActions,
             this, 1, 0, 2, 0);
 
-        utils.navItemSetter('<- Back', 1, 90, target => {
+        utils.navItemSetter('<- Back', 4, 95, target => {
             this.mouseX = null;
             this.mouseY = null;
             this.warriors = null;
@@ -36,7 +42,7 @@ class TheGame {
             unities.unitiesCreated = [];
 
             game.state.start('GameMenu');
-        }, null, true);
+        });
 
         ////////////////////////////////////////////////////////////////////////////////
         // Creates the table, each level should receive a different map(consideration of levels classes)
@@ -44,9 +50,9 @@ class TheGame {
         maps.loadMap('tilemap');
 
         this.warriors = utils.generateTableUnities('warrior-icon', 2, 0, true);
-        this.hero = utils.generateTableUnities('hero-icon', 1, 1, true);
+        this.hero = utils.generateTableUnities('hero-icon', 1, 3, true);
 
-        this.enemyHero = utils.generateTableUnities('enemy-hero-icon', 1, 3, false);
+        this.enemyHero = utils.generateTableUnities('enemy-hero-icon', 1, 2, false);
         this.enemyWarriors = utils.generateTableUnities('enemy-warrior-icon', 2, 4, false);
 
         unities.unitiesCreated = Array.prototype.concat(
@@ -62,16 +68,16 @@ class TheGame {
         this.portraits = ['hero-icon', 'enemy-hero-icon', 'enemy-warrior-icon', 'warrior-icon'];
 
         // total army feedback main player image
-        this.army1 = game.add.sprite(80, game.world.centerY - 32, 'unities-portrait', 0); 
+        this.army1 = game.add.sprite(game.world.centerX - 264, game.world.centerY + 8, 'unities-portrait', 0); 
 
-        this.army1Title = game.add.text(this.army1.x + (this.army1.width * 2), game.world.centerY - 40, null, styles.customText('18pt'));
-        this.army1Status = game.add.text(this.army1.x + (this.army1.width * 2), game.world.centerY - 16, null, styles.customText('16pt'));
+        this.army1Title = game.add.text(this.army1.x + (this.army1.width * 2), game.world.centerY, null, styles.customText('18pt'));
+        this.army1Status = game.add.text(this.army1.x + (this.army1.width * 2), game.world.centerY + 24, null, styles.customText('16pt'));
 
         // total army feedback main enemy image
-        this.army2 = game.add.sprite(game.world.width - 80, game.world.centerY - 32, 'unities-portrait', 0);
+        this.army2 = game.add.sprite(game.world.centerX + 264, game.world.centerY + 8, 'unities-portrait', 0);
 
-        this.army2Title = game.add.text(this.army2.x - (this.army2.width * 2), game.world.centerY - 40, null, styles.customText('18pt'));
-        this.army2Status = game.add.text(this.army2.x - (this.army2.width * 2), game.world.centerY - 16, null, styles.customText('16pt'));
+        this.army2Title = game.add.text(this.army2.x - (this.army2.width * 2), game.world.centerY, null, styles.customText('18pt'));
+        this.army2Status = game.add.text(this.army2.x - (this.army2.width * 2), game.world.centerY + 24, null, styles.customText('16pt'));
 
         this.overWrite = false; //??
         this.onHover = false; //??
@@ -83,7 +89,6 @@ class TheGame {
         //////////////////////////////////////////////////////////////////////////////////////////////
 
         utils.centerGameObjects([
-            this.titleText,
             this.executeActionsBtn,
             this.army1,
             this.army2,
@@ -91,6 +96,8 @@ class TheGame {
             this.army2Title,
             this.army1Status,
             this.army2Status,
+            this.obstacleLayer2,
+            this.obstacleLayer4
         ]);
 
         // FPS

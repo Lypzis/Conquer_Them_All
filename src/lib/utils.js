@@ -92,10 +92,10 @@ const utils = {
     * @param {*} order : the order it will appear, from top to bottom (default is 1).
     * @param {*} padding : space between a previous navItem from the current.
     * @param {*} callback : function called when the button is clicked.
-    * @param {*} revert : (optional) elements will white(false or null) else  black(true).
+    * @param {*} revert : (optional) elements will be white(false or null) else black(true).
     * @param {*} center : (optional) elements align left(false or null) else center(true). 
     */
-    navItemSetter(text, order = 1, padding, callback, revert, center) {
+    navItemSetter(text, order = 1, padding, callback, revert = false, center = false) {
         let navMenuStyle;
         let navMenuPosition;
         let anchor;
