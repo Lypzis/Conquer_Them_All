@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Obs: bugs queue when moving vertically(URGENT);
+// Obs: bugs queue when this dies in last position(URGENT);
 
 class Unity extends Phaser.Sprite {
     constructor(game, x, y, unityKey, unity, id, friendly) {
@@ -282,60 +283,47 @@ class Unity extends Phaser.Sprite {
     }
 
     checkObstacle(side) {
-            switch (side) {
-                case this.leftSide:
-                    if (side.index !== this.walkableTile) {
-                        this.mouseX = this.positionX;
-                        return false;
-                    }
-                    break;
-                case this.rightSide:
-                    if (side.index !== this.walkableTile) {
-                        this.mouseX = this.positionX;
-                        return false;
-                    }
-                    break;
-                case this.topSide:
-                    if (side.index !== this.walkableTile) {
-                        this.mouseY = this.positionY;
-                        return false;
-                    }
-                    break;
-                case this.bottomSide:
-                    if (side.index !== this.walkableTile) {
-                        this.mouseY = this.positionY;
-                        return false;
-                    }
-            }
-
-            ////////////////////////////////////////////////////////////
-            // needs improving
-            const opposites = this.otherUnities.map(e => {
-                switch (side) {
-                    case this.leftSide:
-                        return e.rightSide;
-
-                    case this.rightSide:
-                        return e.leftSide;
-
-                    case this.topSide:
-                        return e.bottomSide;
-
-                    case this.bottomSide:
-                        return e.topSide;
+        switch (side) {
+            case this.leftSide:
+                if (side.index !== this.walkableTile || this.checkUnity(this.direction)) {
+                    this.mouseX = this.positionX;
+                    return false;
                 }
-            });
-
-            for (let i = 0; i < opposites.length; ++i) {
-                if (opposites[i] != undefined && (opposites[i].x == side.x && opposites[i].y == side.y)) {
-                    this.mouseX = opposites[i].x;
-                    this.mouseY = opposites[i].y;
+                break;
+            case this.rightSide:
+                if (side.index !== this.walkableTile || this.checkUnity(this.direction)) {
+                    this.mouseX = this.positionX;
+                    return false;
                 }
-            }
-            //////////////////////////////////////////////////////////////////
-        
+                break;
+            case this.topSide:
+                if (side.index !== this.walkableTile || this.checkUnity(this.direction)) {
+                    this.mouseY = this.positionY;
+                    return false;
+                }
+                break;
+            case this.bottomSide:
+                if (side.index !== this.walkableTile || this.checkUnity(this.direction)) {
+                    this.mouseY = this.positionY;
+                    return false;
+                }
+        }
 
         return side.index === this.walkableTile;
+    }
+
+    checkUnity(side) {
+        let temp;
+
+        if (side != undefined) {
+            temp = this.otherUnities.find(e => e.positionX == side.x && e.positionY == side.y);
+        }
+
+        if (temp != undefined) {
+            return true;
+        }
+
+        return false;
     }
 
     pathSetter() {
@@ -400,7 +388,7 @@ class Unity extends Phaser.Sprite {
     }
 
     amIalive() {
-        if (this.health <= 0){
+        if (this.health <= 0) {
             queue.removeExists(this);
             this.destroy();
         }
@@ -433,7 +421,7 @@ class Unity extends Phaser.Sprite {
         this.stopMovementTrigger();
         this.movementCheck();
 
-        this.executeOrder(); 
+        this.executeOrder();
 
         this.attackOpposition();
         this.amIalive();
