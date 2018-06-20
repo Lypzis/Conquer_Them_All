@@ -234,96 +234,128 @@ class Unity extends Phaser.Sprite {
         this.bottomMovement = true;
     }
 
-    checkObstacle(side) {
-        
-        switch (side) {
-            case this.leftSide:
-                if (side.index !== this.walkableTile) {
-                    this.mouseX = this.positionX;
-                    return false;
-                }
-                break;
-            case this.rightSide:
-                if (side.index !== this.walkableTile) {
-                    this.mouseX = this.positionX;
-                    return false;
-                }
-                break;
-            case this.topSide:
-                if (side.index !== this.walkableTile) {
-                    this.mouseY = this.positionY;
-                    return false;
-                }
-                break;
-            case this.bottomSide:
-                if (side.index !== this.walkableTile) {
-                    this.mouseY = this.positionY;
-                    return false;
-                }
-        } 
+    movementIdentifier() {
+        if (this.positionX != this.mouseX && this.positionY != this.mouseY) {
+            this.lMovement = true;
+            return 'l';
+        }
 
-        //try using phaser collide or coallesce between sprites
+        if (this.positionY != this.mouseY && this.positionX == this.mouseX && !this.lMovement) {
+            return 'vertical';
+        }
 
-        const opposites = this.otherUnities.map(e => {
-            switch (side) {
-                case this.leftSide:
-                    return e.rightSide;
+        if (this.positionX != this.mouseX && this.positionY == this.mouseY) {
+            return 'horizontal';
+        }
 
-                case this.rightSide:
-                    return e.leftSide;
+        return null;
+    }
 
-                case this.topSide:
-                    return e.bottomSide;
+    directionIdentifier() {
+        const movement = this.movementIdentifier();
 
-                case this.bottomSide:
-                    return e.topSide;
-            }
-        });
-
-        for (let i = 0; i < opposites.length; ++i) {
-            if (opposites[i].x == side.x && opposites[i].y == side.y) {
-                this.mouseX = opposites[i].x;
-                this.mouseY = opposites[i].y;
+        if (movement != null) {
+            //console.log(movement);
+            switch (movement) {
+                case 'l':
+                    if (this.mouseX > this.positionX) {
+                        this.direction = this.rightSide;
+                    } else if (this.mouseX < this.positionX) {
+                        this.direction = this.leftSide;
+                    }
+                    break;
+                case 'vertical':
+                    if (this.mouseY < this.positionY) {
+                        this.direction = this.topSide;
+                    } else if (this.mouseY > this.positionY) {
+                        this.direction = this.bottomSide;
+                    }
+                    break;
+                case 'horizontal':
+                    if (this.mouseX > this.positionX) {
+                        this.direction = this.rightSide;
+                    } else if (this.mouseX < this.positionX) {
+                        this.direction = this.leftSide;
+                    }
             }
         }
-             
+    }
+
+    checkObstacle(side) {
+            switch (side) {
+                case this.leftSide:
+                    if (side.index !== this.walkableTile) {
+                        this.mouseX = this.positionX;
+                        return false;
+                    }
+                    break;
+                case this.rightSide:
+                    if (side.index !== this.walkableTile) {
+                        this.mouseX = this.positionX;
+                        return false;
+                    }
+                    break;
+                case this.topSide:
+                    if (side.index !== this.walkableTile) {
+                        this.mouseY = this.positionY;
+                        return false;
+                    }
+                    break;
+                case this.bottomSide:
+                    if (side.index !== this.walkableTile) {
+                        this.mouseY = this.positionY;
+                        return false;
+                    }
+            }
+
+            ////////////////////////////////////////////////////////////
+            // needs improving
+            const opposites = this.otherUnities.map(e => {
+                switch (side) {
+                    case this.leftSide:
+                        return e.rightSide;
+
+                    case this.rightSide:
+                        return e.leftSide;
+
+                    case this.topSide:
+                        return e.bottomSide;
+
+                    case this.bottomSide:
+                        return e.topSide;
+                }
+            });
+
+            for (let i = 0; i < opposites.length; ++i) {
+                if (opposites[i] != undefined && (opposites[i].x == side.x && opposites[i].y == side.y)) {
+                    this.mouseX = opposites[i].x;
+                    this.mouseY = opposites[i].y;
+                }
+            }
+            //////////////////////////////////////////////////////////////////
+        
+
         return side.index === this.walkableTile;
     }
 
-    //obs: being called multiple times when moving to right, bottom or L in the respective directions
-    /**
-    * - If distance, mouseX and mouseY have valid values, verify which type of movement it needs to execute.
-    */
     pathSetter() {
-        if (this.positionX != this.mouseX && this.positionY != this.mouseY) {
+        this.directionIdentifier();
 
-            console.log('L movement.');
-            if (this.mouseX >= this.positionX && this.checkObstacle(this.rightSide)) {
-                this.moveRight();
-            } else if (this.mouseX <= this.positionX && this.checkObstacle(this.leftSide)) {
-                this.moveLeft();
-            } 
-
-            this.lMovement = true;
-
-        } else if (this.positionX == this.mouseX && this.positionY != this.mouseY && !this.lMovement) {
-
-            console.log('Vertical movement.');
-            if (this.mouseY <= this.positionY && this.checkObstacle(this.topSide)) {
-                this.moveUp();
-            } else if (this.mouseY >= this.positionY && this.checkObstacle(this.bottomSide)) {
-                this.moveDown();
-            } 
-
-        } else if (this.positionX != this.mouseX && this.positionY == this.mouseY) {
-
-            console.log('Horizontal movement.');
-            if (this.mouseX >= this.positionX && this.checkObstacle(this.rightSide)) {
-                this.moveRight();
-            } else if (this.mouseX <= this.positionX && this.checkObstacle(this.leftSide)) {
-                this.moveLeft();
+        if (this.checkObstacle(this.direction)) {
+            switch (this.direction) {
+                case (this.topSide):
+                    this.moveUp();
+                    break;
+                case (this.bottomSide):
+                    this.moveDown();
+                    break;
+                case (this.rightSide):
+                    this.moveRight();
+                    break;
+                case (this.leftSide):
+                    this.moveLeft();
+                    break;
             }
-
         }
     }
 
@@ -368,8 +400,10 @@ class Unity extends Phaser.Sprite {
     }
 
     amIalive() {
-        if (this.health <= 0)
+        if (this.health <= 0){
+            queue.removeExists(this);
             this.destroy();
+        }
     }
 
     executeOrder() {
@@ -377,7 +411,7 @@ class Unity extends Phaser.Sprite {
             this.pathSetter();
         }
 
-        if (this.execute && queue.checkFinished(this)) {
+        if (this.execute && queue.checkFinished(this)) { //Bugsy Bugs here if the last one dies
             queue.safeClear();
         }
 
@@ -399,7 +433,7 @@ class Unity extends Phaser.Sprite {
         this.stopMovementTrigger();
         this.movementCheck();
 
-        this.executeOrder();
+        this.executeOrder(); 
 
         this.attackOpposition();
         this.amIalive();

@@ -110,9 +110,9 @@ class TheGame {
         let friendlyTotal = 0;
 
         unities.unitiesCreated.forEach(e => {
-            if (e.friendly)
+            if (e.friendly && e.alive)
                 friendlyTotal += e.health;
-            else
+            else if(e.alive)
                 enemyTotal += e.health;
         });
 
@@ -136,7 +136,7 @@ class TheGame {
         //let picture = '-64';
 
         unities.unitiesCreated.forEach(e => {
-            if (e.check) {
+            if (e.check && e.alive) {
                 this.unity.key = e.key;
                 this.unity.health = e.health;
                 this.unity.attack = e.attack;

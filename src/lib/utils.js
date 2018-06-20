@@ -21,9 +21,7 @@ const utils = {
      * @param {*} unity : An unity object.
     */
     checkObjectsMapCollision(unity) {
-        game.physics.arcade.collide(unity, maps.getLayer(), unity => {
-            unity.collided = true;
-        });
+        game.physics.arcade.collide(unity, maps.getLayer());
     },
 
     drawCoordinates(coordinatesArray) {

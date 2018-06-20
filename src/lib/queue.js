@@ -56,8 +56,10 @@ const queue = {
         });
 
         unities.unitiesCreated.forEach(e => {
-            e.inputEnabled = true;
-            e.availableCoordinates = maps.availableCoordinates(e.positionX, e.positionY, e.movement);
+            if(e.alive){
+                e.inputEnabled = true;
+                e.availableCoordinates = maps.availableCoordinates(e.positionX, e.positionY, e.movement);
+            } 
         });
 
         this.activated = [];
