@@ -81,7 +81,8 @@ const queue = {
                 const posX = this.activated[lastIndex].positionX;
                 const posY = this.activated[lastIndex].positionY;
                 const mouseX = this.activated[lastIndex].mouseX;
-                const mouseY = this.activated[lastIndex].positionY;
+                const mouseY = this.activated[lastIndex].mouseY;
+                console.log('Inside queue: checkFinished');
 
                 return (speedY == 0 && speedX == 0) && (mouseX == posX && mouseY == posY);
             }
@@ -107,7 +108,8 @@ const queue = {
             const posX = this.activated[prevIndex].positionX;
             const posY = this.activated[prevIndex].positionY;
             const mouseX = this.activated[prevIndex].mouseX;
-            const mouseY = this.activated[prevIndex].positionY;
+            const mouseY = this.activated[prevIndex].mouseY;
+            console.log('Inside queue: checkPreviousExecuted');
 
             return (speedY == 0 && speedX == 0) && (mouseX == posX && mouseY == posY); 
         }

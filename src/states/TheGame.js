@@ -171,8 +171,8 @@ class TheGame {
             this.mouseX = maps.gridCoordinateConvert(game.input.x);
             this.mouseY = maps.gridCoordinateConvert(game.input.y);
 
-            console.log(this.mouseX)
-            console.log(this.mouseY)
+            //console.log(this.mouseX)
+            //console.log(this.mouseY)
             //console.log(unities.unitiesCreated);
 
             // gets the id of the activated object

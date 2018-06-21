@@ -6,7 +6,6 @@
 */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Obs: bugs queue when moving vertically(URGENT);
 // Obs: bugs queue when this dies in last position(URGENT);
 
 class Unity extends Phaser.Sprite {
@@ -195,44 +194,7 @@ class Unity extends Phaser.Sprite {
 
         if (this.body.velocity.y == 0 && this.body.velocity.x == 0) {
             this.lMovement = false;
-            this.leftMovement = false;
-            this.topMovement = false;
-            this.bottomMovement = false;
-            this.rightMovement = false;
         }
-
-    }
-
-    /**
-     * - Give positive speed to move to the X right direction.
-     */
-    moveRight() {
-        this.body.velocity.x = this.speed;
-        this.rightMovement = true;
-    }
-
-    /**
-     * - Give negative speed to move to the X left direction.
-     */
-    moveLeft() {
-        this.body.velocity.x = -this.speed;
-        this.leftMovement = true;
-    }
-
-    /**
-     * - Give negative speed to move to the Y top direction.
-     */
-    moveUp() {
-        this.body.velocity.y = -this.speed;
-        this.topMovement = true;
-    }
-
-    /**
-     * - Give positive speed to move to the Y bottom direction.
-     */
-    moveDown() {
-        this.body.velocity.y = this.speed;
-        this.bottomMovement = true;
     }
 
     movementIdentifier() {
@@ -332,16 +294,16 @@ class Unity extends Phaser.Sprite {
         if (this.checkObstacle(this.direction)) {
             switch (this.direction) {
                 case (this.topSide):
-                    this.moveUp();
+                    this.body.velocity.y = -this.speed;
                     break;
                 case (this.bottomSide):
-                    this.moveDown();
+                    this.body.velocity.y = this.speed;
                     break;
                 case (this.rightSide):
-                    this.moveRight();
+                    this.body.velocity.x = this.speed;
                     break;
                 case (this.leftSide):
-                    this.moveLeft();
+                    this.body.velocity.x = -this.speed;
                     break;
             }
         }
