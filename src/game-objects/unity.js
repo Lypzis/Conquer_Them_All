@@ -1,3 +1,5 @@
+import { debug } from "util";
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** 
  * @by: Lypzis Entertainment
@@ -5,8 +7,6 @@
  * @doc: Generic Unity class.
 */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Obs: bugs queue when this dies in last position(URGENT);
 
 class Unity extends Phaser.Sprite {
     constructor(game, x, y, unityKey, unity, id, friendly) {
@@ -24,7 +24,6 @@ class Unity extends Phaser.Sprite {
         this.chargeSpeed = unity.chargeSpeed;
         this.chargeMaxDamage = unity.chargeMaxDamage;
         this.minChargeDist = unity.minChargeDist;
-        //this.morale = null; 
 
         this.active = false;
         this.inputEnabled = true;
@@ -61,13 +60,14 @@ class Unity extends Phaser.Sprite {
                 // inactivate if active else active to receive order
                 if (this.active) {
                     this.active = !this.active;
+
                 } else {
                     this.highlightCoordinates = utils.drawCoordinates(this.availableCoordinates); //
                     this.active = true;
                 }
             }
 
-            target.execute = false; // it should wait for the 'Execute Actions' signal to do its action.
+            this.execute = false; // it should wait for the 'Execute Actions' signal to do its action.
         });
 
         this.events.onInputOut.add(target => {
@@ -92,7 +92,10 @@ class Unity extends Phaser.Sprite {
 
         const invalidDistance = this.checkDistanceLimit();
 
-        if (invalidDistance) {
+        if (this.positionX == this.mouseX && this.positionY == this.mouseY) {
+            this.mouseX = null;
+            this.mouseY = null;
+        } else if (invalidDistance) {
             this.active = false;
             this.mouseX = null;
             this.mouseY = null;
@@ -284,7 +287,7 @@ class Unity extends Phaser.Sprite {
 
         if (temp != undefined) {
             return true;
-        }
+        } 
 
         return false;
     }
@@ -315,7 +318,7 @@ class Unity extends Phaser.Sprite {
     */
     attackOpposition() {
         // damage only once, per turn
-        if (!this.attacking) {
+        if (!this.attacking && queue.activated.length <= 0) {
 
             // verifies other unities status in the field
             this.otherUnities.forEach(e => {
@@ -357,12 +360,25 @@ class Unity extends Phaser.Sprite {
         }
     }
 
+    amIsurrounded() {
+        const left = this.otherUnities.find(e => (e.positionX == this.leftSide.x && e.positionY == this.leftSide.y) && e.friendly != this.friendly);
+        const right = this.otherUnities.find(e => (e.positionX == this.rightSide.x && e.positionY == this.rightSide.y) && e.friendly != this.friendly);
+
+        if (left != undefined && right != undefined) {
+            this.attack = unities.getObject(this.key).attack * 0.3;
+            this.defense = unities.getObject(this.key).defense * 1.7;
+        } else {
+            this.attack = unities.getObject(this.key).attack;
+            this.defense = unities.getObject(this.key).defense;
+        }
+    }
+
     executeOrder() {
         if (this.execute && queue.checkPreviousExecuted(this)) {
             this.pathSetter();
         }
 
-        if (queue.checkFinished(this)) { //Bugsy Bugs here if the last one dies || (queue.checkFinished(this) == undefined) this.execute && 
+        if (queue.checkFinished(this)) {
             queue.safeClear();
         }
 
@@ -384,10 +400,9 @@ class Unity extends Phaser.Sprite {
         this.stopMovementTrigger();
         this.movementCheck();
 
-        
-        
         this.executeOrder();
 
+        this.amIsurrounded();
         this.attackOpposition();
         this.amIalive();
     }

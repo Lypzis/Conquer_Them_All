@@ -118,8 +118,8 @@ class TheGame {
 
         this.army1Title.text = 'Your Army';
         this.army2Title.text = 'Enemy Army';
-        this.army1Status.text = friendlyTotal;
-        this.army2Status.text = enemyTotal;
+        this.army1Status.text = `${Math.round(friendlyTotal)}`;
+        this.army2Status.text = `${Math.round(enemyTotal)}`;
 
     }
 
@@ -137,7 +137,7 @@ class TheGame {
             if (e.check && e.alive) {
                 this.unity.key = e.key;
                 this.unity.name = e.name;
-                this.unity.health = e.health;
+                this.unity.health = `${Math.ceil(e.health)}`;
                 this.unity.attack = e.attack;
                 this.unity.defense = `${Math.floor((1 - e.defense) * 100)}%`;
                 this.unity.friendly = e.friendly;
