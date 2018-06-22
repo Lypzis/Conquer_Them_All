@@ -27,7 +27,7 @@ const queue = {
     */
     removeExists(unity) {
 
-        if (this.checkExists(unity)){
+        if (this.checkExists(unity)) {
             const index = this.activated.indexOf(unity);
             this.activated[index].active = false;
             this.activated[index].coordinateMarker.destroy();
@@ -56,10 +56,10 @@ const queue = {
         });
 
         unities.unitiesCreated.forEach(e => {
-            if(e.alive){
+            if (e.alive) {
                 e.inputEnabled = true;
                 e.availableCoordinates = maps.availableCoordinates(e.positionX, e.positionY, e.movement);
-            } 
+            }
         });
 
         this.activated = [];
@@ -82,13 +82,14 @@ const queue = {
                 const posY = this.activated[lastIndex].positionY;
                 const mouseX = this.activated[lastIndex].mouseX;
                 const mouseY = this.activated[lastIndex].mouseY;
-                console.log('Inside queue: checkFinished');
 
                 return (speedY == 0 && speedX == 0) && (mouseX == posX && mouseY == posY);
             }
 
             return false;
         }
+
+        return true;
     },
 
     /** - Check if the previous unity in the queue is still executing.
@@ -99,7 +100,7 @@ const queue = {
         if (queue.activated.length > 0) {
             const index = queue.activated.indexOf(unity);
 
-            if (index == 0) 
+            if (index == 0)
                 return true;
 
             const prevIndex = index - 1;
@@ -109,9 +110,8 @@ const queue = {
             const posY = this.activated[prevIndex].positionY;
             const mouseX = this.activated[prevIndex].mouseX;
             const mouseY = this.activated[prevIndex].mouseY;
-            console.log('Inside queue: checkPreviousExecuted');
 
-            return (speedY == 0 && speedX == 0) && (mouseX == posX && mouseY == posY); 
+            return (speedY == 0 && speedX == 0) && (mouseX == posX && mouseY == posY);
         }
     }
 

@@ -14,6 +14,7 @@ class Unity extends Phaser.Sprite {
 
         this.id = id;
         this.key = unityKey;
+        this.name = unity.name;
         this.friendly = friendly;
         this.defense = unity.defense;
         this.attack = unity.attack;
@@ -361,7 +362,7 @@ class Unity extends Phaser.Sprite {
             this.pathSetter();
         }
 
-        if (this.execute && queue.checkFinished(this)) { //Bugsy Bugs here if the last one dies
+        if (queue.checkFinished(this)) { //Bugsy Bugs here if the last one dies || (queue.checkFinished(this) == undefined) this.execute && 
             queue.safeClear();
         }
 
@@ -383,6 +384,8 @@ class Unity extends Phaser.Sprite {
         this.stopMovementTrigger();
         this.movementCheck();
 
+        
+        
         this.executeOrder();
 
         this.attackOpposition();

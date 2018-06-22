@@ -68,13 +68,13 @@ class TheGame {
         this.portraits = ['hero-icon', 'enemy-hero-icon', 'enemy-warrior-icon', 'warrior-icon'];
 
         // total army feedback main player image
-        this.army1 = game.add.sprite(game.world.centerX - 264, game.world.centerY + 8, 'unities-portrait', 0); 
+        this.army1 = game.add.sprite(game.world.centerX - 280, game.world.centerY + 8, 'unities-portrait', 0); 
 
         this.army1Title = game.add.text(this.army1.x + (this.army1.width * 2), game.world.centerY, null, styles.customText('18pt'));
         this.army1Status = game.add.text(this.army1.x + (this.army1.width * 2), game.world.centerY + 24, null, styles.customText('16pt'));
 
         // total army feedback main enemy image
-        this.army2 = game.add.sprite(game.world.centerX + 264, game.world.centerY + 8, 'unities-portrait', 0);
+        this.army2 = game.add.sprite(game.world.centerX + 280, game.world.centerY + 8, 'unities-portrait', 0);
 
         this.army2Title = game.add.text(this.army2.x - (this.army2.width * 2), game.world.centerY, null, styles.customText('18pt'));
         this.army2Status = game.add.text(this.army2.x - (this.army2.width * 2), game.world.centerY + 24, null, styles.customText('16pt'));
@@ -116,7 +116,7 @@ class TheGame {
                 enemyTotal += e.health;
         });
 
-        this.army1Title.text = 'Hero Army';
+        this.army1Title.text = 'Your Army';
         this.army2Title.text = 'Enemy Army';
         this.army1Status.text = friendlyTotal;
         this.army2Status.text = enemyTotal;
@@ -125,19 +125,18 @@ class TheGame {
 
     checkUnitStatusOnHover() {
         this.unity = {
-            //name: null, future implementation
             key: null,
+            name: null, 
             health: null,
             attack: null,
             defense: null,
             friendly: null,
         };
 
-        //let picture = '-64';
-
         unities.unitiesCreated.forEach(e => {
             if (e.check && e.alive) {
                 this.unity.key = e.key;
+                this.unity.name = e.name;
                 this.unity.health = e.health;
                 this.unity.attack = e.attack;
                 this.unity.defense = `${Math.floor((1 - e.defense) * 100)}%`;
@@ -150,11 +149,11 @@ class TheGame {
 
             if (this.unity.friendly) {
                 this.army1.animations.play(`${this.unity.key}`);
-                this.army1Title.text = this.unity.key;
+                this.army1Title.text = this.unity.name;
                 this.army1Status.text = str;
             } else {
                 this.army2.animations.play(`${this.unity.key}`);
-                this.army2Title.text = this.unity.key;
+                this.army2Title.text = this.unity.name;
                 this.army2Status.text = str;
             }
         } else {
