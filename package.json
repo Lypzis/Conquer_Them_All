@@ -1,12 +1,12 @@
 {
   "name": "conquer_them_all",
   "productName": "conquer_them_all",
-  "version": "0.9.0",
-  "description": "Medieval Strategy/Action game.",
+  "version": "0.10.0",
+  "description": "Medieval Dark Fantasy Strategy/Turn based game.",
   "main": "src/index.js",
   "scripts": {
-    "electron": "electron .",
     "start": "electron-forge start",
+    "dev": "cross-env NODE_ENV=development electron .",
     "package": "electron-forge package",
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
@@ -58,6 +58,7 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "cross-env": "^5.2.0",
     "electron-forge": "^5.1.1",
     "electron-prebuilt-compile": "1.8.3",
     "eslint": "^3",

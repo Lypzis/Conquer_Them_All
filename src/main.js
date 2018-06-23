@@ -32,14 +32,14 @@ class Main {
 
 ///////////////////////////////////////////////////////////////////////
 // Initialize Phaser application
-const game = new Phaser.Game(832, 608, Phaser.AUTO, 'game'); //832, 608
+const game = new Phaser.Game(832, 608, Phaser.AUTO, 'game'); //window.innerWidth, window.innerHeight
 
 const gameOptions = {
     playSound: true,
     playMusic: true
 }
 
-let musicPlayer;
+let mainTheme;
 
 // Adds the main configuration to the application and starts it
 game.state.add('Main', Main);

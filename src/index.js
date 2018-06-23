@@ -9,8 +9,15 @@ if (require("electron-squirrel-startup")) {
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let development = false;
 
 const createWindow = () => {
+
+  if (process.env.NODE_ENV === 'development'){
+    console.log('Development mode!');
+    development = true;
+  }   
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 832,
@@ -18,22 +25,24 @@ const createWindow = () => {
     backgroundColor: '#020202',
     backgroundThrottling: false,
 
-    //resizable: false, //
-    //frame: false, //
-    //show: false, //
+    //production
+    resizable: development, //
+    frame: development, //
+    show: development, //
   });
 
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
+ 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
-
   });
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools(); //
+  if(development)
+    mainWindow.webContents.openDevTools(); 
 
   // Emitted when the window is closed.
   mainWindow.on("closed", () => {

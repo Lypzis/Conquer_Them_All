@@ -38,7 +38,7 @@ class Splash {
             'fear_and_wonder'
         ];
 
-        audios.forEach(audio => game.load.audio(`${audio}`, `./assets/bgm/${audio}.mp3`));
+        //audios.forEach(audio => game.load.audio(`${audio}`, `./assets/bgm/${audio}.mp3`));
     }
 
     loadImages() {
@@ -137,9 +137,9 @@ class Splash {
 
     addGameMusic() {
         // add background music and make it play in loop
-        musicPlayer = game.add.audio('fear_and_wonder');
-        musicPlayer.loop = true;
-        //musicPlayer.play();
+        //mainTheme = game.add.audio('fear_and_wonder');
+        //mainTheme.loop = true;
+        //mainTheme.play();
     }
 
     create() {
