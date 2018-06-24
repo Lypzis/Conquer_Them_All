@@ -1,4 +1,4 @@
-class GameOver {
+class History {
     create(){
         game.add.sprite(0, 0, 'quit-bg');
 

@@ -1,4 +1,4 @@
-class GameOver {
+class Instructions {
     create(){
         game.add.sprite(0, 0, 'quit-bg');
 
@@ -8,6 +8,7 @@ class GameOver {
     }
 
     update(){
-        
+
     }
+    
 }

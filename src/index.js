@@ -24,11 +24,11 @@ const createWindow = () => {
     height: 608,
     backgroundColor: '#020202',
     backgroundThrottling: false,
-
-    //production
-    resizable: development, //
-    frame: development, //
-    show: development, //
+    icon: __dirname + '/assets/images/icon.ico',
+    
+    resizable: development, 
+    frame: development, 
+    show: development, 
   });
 
 

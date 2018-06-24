@@ -26,7 +26,8 @@ class Splash {
             'TheGame',
             'GameOver',
             'Credits',
-            'Options'
+            'Options',
+            'Instructions'
         ];
 
         states.forEach(state => game.load.script(`${state}`, `./states/${state}.js`));
@@ -133,6 +134,7 @@ class Splash {
         game.state.add('GameOver', GameOver);
         game.state.add('Credits', Credits);
         game.state.add('Options', Options);
+        game.state.add('Instructions', Instructions);
     }
 
     addGameMusic() {
