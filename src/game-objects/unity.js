@@ -1,5 +1,3 @@
-import { debug } from "util";
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** 
  * @by: Lypzis Entertainment
@@ -50,6 +48,7 @@ class Unity extends Phaser.Sprite {
 
         this.animations.add('default', [0], 1, true);
         this.animations.add('hovered', [1], 1, true);
+        this.animations.add('cancel', [2], 1, true);
 
         this.events.onInputUp.add(target => {
 
@@ -77,7 +76,11 @@ class Unity extends Phaser.Sprite {
 
         this.events.onInputOver.add(target => {
             this.check = true;
-            target.animations.play('hovered');
+            if(this.active || queue.checkExists(this)) {
+                target.animations.play('cancel');
+            } else {
+                target.animations.play('hovered');
+            }
         });
     }
 
