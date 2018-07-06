@@ -22,6 +22,10 @@ class Main {
         game.load.image('loading', './assets/images/progress-bar.png');
         game.load.image('brand', './assets/images/logo.png');
         game.load.script('Splash', './states/Splash.js');
+
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        game.scale.pageAlignHorizontally = true;
+        game.scale.pageAlignVertically = true;
     }
 
     create() {

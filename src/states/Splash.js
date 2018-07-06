@@ -21,16 +21,14 @@ class Splash {
     }
 
     loadScripts() {
-        const states = [
+        [
             'GameMenu',
             'TheGame',
             'GameOver',
             'Credits',
             'Options',
             'Instructions'
-        ];
-
-        states.forEach(state => game.load.script(`${state}`, `./states/${state}.js`));
+        ].forEach(state => game.load.script(`${state}`, `./states/${state}.js`));
     }
 
     loadBgm() {
@@ -43,7 +41,7 @@ class Splash {
     }
 
     loadImages() {
-        const images = [
+        [
             'menu-bg',
             'menu-clouds-bg',
             'menu-sky-bg',
@@ -54,31 +52,26 @@ class Splash {
             'vegetation1',
             'vegetation2',
             'tableGround-tile',
-        ];
-
-        images.forEach(image => game.load.image(`${image}`, `./assets/images/${image}.png`));
+        ].forEach(image => game.load.image(`${image}`, `./assets/images/${image}.png`));
     }
 
     loadSpriteSheets() {
-        const icons = [
+        // icons/pieces
+        [
             'warrior-icon',
             'hero-icon',
             'enemy-hero-icon',
             'enemy-warrior-icon'
-        ];
+        ].forEach(icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 30, 30));
 
         // portraits
-        game.load.spritesheet('unities-portrait', './assets/images/unities-portrait.png', 60, 60);
-
-        icons.forEach(icon => game.load.spritesheet(`${icon}`, `./assets/images/${icon}.png`, 30, 30));
+        game.load.spritesheet('unities-portrait', './assets/images/unities-portrait.png', 60, 60);  
     }
 
     loadButtons() {
-        const buttons = [
+        [
             'execute-btn'
-        ];
-
-        buttons.forEach(button => game.load.spritesheet(`${button}`, `./assets/images/${button}.png`, 165, 34));
+        ].forEach(button => game.load.spritesheet(`${button}`, `./assets/images/${button}.png`, 165, 34));
     }
 
     // loads a custom font
@@ -102,11 +95,9 @@ class Splash {
     }
 
     loadGameObjects() {
-        const objects = [
+        [
             'unity'
-        ];
-
-        objects.forEach(object => game.load.script(`${object}`, `./game-objects/${object}.js`));
+        ].forEach(object => game.load.script(`${object}`, `./game-objects/${object}.js`));
     }
 
     preload() {
@@ -154,9 +145,6 @@ class Splash {
         setTimeout(() => {
             game.state.start('GameMenu');
         }, 2000); //2000ms = 2s before loading next screen
-
-
     }
-
 }
 
