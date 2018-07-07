@@ -23,7 +23,7 @@ class Main {
         game.load.image('brand', './assets/images/logo.png');
         game.load.script('Splash', './states/Splash.js');
 
-        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;//SHOW_ALL EXACT_FIT; TO SOLVE
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;
     }
@@ -36,7 +36,7 @@ class Main {
 
 ///////////////////////////////////////////////////////////////////////
 // Initialize Phaser application
-const game = new Phaser.Game(832, 608, Phaser.AUTO, 'game'); //window.innerWidth, window.innerHeight
+const game = new Phaser.Game(832, 608, Phaser.AUTO, ''); //'game' window.innerWidth, window.innerHeight
 
 const gameOptions = {
     playSound: true,

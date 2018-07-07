@@ -10,12 +10,14 @@ if (require("electron-squirrel-startup")) {
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let development = false;
+let fullScreen = true;
 
 const createWindow = () => {
 
   if (process.env.NODE_ENV === 'development'){
     console.log('Development mode!');
     development = true;
+    fullScreen = false;
   }   
 
   // Create the browser window.
@@ -26,6 +28,7 @@ const createWindow = () => {
     backgroundThrottling: false,
     icon: __dirname + '/assets/images/icon.ico',
     
+    fullscreen: fullScreen,
     resizable: development, 
     frame: development, 
     show: development, 
